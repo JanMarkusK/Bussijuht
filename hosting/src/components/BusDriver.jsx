@@ -9,6 +9,7 @@ const BusDriver = () => {
   const [hand, setHand] = useState([]);
   const [currentRow, setCurrentRow] = useState(4);
   const [cardsTurned, setCardsTurned] = useState([]);
+  const [gameOver, setGameOver] = useState(false);
 
   useEffect(() => {
     const setupGame = () => {
@@ -24,13 +25,14 @@ const BusDriver = () => {
       setPyramid(pyramidCards);
       setHand(deck.splice(0, 5)); // Give the player the first 5 cards from the remaining deck
       setCardsTurned(new Array(pyramidSetup.length).fill(false));
+      setGameOver(false);
     };
 
     setupGame();
   }, []);
 
   const handleCardClick = (rowIndex, cardIndex) => {
-    if (rowIndex !== currentRow || cardsTurned[rowIndex]) return;
+    if (gameOver || cardsTurned[rowIndex] || rowIndex !== currentRow) return;
 
     const newPyramid = [...pyramid];
     newPyramid[rowIndex][cardIndex].faceUp = true;
@@ -40,15 +42,38 @@ const BusDriver = () => {
     newCardsTurned[rowIndex] = true;
     setCardsTurned(newCardsTurned);
 
-    if (newCardsTurned[rowIndex]) {
+    if (newCardsTurned.every((turned, index) => index > rowIndex || turned)) {
       setCurrentRow(currentRow - 1);
     }
+
+    const cardValue = newPyramid[rowIndex][cardIndex].value.split(' ')[0];
+    if (cardValue === 'J' || cardValue === 'Q' || cardValue === 'K') {
+      setGameOver(true);
+    }
+  };
+
+  const handleRestart = () => {
+    setGameOver(false);
+    setCardsTurned(new Array(pyramid.length).fill(false));
+
+    const newDeck = shuffleDeck(generateDeck());
+    let remainingDeck = [...newDeck];
+    const newPyramid = pyramid.map(row => row.map(card => {
+      if (card.faceUp) {
+        return { faceUp: false, value: remainingDeck.pop() };
+      }
+      return card;
+    }));
+    setPyramid(newPyramid);
+
+    setHand(remainingDeck.splice(0, 5));
   };
 
   return (
     <div className="bus-driver">
       <Pyramid pyramid={pyramid} onCardClick={handleCardClick} />
-      {/* <Hand hand={hand} /> */}
+      <Hand hand={hand} />
+      {gameOver && <button onClick={handleRestart}>Restart</button>}
     </div>
   );
 };
