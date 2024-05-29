@@ -26,6 +26,7 @@ const BusDriver = () => {
       setHand(deck.splice(0, 5)); // Give the player the first 5 cards from the remaining deck
       setCardsTurned(new Array(pyramidSetup.length).fill(false));
       setGameOver(false);
+      setCurrentRow(4);
     };
 
     setupGame();
@@ -42,12 +43,12 @@ const BusDriver = () => {
     newCardsTurned[rowIndex] = true;
     setCardsTurned(newCardsTurned);
 
-    if (newCardsTurned.every((turned, index) => index > rowIndex || turned)) {
+    if (newCardsTurned.some((turned, index) => index > rowIndex || turned)) {
       setCurrentRow(currentRow - 1);
     }
 
     const cardValue = newPyramid[rowIndex][cardIndex].value.split(' ')[0];
-    if (cardValue === 'J' || cardValue === 'Q' || cardValue === 'K') {
+    if (cardValue === 'J' || cardValue === 'Q' || cardValue === 'K' || cardValue === 'A') {
       setGameOver(true);
     }
   };
