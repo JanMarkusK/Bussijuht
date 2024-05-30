@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Pyramid from './Pyramid';
 import Hand from './Hand';
 import { generateDeck, shuffleDeck } from '../utils/deck';
+import '../styles.css';
 
 const BusDriver = () => {
   const [pyramid, setPyramid] = useState([]);
@@ -49,7 +50,7 @@ const BusDriver = () => {
       setCurrentRow(currentRow - 1);
     }
 
-    const cardValue = newPyramid[rowIndex][cardIndex].value.split(' ')[0];
+    const cardValue = newPyramid[rowIndex][cardIndex].value.split('_')[0];
     if (cardValue === 'J' || cardValue === 'Q' || cardValue === 'K' || cardValue === 'A') {
       setGameOver(true);
     }
