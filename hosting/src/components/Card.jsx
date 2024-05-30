@@ -1,18 +1,23 @@
 // src/components/Card.jsx
 import React from 'react';
 import PropTypes from 'prop-types';
+import '../flip.css';
 
 const Card = ({ card, onClick }) => {
-  const cardFileName = card.faceUp ? `${card.value.replace(' ', '_')}.png` : 'back.png';
+  const cardFileName = card.faceUp ? `${card.value.replace(/ /g, '_')}.png` : 'back.png';
   const cardImage = `/cards/${cardFileName}`;
 
   return (
-    <img
-      src={cardImage}
-      alt={card.faceUp ? card.value : 'Card Back'}
-      onClick={onClick}
-      className="card"
-    />
+    <div className={`card ${card.faceUp ? 'flipped' : ''}`} onClick={onClick}>
+      <div className="card-inner">
+        <div className="card-front">
+          <img src="/cards/back.png" alt="Card Back" />
+        </div>
+        <div className="card-back">
+          <img src={cardImage} alt={card.value} />
+        </div>
+      </div>
+    </div>
   );
 };
 
