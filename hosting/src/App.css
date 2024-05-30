@@ -11,14 +11,10 @@
 }
 
 .card {
-  width: 50px;
-  height: 70px;
+  width: 100px; /* Adjust the width as needed */
+  height: auto;
   margin: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #000;
-  background-color: #641f1f;
+  cursor: pointer;
 }
 
 .hand {

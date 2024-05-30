@@ -8,7 +8,7 @@ export const generateDeck = () => {
   
     for (let suit of suits) {
       for (let value of values) {
-        deck.push(`${value} of ${suit}`);
+        deck.push(`${value}_of_${suit}`);
       }
     }
   

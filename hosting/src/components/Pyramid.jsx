@@ -1,6 +1,7 @@
 // src/components/Pyramid.jsx
 import React from 'react';
 import PropTypes from 'prop-types';
+import Card from './Card';
 
 const Pyramid = ({ pyramid, onCardClick }) => {
   return (
@@ -8,9 +9,11 @@ const Pyramid = ({ pyramid, onCardClick }) => {
       {pyramid.map((row, rowIndex) => (
         <div key={rowIndex} className="row">
           {row.map((card, cardIndex) => (
-            <div key={cardIndex} className="card" onClick={() => onCardClick(rowIndex, cardIndex)}>
-              {card.faceUp ? card.value : 'X'}
-            </div>
+            <Card
+              key={cardIndex}
+              card={card}
+              onClick={() => onCardClick(rowIndex, cardIndex)}
+            />
           ))}
         </div>
       ))}
@@ -23,11 +26,11 @@ Pyramid.propTypes = {
     PropTypes.arrayOf(
       PropTypes.shape({
         faceUp: PropTypes.bool.isRequired,
-        value: PropTypes.string.isRequired
+        value: PropTypes.string.isRequired,
       })
     )
   ).isRequired,
-  onCardClick: PropTypes.func.isRequired
+  onCardClick: PropTypes.func.isRequired,
 };
 
 export default Pyramid;
