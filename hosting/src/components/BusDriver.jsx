@@ -5,7 +5,7 @@ import Hand from './Hand';
 import { generateDeck, shuffleDeck } from '../utils/deck';
 import { ref, set, onValue, update } from 'firebase/database';
 import { realtimeDB } from '../firebase';
-import '../styles.css';
+import '../assets/css/styles.css';
 import PropTypes from 'prop-types';
 
 const BusDriver = ({ roomCode, playerName, gameData }) => {
