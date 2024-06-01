@@ -46,38 +46,61 @@ const BusDriver = ({ roomCode, playerName, gameData }) => {
   }, [roomCode]);
 
   const handleCardClick = (rowIndex, cardIndex) => {
-    if (gameOver || win || cardsTurned[rowIndex] || rowIndex !== currentRow) return;
-
+    if (gameOver || win || cardsTurned[rowIndex]) return;
+  
     const newPyramid = [...pyramid];
     newPyramid[rowIndex][cardIndex].faceUp = true;
     setPyramid(newPyramid);
-
+  
     const newCardsTurned = [...cardsTurned];
     newCardsTurned[rowIndex] = true;
     setCardsTurned(newCardsTurned);
+  
+    const cardValue = newPyramid[rowIndex][cardIndex].value.split('_')[0];
+    if (['J', 'Q', 'K', 'A'].includes(cardValue)) {
+      setGameOver(true);
+      update(ref(realtimeDB, `rooms/${roomCode}`), {
+        pyramid: newPyramid,
+        currentRow,
+        cardsTurned: newCardsTurned,
+        gameOver: true,
+        win: false,
+        hand,
+      });
+      return;
+    }
+  
+    console.log(rowIndex);
 
-    if (newCardsTurned.some((turned, index) => index > rowIndex || turned)) {
+    if (rowIndex === 0) {
+      console.log("You won the game!");
+      setWin(true);
+      update(ref(realtimeDB, `rooms/${roomCode}`), {
+        pyramid: newPyramid,
+        currentRow,
+        cardsTurned: newCardsTurned,
+        gameOver: false,
+        win: true,
+        hand,
+      });
+      return;
+    }
+  
+    // Check if all cards in the current row have been turned over
+    if (newCardsTurned.every((turned, index) => index !== currentRow || turned)) {
       setCurrentRow(currentRow - 1);
     }
-
-    const cardValue = newPyramid[rowIndex][cardIndex].value.split('_')[0];
-    if (cardValue === 'J' || cardValue === 'Q' || cardValue === 'K' || cardValue === 'A') {
-      setGameOver(true);
-    }
-
-    if (currentRow === 0 && cardValue !== 'J' && cardValue !== 'Q' && cardValue !== 'K' && cardValue !== 'A') {
-      setWin(true);
-    }
-
+  
     update(ref(realtimeDB, `rooms/${roomCode}`), {
       pyramid: newPyramid,
-      currentRow: currentRow - 1,
+      currentRow: newCardsTurned.every((turned, index) => index !== currentRow || turned) ? currentRow - 1 : currentRow,
       cardsTurned: newCardsTurned,
-      gameOver,
-      win,
+      gameOver: false,
+      win: false,
       hand,
     });
   };
+  
 
   const handleStartGame = () => {
     const deck = shuffleDeck(generateDeck());
@@ -106,7 +129,7 @@ const BusDriver = ({ roomCode, playerName, gameData }) => {
       <div className="bus-driver">
         <h1>Bus Driver Game</h1>
         <Pyramid pyramid={pyramid} onCardClick={handleCardClick} />
-        <Hand hand={hand} />
+        {/* <Hand hand={hand} /> */}
         <div className="players-list">
           <h3>Players in Game:</h3>
           <ul>
@@ -120,10 +143,11 @@ const BusDriver = ({ roomCode, playerName, gameData }) => {
           <div className="overlay">
             <div className="overlay-content">
               <h1>You win!</h1>
+              <button onClick={handleStartGame}>Restart</button>
             </div>
           </div>
         )}
-        <button onClick={handleStartGame}>Start Game</button>
+        {!gameOver && !win && <button onClick={handleStartGame}>Start Game</button>}
       </div>
     </div>
   );

@@ -1,7 +1,6 @@
 // src/components/Card.jsx
 import React from 'react';
 import PropTypes from 'prop-types';
-//import '../flip.css';
 
 const Card = ({ card, onClick }) => {
   const cardFileName = card.faceUp ? `${card.value.replace(/ /g, '_')}.png` : 'back.png';
