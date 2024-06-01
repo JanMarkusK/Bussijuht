@@ -46,7 +46,7 @@ const BusDriver = ({ roomCode, playerName, gameData }) => {
   }, [roomCode]);
 
   const handleCardClick = (rowIndex, cardIndex) => {
-    if (gameOver || win || cardsTurned[rowIndex]) return;
+    if (gameOver || win || cardsTurned[rowIndex] || rowIndex !== currentRow) return;
   
     const newPyramid = [...pyramid];
     newPyramid[rowIndex][cardIndex].faceUp = true;
@@ -70,8 +70,6 @@ const BusDriver = ({ roomCode, playerName, gameData }) => {
       return;
     }
   
-    console.log(rowIndex);
-
     if (rowIndex === 0) {
       console.log("You won the game!");
       setWin(true);
@@ -87,13 +85,13 @@ const BusDriver = ({ roomCode, playerName, gameData }) => {
     }
   
     // Check if all cards in the current row have been turned over
-    if (newCardsTurned.every((turned, index) => index !== currentRow || turned)) {
+    if (newCardsTurned.some((turned, index) => index > rowIndex || turned)) {
       setCurrentRow(currentRow - 1);
     }
   
     update(ref(realtimeDB, `rooms/${roomCode}`), {
       pyramid: newPyramid,
-      currentRow: newCardsTurned.every((turned, index) => index !== currentRow || turned) ? currentRow - 1 : currentRow,
+      currentRow: allTurnedInCurrentRow ? currentRow - 1 : currentRow,
       cardsTurned: newCardsTurned,
       gameOver: false,
       win: false,
