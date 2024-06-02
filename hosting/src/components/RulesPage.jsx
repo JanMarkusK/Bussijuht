@@ -10,7 +10,7 @@ const RulesPage = ({ setInRules }) => {
 
   return (
     <div className="rules-page">
-      <h1>Reeglid</h1>
+      <h1>Rules</h1>
       <p>
         The deck of cards is made into a pyramid - 5 cards, 4, 3, 2, and 1 card in a row. <br />
         The remaining cards are distributed among the players. <br />
