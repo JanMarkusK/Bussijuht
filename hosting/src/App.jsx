@@ -1,30 +1,40 @@
-// src/App.jsx
 import React, { useState } from 'react';
 import Lobby from './components/Lobby';
 import BusDriver from './components/BusDriver';
-import Pyramid from './components/Pyramid';
+import HomePage from './components/HomePage';
+import RulesPage from './components/RulesPage';
 
 const App = () => {
   const [gameData, setGameData] = useState(null);
   const [roomCode, setRoomCode] = useState('');
   const [playerName, setPlayerName] = useState('');
   const [inGame, setInGame] = useState(false);
+  const [inLobby, setInLobby] = useState(false);
+  const [inRules, setInRules] = useState(false);
 
   return (
     <div>
-      {!inGame ? (
-        <Lobby
-          setGameData={setGameData}
-          setRoomCode={setRoomCode}
-          setPlayerName={setPlayerName}
-          setInGame={setInGame}
-        />
+      {!inLobby && !inRules ? (
+        <HomePage setInLobby={setInLobby} setInRules={setInRules} />
       ) : (
-        <BusDriver
-          roomCode={roomCode}
-          playerName={playerName}
-          gameData={gameData}
-        />
+        inRules ? (
+          <RulesPage setInRules={setInRules} />
+        ) : (
+          !inGame ? (
+            <Lobby
+              setGameData={setGameData}
+              setRoomCode={setRoomCode}
+              setPlayerName={setPlayerName}
+              setInGame={setInGame}
+            />
+          ) : (
+            <BusDriver
+              roomCode={roomCode}
+              playerName={playerName}
+              gameData={gameData}
+            />
+          )
+        )
       )}
     </div>
   );

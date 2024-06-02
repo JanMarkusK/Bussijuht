@@ -1,0 +1,31 @@
+/*src/components/HomePage.css*/
+.home-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #6ec03c; /* Saad muuta taustavärvi vajadusel */
+}
+
+.home-page h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.home-page h2 {
+  margin-bottom: 20px;
+}
+
+.home-page-image { 
+  max-width: 15%; /* pildi suurus 15% peaks sobima*/
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.home-page button {
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 1.2em;
+  cursor: pointer;
+}
