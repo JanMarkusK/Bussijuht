@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Card from './Card';
-import '../flip.css'; // Import the CSS here
+import '../assets/css/flip.css'; // Import the CSS here
 
 const Pyramid = ({ pyramid, onCardClick }) => {
   return (
