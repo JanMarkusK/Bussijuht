@@ -30,23 +30,26 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     }
   }, [localRoomCode, setGameData, setInGame]);
 
-  const handleCreateRoom = async () => {
+  const handleRoomCode = async () => {
     const newRoomCode = Math.floor(Math.random() * 90000) + 10000;
     setRoomCode(newRoomCode); // Use the prop function to set the room code in the parent component
+  };
 
-    const roomDoc = doc(firestoreDB, `Lobby/${newRoomCode}`);
+
+  const handleCreateRoom = async () => {
+    const roomDoc = doc(firestoreDB, `Lobby/${handleRoomCode}`);
     await setDoc(roomDoc, { players: [{ name: localPlayerName, ready: false }], inGame: false });
-    joinRoom(localRoomCode);
+    joinRoom(handleRoomCode);
   };
 
   const handleJoinRoom = async () => {
-    const roomDoc = doc(firestoreDB, `Lobby/${localRoomCode}`);
+    const roomDoc = doc(firestoreDB, `Lobby/${handleRoomCode}`);
     const docSnapshot = await getDoc(roomDoc);
     if (docSnapshot.exists()) {
       const roomData = docSnapshot.data();
       const updatedPlayers = [...roomData.players, { name: localPlayerName, ready: false }];
       await updateDoc(roomDoc, { players: updatedPlayers });
-      joinRoom(localRoomCode);
+      joinRoom(handleRoomCode);
     }
   };
 
@@ -64,7 +67,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   };
 
   const handleStartGame = async () => {
-    const roomDoc = doc(firestoreDB, `Lobby/${localRoomCode}`);
+    const roomDoc = doc(firestoreDB, `Lobby/${handleRoomCode}`);
     await updateDoc(roomDoc, { inGame: true });
     navigate('/2faas');
   };
@@ -72,12 +75,12 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   return (
     <div className="lobby-page">
       <div className="input-container">
-        <input
+        {/* <input
           type="text"
           placeholder="Room Code"
           value={localRoomCode}
           onChange={(e) => setLocalRoomCode(e.target.value)}
-        />
+        /> */}
         <input
           type="text"
           placeholder="Player Name"

@@ -127,7 +127,7 @@ const BusDriver = ({ roomCode, playerName, gameData }) => {
         <Pyramid pyramid={pyramid} onCardClick={handleCardClick} />
         {/* <Hand hand={hand} /> */}
         <div className="players-list">
-          <h3>Players in Game:</h3>
+          <h3>Players in Game ({roomCode}):</h3>
           <ul>
             {players.map((player, index) => (
               <li key={index}>{player.name}</li>
