@@ -3,6 +3,9 @@ import Lobby from './components/Lobby';
 import BusDriver from './components/BusDriver';
 import HomePage from './components/HomePage';
 import RulesPage from './components/RulesPage';
+import SignIn from './components/authentication/SignIn';
+import SignUp from './components/authentication/SignIn';
+import AuthDetails from './components/authentication/AuthDetails';
 
 const App = () => {
   const [gameData, setGameData] = useState(null);
@@ -15,7 +18,12 @@ const App = () => {
   return (
     <div>
       {!inLobby && !inRules ? (
+        <>
         <HomePage setInLobby={setInLobby} setInRules={setInRules} />
+        <SignIn/>
+        <SignUp/>
+        <AuthDetails/>
+        </>
       ) : (
         inRules ? (
           <RulesPage setInRules={setInRules} />
