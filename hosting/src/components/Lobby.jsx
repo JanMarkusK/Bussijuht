@@ -75,12 +75,12 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   return (
     <div className="lobby-page">
       <div className="input-container">
-        {/* <input
+        {isJoining ? (<input
           type="text"
           placeholder="Room Code"
           value={localRoomCode}
           onChange={(e) => setLocalRoomCode(e.target.value)}
-        /> */}
+        />) : (<></>)}
         <input
           type="text"
           placeholder="Player Name"
