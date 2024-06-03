@@ -1,7 +1,7 @@
 // src/components/Lobby.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { firestoreDB, doc, setDoc, updateDoc, getDoc, onSnapshot, collection, addDoc, query } from '../firebase';
+import { firestoreDB, doc, setDoc, updateDoc, getDoc, getDocs, onSnapshot, collection, addDoc, query, where } from '../firebase';
 import PropTypes from 'prop-types';
 import '../assets/css/Lobby.css'; // Import the CSS file
 
@@ -39,25 +39,57 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
 
 
   const handleCreateRoom = async () => {
-    handleRoomCode;
+    await handleRoomCode;
     await addDoc(lobbyCollectionRef, {
       roomCode: localRoomCode, 
       players: [{ name: localPlayerName, ready: false }], //siia teha hiljem teine versioon kus on sisselogitud kasutaja andmed
-      inGame: false });
-      handleJoinRoom("roomCode", localRoomCode);
+      inGame: false 
+    });
+    await handleJoinRoom();
   };
 
-  const handleJoinRoom = async (fieldName, localRoomCode) => {
-    const q = query(lobbyCollectionRef.where(fieldName, '==', localRoomCode));
-    const docSnapshot = await getDoc(q);
-    if (docSnapshot.exists()) {
-      const roomData = docSnapshot.data();
-      const updatedPlayers = [...roomData.players, { name: localPlayerName, ready: false }];
-      await updateDoc(q, { players: updatedPlayers });
-      /*joinRoom(localRoomCode);*/
+  const handleJoinRoom = async () => {
+    try {
+      const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach(async (doc) => {
+          const roomData = doc.data();
+          const updatedPlayers = [...roomData.players, { name: localPlayerName, ready: false }];
+          await updateDoc(doc.ref, { players: updatedPlayers });
+          /*joinRoom(localRoomCode);*/
+        });
+      } else {
+        console.log('No matching room found for the provided room code.');
+      }
+    } catch (error) {
+      console.error('Error joining room:', error);
     }
   };
-
+  
+  const handleStartGame = async () => {
+    try {
+      //Otsib docs
+      const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
+      //Toob docs
+      const querySnapshot = await getDocs(q);
+      //Käib docs läbi
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach((doc) => {
+          console.log('Document data:', doc.data());
+          if (doc.exists()) {
+            const docRef = doc.data;
+            updateDoc(docRef, { inGame: true });
+            navigate('/2faas');
+          }
+        })
+      } else {
+        console.log('No matching room found for the provided room code.');
+      }
+    } catch (error) {
+      console.error('Error starting game:', error);
+    }
+  };
   /*const joinRoom = (localRoomCode) => {
     const roomDoc = doc(firestoreDB, `Lobby`, localRoomCode);
     onSnapshot(roomDoc, (snapshot) => {
@@ -71,11 +103,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     });
   };
   */
-  const handleStartGame = async (fieldName) => {
-    const q = query(lobbyCollectionRef.where(fieldName, '==', localRoomCode));
-    await updateDoc(q, { inGame: true });
-    navigate('/2faas');
-  };
+
 
   return (
     <div className="lobby-page">
@@ -100,7 +128,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
         <button onClick={() => setIsJoining(!isJoining)}>
           {isJoining ? 'Switch to Create' : 'Switch to Join'}
         </button>
-        <button onClick={handleStartGame("roomCode", )}>Start Game</button>
+        <button onClick={handleStartGame}>Start Game</button>
       </div>
       <div className="player-list-container">
         <h3>Players in Lobby:</h3>
