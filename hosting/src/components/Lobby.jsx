@@ -31,7 +31,10 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   }, [localRoomCode, setGameData, setInGame]);
 
   const handleCreateRoom = async () => {
-    const roomDoc = doc(firestoreDB, `Lobby/${localRoomCode}`);
+    const newRoomCode = Math.floor(Math.random() * 90000) + 10000;
+    setRoomCode(newRoomCode); // Use the prop function to set the room code in the parent component
+
+    const roomDoc = doc(firestoreDB, `Lobby/${newRoomCode}`);
     await setDoc(roomDoc, { players: [{ name: localPlayerName, ready: false }], inGame: false });
     joinRoom(localRoomCode);
   };
