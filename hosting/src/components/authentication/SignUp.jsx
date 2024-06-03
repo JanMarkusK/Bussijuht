@@ -17,7 +17,7 @@ const SignUp = () => {
             })
     }
   return (
-    <div className='sign-ingcontainer'>
+    <div className='sign-upcontainer'>
       <form onSubmit={signUp}>
         <label>Create an account</label>
         <input 

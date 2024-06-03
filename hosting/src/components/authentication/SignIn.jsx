@@ -17,7 +17,7 @@ const SignIn = () => {
             })
     }
   return (
-    <div className='sign-ingcontainer'>
+    <div className='sign-incontainer'>
       <form onSubmit={signIn}>
         <label>Log in to your account</label>
         <input 
