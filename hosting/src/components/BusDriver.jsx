@@ -5,7 +5,7 @@ import Hand from './Hand';
 import { generateDeck, shuffleDeck } from '../utils/deck';
 import { ref, set, onValue, update } from 'firebase/database';
 import { realtimeDB } from '../firebase';
-import '../assets/css/styles.css';
+import '../assets/css/BusDriver.css';
 import PropTypes from 'prop-types';
 
 const BusDriver = ({ roomCode, playerName, gameData }) => {
@@ -123,11 +123,10 @@ const BusDriver = ({ roomCode, playerName, gameData }) => {
   };
 
   return (
-    <div className="bus-driver-container">
-      <div className="bus-driver">
+    <div className="bus-driver-page">
+      <div className="bus-driver-container">
         <h1>Bus Driver Game</h1>
         <Pyramid pyramid={pyramid} onCardClick={handleCardClick} />
-        {/* <Hand hand={hand} /> */}
         <div className="players-list">
           <h3>Players in Game:</h3>
           <ul>

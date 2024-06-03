@@ -1,14 +1,17 @@
 // src/components/Lobby.jsx
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ref, set, onValue, update } from 'firebase/database';
 import { realtimeDB } from '../firebase';
 import PropTypes from 'prop-types';
+import '../assets/css/Lobby.css'; // Import the CSS file
 
 const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   const [localRoomCode, setLocalRoomCode] = useState('');
   const [localPlayerName, setLocalPlayerName] = useState('');
   const [isJoining, setIsJoining] = useState(true);
   const [players, setPlayers] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (localRoomCode) {
@@ -54,31 +57,35 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   const handleStartGame = () => {
     const roomRef = ref(realtimeDB, `rooms/${localRoomCode}`);
     update(roomRef, { inGame: true });
+    navigate('/2faas');
   };
 
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="Room Code"
-        value={localRoomCode}
-        onChange={(e) => setLocalRoomCode(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="Player Name"
-        value={localPlayerName}
-        onChange={(e) => setLocalPlayerName(e.target.value)}
-      />
-      {isJoining ? (
-        <button onClick={handleJoinRoom}>Join Room</button>
-      ) : (
-        <button onClick={handleCreateRoom}>Create Room</button>
-      )}
-      <button onClick={() => setIsJoining(!isJoining)}>
-        {isJoining ? 'Switch to Create' : 'Switch to Join'}
-      </button>
-      <div>
+    <div className="lobby-page">
+      <div className="input-container">
+        <input
+          type="text"
+          placeholder="Room Code"
+          value={localRoomCode}
+          onChange={(e) => setLocalRoomCode(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Player Name"
+          value={localPlayerName}
+          onChange={(e) => setLocalPlayerName(e.target.value)}
+        />
+        {isJoining ? (
+          <button onClick={handleJoinRoom}>Join Room</button>
+        ) : (
+          <button onClick={handleCreateRoom}>Create Room</button>
+        )}
+        <button onClick={() => setIsJoining(!isJoining)}>
+          {isJoining ? 'Switch to Create' : 'Switch to Join'}
+        </button>
+        <button onClick={handleStartGame}>Start Game</button>
+      </div>
+      <div className="player-list-container">
         <h3>Players in Lobby:</h3>
         <ul>
           {players.map((player, index) => (
@@ -86,7 +93,6 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
           ))}
         </ul>
       </div>
-      <button onClick={handleStartGame}>Start Game</button>
     </div>
   );
 };
