@@ -23,4 +23,4 @@ const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
 
-export { realtimeDB };
+export { app, realtimeDB, analytics, auth };

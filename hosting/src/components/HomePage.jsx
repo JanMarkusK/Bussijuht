@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import '../assets/css/HomePage.css'; 
 import drinkingImage from '../assets/drinking.png'; 
@@ -7,26 +8,26 @@ import porgandImage from '/banner/porgand.png';
 import rahaImage from '/banner/200.png';
 import viinImage from '/banner/viin.png';
 
-
 const HomePageBanner = () => {
   return (
-      <div className="banner">
-          <img src={bannerImage} alt="Banner" className="banner-image" />
-          <img src={porgandImage} alt="Porgand" className="overlay-image porgand" />
-          <img src={rahaImage} alt="200" className="overlay-image raha" />
-          <img src={viinImage} alt="Viin" className="overlay-image viin" />
-      </div>
+    <div className="banner">
+      <img src={bannerImage} alt="Banner" className="banner-image" />
+      <img src={porgandImage} alt="Porgand" className="overlay-image porgand" />
+      <img src={rahaImage} alt="200" className="overlay-image raha" />
+      <img src={viinImage} alt="Viin" className="overlay-image viin" />
+    </div>
   );
 };
 
-
 const HomePage = ({ setInLobby, setInRules, setInCreateAccount, setInLogIn }) => {
+  const navigate = useNavigate();
+
   const handleCreateAccountClick = () => {
     setInCreateAccount(true);
   };
 
   const handleJoinGameClick = () => {
-    setInLobby(true);
+    navigate('/guestlobby');
   };
 
   const handleLogInClick = () => {
@@ -34,7 +35,7 @@ const HomePage = ({ setInLobby, setInRules, setInCreateAccount, setInLogIn }) =>
   };
 
   const handleRulesClick = () => {
-    setInRules(true);
+    navigate('/rules');
   };
 
   return (

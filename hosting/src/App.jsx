@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Lobby from './components/Lobby';
 import BusDriver from './components/BusDriver';
 import HomePage from './components/HomePage';
@@ -16,35 +17,36 @@ const App = () => {
   const [inRules, setInRules] = useState(false);
 
   return (
-    <div>
-      {!inLobby && !inRules ? (
-        <>
-        <HomePage setInLobby={setInLobby} setInRules={setInRules} />
-        <SignIn/>
-        <SignUp/>
-        <AuthDetails/>
-        </>
-      ) : (
-        inRules ? (
-          <RulesPage setInRules={setInRules} />
-        ) : (
-          !inGame ? (
+    <Router>
+      <div>
+        <Routes>
+          <Route path="/" element={
+            <>
+              <HomePage setInLobby={setInLobby} setInRules={setInRules} />
+              <SignIn />
+              <SignUp />
+              <AuthDetails />
+            </>
+          } />
+          <Route path="/rules" element={<RulesPage setInRules={setInRules} />} />
+          <Route path="/guestlobby" element={
             <Lobby
               setGameData={setGameData}
               setRoomCode={setRoomCode}
               setPlayerName={setPlayerName}
               setInGame={setInGame}
             />
-          ) : (
+          } />
+          <Route path="/2faas" element={
             <BusDriver
               roomCode={roomCode}
               playerName={playerName}
               gameData={gameData}
             />
-          )
-        )
-      )}
-    </div>
+          } />
+        </Routes>
+      </div>
+    </Router>
   );
 };
 

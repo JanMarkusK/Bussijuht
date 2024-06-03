@@ -1,11 +1,14 @@
 // src/components/RulesPage.jsx
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import '../assets/css/RulesPage.css'; // Veendu, et sul on see CSS fail olemas
 
 const RulesPage = ({ setInRules }) => {
+  const navigate = useNavigate();
+
   const handleBackClick = () => {
-    setInRules(false);
+    navigate('/');
   };
 
   return (
