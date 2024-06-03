@@ -4,7 +4,7 @@ import Pyramid from './Pyramid';
 import Hand from './Hand';
 import { generateDeck, shuffleDeck } from '../utils/deck';
 import { firestoreDB, doc, setDoc, updateDoc, onSnapshot } from '../firebase';
-import '../styles.css';
+import '../assets/css/styles.css';
 import PropTypes from 'prop-types';
 
 const BusDriver = ({ roomCode, playerName, gameData }) => {
