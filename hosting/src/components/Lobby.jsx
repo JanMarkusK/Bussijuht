@@ -1,8 +1,7 @@
 // src/components/Lobby.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ref, set, onValue, update } from 'firebase/database';
-import { realtimeDB } from '../firebase';
+import { firestoreDB, doc, setDoc, updateDoc, getDoc, onSnapshot } from '../firebase';
 import PropTypes from 'prop-types';
 import '../assets/css/Lobby.css'; // Import the CSS file
 
@@ -15,9 +14,9 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
 
   useEffect(() => {
     if (localRoomCode) {
-      const roomRef = ref(realtimeDB, `rooms/${localRoomCode}`);
-      onValue(roomRef, (snapshot) => {
-        const data = snapshot.val();
+      const roomDoc = doc(firestoreDB, `Lobby/${localRoomCode}`);
+      const unsubscribe = onSnapshot(roomDoc, (snapshot) => {
+        const data = snapshot.data();
         if (data) {
           setPlayers(data.players || []);
           if (data.inGame) {
@@ -26,25 +25,32 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
           }
         }
       });
+
+      return () => unsubscribe();
     }
   }, [localRoomCode, setGameData, setInGame]);
 
   const handleCreateRoom = async () => {
-    const roomRef = ref(realtimeDB, `rooms/${localRoomCode}`);
-    set(roomRef, { players: [{ name: localPlayerName, ready: false }], inGame: false });
+    const roomDoc = doc(firestoreDB, `Lobby/${localRoomCode}`);
+    await setDoc(roomDoc, { players: [{ name: localPlayerName, ready: false }], inGame: false });
     joinRoom(localRoomCode);
   };
 
   const handleJoinRoom = async () => {
-    const roomRef = ref(realtimeDB, `rooms/${localRoomCode}/players`);
-    update(roomRef, { [players.length]: { name: localPlayerName, ready: false } });
-    joinRoom(localRoomCode);
+    const roomDoc = doc(firestoreDB, `Lobby/${localRoomCode}`);
+    const docSnapshot = await getDoc(roomDoc);
+    if (docSnapshot.exists()) {
+      const roomData = docSnapshot.data();
+      const updatedPlayers = [...roomData.players, { name: localPlayerName, ready: false }];
+      await updateDoc(roomDoc, { players: updatedPlayers });
+      joinRoom(localRoomCode);
+    }
   };
 
   const joinRoom = (code) => {
-    const roomRef = ref(realtimeDB, `rooms/${code}`);
-    onValue(roomRef, (snapshot) => {
-      const data = snapshot.val();
+    const roomDoc = doc(firestoreDB, `Lobby/${code}`);
+    onSnapshot(roomDoc, (snapshot) => {
+      const data = snapshot.data();
       if (data) {
         setGameData(data);
         setRoomCode(code);
@@ -54,9 +60,9 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     });
   };
 
-  const handleStartGame = () => {
-    const roomRef = ref(realtimeDB, `rooms/${localRoomCode}`);
-    update(roomRef, { inGame: true });
+  const handleStartGame = async () => {
+    const roomDoc = doc(firestoreDB, `Lobby/${localRoomCode}`);
+    await updateDoc(roomDoc, { inGame: true });
     navigate('/2faas');
   };
 
