@@ -1,0 +1,61 @@
+/* src/assets/css/Lobby.css */
+
+.lobby-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #6ec03c; /* Same background color as HomePage for consistency */
+    text-align: center; /* Center text and image horizontally */
+  }
+  
+  .lobby-page h3 {
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+  
+  .lobby-page input {
+    padding: 10px;
+    font-size: 1em;
+    margin: 10px 0;
+    width: 200px;
+  }
+  
+  .lobby-page button {
+    padding: 10px 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin: 10px;
+  }
+  
+  .lobby-page ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .lobby-page li {
+    margin: 5px 0;
+  }
+  
+  .input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .player-list-container {
+    margin-top: 20px;
+  }
+  
+  .lobby-page .button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .lobby-page .button-container button {
+    margin: 10px;
+  }
+  
