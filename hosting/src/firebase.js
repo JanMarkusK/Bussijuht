@@ -1,6 +1,6 @@
 // src/firebase.js
 import { initializeApp } from 'firebase/app';
-import { getFirestore, doc, setDoc, updateDoc, getDoc, onSnapshot } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, updateDoc, getDoc, onSnapshot, collection, addDoc, query } from 'firebase/firestore';
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 
@@ -23,4 +23,4 @@ const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
 
-export { app, analytics, auth, firestoreDB, doc, setDoc, updateDoc, getDoc, onSnapshot  };
+export { app, analytics, auth, firestoreDB, doc, setDoc, updateDoc, getDoc, onSnapshot, collection, addDoc, query };
