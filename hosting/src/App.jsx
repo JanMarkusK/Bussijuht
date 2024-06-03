@@ -5,7 +5,7 @@ import BusDriver from './components/BusDriver';
 import HomePage from './components/HomePage';
 import RulesPage from './components/RulesPage';
 import SignIn from './components/authentication/SignIn';
-import SignUp from './components/authentication/SignIn';
+import SignUp from './components/authentication/SignUp';
 import AuthDetails from './components/authentication/AuthDetails';
 
 const App = () => {
