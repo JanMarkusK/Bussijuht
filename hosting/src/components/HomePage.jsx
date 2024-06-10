@@ -1,3 +1,4 @@
+// src/components/HomePage.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
