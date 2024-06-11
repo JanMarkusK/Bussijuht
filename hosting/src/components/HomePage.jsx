@@ -38,6 +38,10 @@ const HomePage = ({ setInLobby, setInRules, setInCreateAccount, setInLogIn }) =>
     navigate('/rules');
   };
 
+  const handleProfileClick = () => {
+    navigate('/profile');
+  };
+
   return (
     <div className="home-page">
       <header id="pagebegin">
@@ -76,6 +80,7 @@ const HomePage = ({ setInLobby, setInRules, setInCreateAccount, setInLogIn }) =>
           <button onClick={handleLogInClick} className="button-centered">Log In(puudub)</button>
         </div>  
         <button onClick={handleRulesClick} className="offset-button">Rules</button>
+        <button onClick={handleProfileClick}>Profile</button>
       </main>
       <footer>
         <hr />
@@ -90,6 +95,7 @@ HomePage.propTypes = {
   setInLobby: PropTypes.func.isRequired,
   setInLogIn: PropTypes.func.isRequired,
   setInRules: PropTypes.func.isRequired,
+  setInProfile: PropTypes.func.isRequired,
 };
 
 export default HomePage;
