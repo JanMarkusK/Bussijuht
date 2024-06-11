@@ -80,7 +80,9 @@ const HomePage = ({ setInLobby, setInRules, setInCreateAccount, setInLogIn }) =>
           <button onClick={handleLogInClick} className="button-centered">Log In(puudub)</button>
         </div>  
         <button onClick={handleRulesClick} className="offset-button">Rules</button>
-        <button onClick={handleProfileClick}>Profile</button>
+        <div>
+          <button onClick={handleProfileClick}>Profile</button>
+        </div>
       </main>
       <footer>
         <hr />
