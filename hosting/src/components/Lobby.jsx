@@ -46,7 +46,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     //Paneb kõik vajaliku info Firestore doci
     await addDoc(lobbyCollectionRef, {
       roomCode: newRoomCode,
-      players: [{ name: localPlayerName, ready: false }],
+      players: [{ name: localPlayerName, host: true, ready: false }],
       inGame: false
     });
     //Muudab proppide valuet, mdea kas need on tegelt vajalikud veel
@@ -66,7 +66,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     if (!querySnapshot.empty) {
       querySnapshot.forEach(async (doc) => {
         const roomData = doc.data();
-        const updatedPlayers = [...roomData.players, { name: localPlayerName, ready: false }];
+        const updatedPlayers = [...roomData.players, { name: localPlayerName, host: false, ready: false }];
         await updateDoc(doc.ref, { players: updatedPlayers });
       });
     } else {
