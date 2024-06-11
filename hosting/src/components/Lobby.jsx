@@ -24,6 +24,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
             if (data.inGame) {
               setInGame(true);
               setGameData(data);
+              navigate('/2faas');
             }
           }
         });
@@ -49,6 +50,8 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
       players: [{ name: localPlayerName, host: true, ready: false }],
       inGame: false
     });
+    localStorage.setItem('lobbyCode', newRoomCode)
+    localStorage.setItem('playerName', localPlayerName)
     //Muudab proppide valuet, mdea kas need on tegelt vajalikud veel
     setPlayerName(localPlayerName);
     setRoomCode(localRoomCode);
@@ -60,7 +63,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
       alert("Please enter both a room code and a player name.");
       return;
     }
-
+    localStorage.setItem('playerName', localPlayerName)
     const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
     const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {
