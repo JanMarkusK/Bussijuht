@@ -37,7 +37,6 @@ const BusDriver = () => {
     );
     const querySnapshotHost = await getDocs(q);
 
-
     if (!querySnapshotHost.empty) {
       let deck = await fetchDeck(); // Fetch the deck from Firestore
       deck = shuffleDeck(deck); // Shuffle the fetched deck
@@ -56,7 +55,6 @@ const BusDriver = () => {
       }));
 
       // Create a new document in the pyramid collection
-
       const pyramidDocRef = await addDoc(pyramidCollectionRef, {
         roomCode: localRoomCode
       });
@@ -78,22 +76,49 @@ const BusDriver = () => {
       });
     
       setPyramid(pyramidCards);
-      
+      setHand(deck.splice(0, 5)); // Give the player the first 5 cards from the remaining deck
+      setCardsTurned(new Array(pyramidSetup.length).fill(false));
+      setGameOver(false);
+      setWin(false); // Reset win state
+      setCurrentRow(4); // Reset to the bottom row
     } else {
-      await getDoc(query(pyramidCollectionRef, where('roomCode', '==', localRoomCode)));
-    }
+      // Fetch the existing pyramid data if not the host
+      const q = query(pyramidCollectionRef, where('roomCode', '==', localRoomCode));
+      const querySnapshot = await getDocs(q);
 
-    setHand(deck.splice(0, 5)); // Give the player the first 5 cards from the remaining deck
-    setCardsTurned(new Array(pyramidSetup.length).fill(false));
-    setGameOver(false);
-    setWin(false); // Reset win state
-    setCurrentRow(4); // Reset to the bottom row
+      if (!querySnapshot.empty) {
+        const pyramidData = querySnapshot.docs[0].data();
+        const pyramidCards = [];
+        let currentRow = [];
+        let currentRowIndex = 0;
+
+        for (const key in pyramidData) {
+          if (key.startsWith('c')) {
+            const { faceUp, name, row } = pyramidData[key];
+            if (row !== currentRowIndex) {
+              pyramidCards.push(currentRow);
+              currentRow = [];
+              currentRowIndex = row;
+            }
+            currentRow.push({ faceUp, value: name });
+          }
+        }
+        pyramidCards.push(currentRow); // push the last row
+        setPyramid(pyramidCards);
+
+        // For simplicity, assume the remaining deck is stored somewhere, or handle this logic separately
+        // setHand(remainingDeckFromFirestore); // You need to implement fetching the hand for non-host players
+        setCardsTurned(new Array(pyramidCards.length).fill(false));
+        setGameOver(false);
+        setWin(false);
+        setCurrentRow(4);
+      } else {
+        console.error('No pyramid data found for this room code.');
+      }
+    }
     console.log('Setup game completed');
-    
   };
   
-  
-
   const handleCardClick = (rowIndex, cardIndex) => {
     if (gameOver || win || cardsTurned[rowIndex] || rowIndex !== currentRow) return;
 
@@ -118,8 +143,6 @@ const BusDriver = () => {
       setWin(true);
     }
   };
-
-
 
   return (
     <div className="bus-driver-container">
