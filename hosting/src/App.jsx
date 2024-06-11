@@ -24,10 +24,10 @@ const App = () => {
             <>
               <HomePage setInLobby={setInLobby} setInRules={setInRules} />
               <SignIn />
-              <SignUp />
               <AuthDetails />
             </>
           } />
+          <Route path="/signup" element={<SignUp />} />
           <Route path="/rules" element={<RulesPage setInRules={setInRules} />} />
           <Route path="/guestlobby" element={
             <Lobby

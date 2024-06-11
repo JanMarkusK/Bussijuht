@@ -1,4 +1,3 @@
-// src/components/HomePage.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -24,7 +23,7 @@ const HomePage = ({ setInLobby, setInRules, setInCreateAccount, setInLogIn }) =>
   const navigate = useNavigate();
 
   const handleCreateAccountClick = () => {
-    setInCreateAccount(true);
+    navigate('/signup');
   };
 
   const handleJoinGameClick = () => {
@@ -72,7 +71,7 @@ const HomePage = ({ setInLobby, setInRules, setInCreateAccount, setInLogIn }) =>
         <h2>Matemaatikud lahendavad õllesid!</h2>
         <img src={drinkingImage} alt="Drinking Game" className="home-page-image" />
         <div className="button-container">
-          <button onClick={handleCreateAccountClick}>Create Account(puudub)</button>
+          <button onClick={handleCreateAccountClick}>Create Account</button>
           <button onClick={handleJoinGameClick}>Join by Guest</button>
           <button onClick={handleLogInClick} className="button-centered">Log In(puudub)</button>
         </div>  
