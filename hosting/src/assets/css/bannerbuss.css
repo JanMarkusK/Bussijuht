@@ -39,7 +39,9 @@
 .smoke {
     left: 80px;
     top: 350px;
-    animation: smoking 3s ease-out infinite;
+    animation: moveBuss 12s linear;
+    animation: moveSmoke 3s linear infinite;
+    animation-delay: .5s;
   }
   
 .pealkiri {
