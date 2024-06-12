@@ -1,0 +1,76 @@
+.peamine {
+	top: 10px;
+	left: 158px;
+	transform-origin: 50% 177px;
+	/*animation: spin 20s linear infinite;*/
+	position: absolute;
+}
+
+@keyframes swing2 {
+	 0% {transform: rotate(0deg);
+	 
+	 }
+	100% {transform: rotate(-120deg);
+	
+	}
+}
+
+.viin {
+	transform-origin: 50% 0%;
+	animation: swing2 0.4s ease-in-out infinite alternate;
+	position: absolute;
+	width: 90px;
+	height: 60px;
+	top: 68px;
+	left: 767px;
+	/*animation-duration: 100s;*/
+	transform-origin: 35% 1px;
+	animation: swing2 5s infinite;
+}
+
+@keyframes move {
+	 0% {transform: translate(-70, 350) scale(0.1);
+	 
+	 }
+	100% {transform: translate(-220px, 60px) scale(1.4);
+	
+	}
+}
+
+.raha {
+	width: 90px;
+	height: 45px;
+	position: relative;
+	top: -70px;
+	left: 550px;
+	animation: move 10.3s linear infinite;
+}
+
+@keyframes move2 {
+	 0% {transform: translate(-40, 350) rotate(100deg);
+ 
+	 }
+	100% {transform: translate(-190px, 65px) rotate(-100deg);
+	
+	}
+}
+
+.porgandilaadnetoode {
+	position: relative;
+	top: 0px;
+	left: 100px;
+	width: 150px;
+	height: 90px;
+	animation: move2 3.5s linear infinite;
+}
+
+
+.peamine-border {
+    position: relative;
+    top: 18px;
+    left: -77px;
+    width: 205px;
+    height: 100px;
+    overflow: hidden;
+	/*border: 4px solid black;*/
+}

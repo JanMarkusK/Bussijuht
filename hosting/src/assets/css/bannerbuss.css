@@ -1,0 +1,124 @@
+/* src/assets/css/bannerbuss.css */
+
+.banner-container {
+  width: 800px;
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid black;*/
+  margin: 0 auto; /* Center the banner horizontally*/
+}
+
+.road-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+.tee-image {
+  width: 2500px;
+  height: 200px;
+  position: absolute;
+  left: 300px;
+  animation: moveTee 5s linear infinite;
+}
+
+.peatus {
+  top: 15px; /* Adjust position as needed */
+  left: 1550px; /* Center the bus horizontally */
+  width: 200px; /* Adjust the size as needed */
+  height: auto;
+  position: absolute;
+  z-index: 3;
+  animation: moveTee 5s linear infinite;
+  animation-delay: 0s;
+}
+
+.buss, /*.smoke, */.pealkiri {
+  position: absolute;
+}
+
+.buss {
+  top: 60px; /* Adjust position as needed */
+  left: 250px; /* Center the bus horizontally */
+  width: 120px; /* Adjust size as needed */
+  height: auto;
+  z-index: 1;
+  animation: moveBuss 5s linear forwards;
+  transform: scaleX(-1);
+}
+
+.smoke {
+  /*top: 100px;
+  left: 350px;
+  width: 50px;
+  height: auto;
+  animation: smoking 3s ease-out infinite;*/
+  
+}
+
+.smoke2 {/*
+  animation-delay: 0.5s;*/
+}
+.smoke3 {/*
+  animation-delay: 1s;*/
+}
+.smoke4 {/*
+  animation-delay: 1.5s;*/
+}
+.smoke5 {/*
+  animation-delay: 2s;*/
+}
+.smoke6 {/*
+  animation-delay: 2.5s;*/
+}
+
+.pealkiri {
+  top: 10px; /* Adjust position as needed */
+  left: 185px; /* Center the title horizontally */
+  width: 350px; /* Adjust size as needed */
+  height: auto;
+  z-index: 2;
+}
+
+@keyframes moveTee {
+  0% {
+    transform: translateX(-300px);
+  }
+  100% {
+    transform: translateX(-1867px);
+  }
+}
+
+@keyframes moveBuss {
+  0% {
+    left: -100px;
+  }
+  100% {
+    left: 400px;
+  }
+}
+
+@keyframes moveSmokeWithBus {
+  0% {
+    left: -55px;
+  }
+  100% {
+    left: 380px; /* Adjusted to move with the bus */
+  }
+}
+
+@keyframes smoking {
+  0% {
+    transform: translate(0px, 30px) scale(0.1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-130px, -25px) scale(1);
+    opacity: 0;
+  }
+}

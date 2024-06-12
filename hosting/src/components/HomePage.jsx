@@ -1,20 +1,31 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import '../assets/css/HomePage.css'; 
+import '../assets/css/HomePage.css';
+import '../assets/css/banner.css';
+import '../assets/css/bannerbuss.css';
 import drinkingImage from '../assets/drinking.png'; 
-import bannerImage from '/banner/bannerRinde.png';
-import porgandImage from '/banner/porgand.png';
-import rahaImage from '/banner/200.png';
-import viinImage from '/banner/viin.png';
+import teeImage from '/banner/tee.png';
+import bussImage from '/banner/buss.png';
+import peatusImage from '/banner/peatus.png';
+import smokeImage from '/banner/smoke.png';
+import pealkiriImage from '/banner/pealkiri.png';
 
 const HomePageBanner = () => {
   return (
-    <div className="banner">
-      <img src={bannerImage} alt="Banner" className="banner-image" />
-      <img src={porgandImage} alt="Porgand" className="overlay-image porgand" />
-      <img src={rahaImage} alt="200" className="overlay-image raha" />
-      <img src={viinImage} alt="Viin" className="overlay-image viin" />
+    <div className="banner-container">
+      <div className="road-container">
+        <img id="tee" src={teeImage} alt="tee" className="tee-image" />
+        <img id="peatus" src={peatusImage} alt="peatus" className="overlay-image peatus" />
+      </div>
+      <img id="pealkiri" src={pealkiriImage} alt="pealkiri" className="overlay-image pealkiri" />
+      <img id="buss" src={bussImage} alt="buss" className="overlay-image buss" />
+      <img id="smoke" src={smokeImage} alt="smoke" className="overlay-image smoke" />
+      <img id="smoke" src={smokeImage} alt="smoke" className="overlay-image smoke smoke2" />
+      <img id="smoke" src={smokeImage} alt="smoke" className="overlay-image smoke smoke3" />
+      <img id="smoke" src={smokeImage} alt="smoke" className="overlay-image smoke smoke4" />
+      <img id="smoke" src={smokeImage} alt="smoke" className="overlay-image smoke smoke5" />
+      <img id="smoke" src={smokeImage} alt="smoke" className="overlay-image smoke smoke6" />
     </div>
   );
 };
@@ -45,34 +56,11 @@ const HomePage = ({ setInLobby, setInRules, setInCreateAccount, setInLogIn }) =>
   return (
     <div className="home-page">
       <header id="pagebegin">
-        <img 
-          src={bannerImage} 
-          alt="lehe bänner" 
-          className="banner"
-        />
-        <div id="peamine" className="peamine">
-          <div className="peamine-border">
-            <img 
-              className="porgandilaadnetoode" 
-              src={porgandImage} 
-              alt="porgand" 
-            />
-          </div>  
-          <img 
-            className="raha" 
-            src={rahaImage} 
-            alt="klots" 
-          />
-          <img 
-            className="viin" 
-            src={viinImage} 
-            alt="alx" 
-          />
-        </div>
+        <HomePageBanner />
       </header>
       <main>
-        <h1>Tere tulemast Bussijuhi mängu!</h1>
-        <h2>Matemaatikud lahendavad õllesid!</h2>
+        <h1>Welcome to the Bus Driver Game!</h1>
+        <h2>Mathematicians solve beers!</h2>
         <img src={drinkingImage} alt="Drinking Game" className="home-page-image" />
         <div className="button-container">
           <button onClick={handleCreateAccountClick}>Create Account</button>
