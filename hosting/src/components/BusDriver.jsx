@@ -29,18 +29,18 @@ const BusDriver = () => {
     console.log('Setup game started');
     console.log('Room Code:', localRoomCode);
     console.log('Player Name:', localPlayerName);
-    //Hosti kontroll
+  
     const q = query(lobbyCollectionRef, 
       where('roomCode', '==', localRoomCode),
       where('players.name', '==', localPlayerName),
       where('players.host', '==', true)
     );
     const querySnapshotHost = await getDocs(q);
-
+  
     if (!querySnapshotHost.empty) {
-      let deck = await fetchDeck(); // Fetch the deck from Firestore
-      deck = shuffleDeck(deck); // Shuffle the fetched deck
-    
+      let deck = await fetchDeck();
+      deck = shuffleDeck(deck);
+  
       const pyramidSetup = [
         Array(1).fill('X'),
         Array(2).fill('X'),
@@ -48,17 +48,14 @@ const BusDriver = () => {
         Array(4).fill('X'),
         Array(5).fill('X')
       ];
-    
+  
       const pyramidCards = pyramidSetup.map(row => row.map(() => {
         const cardValue = deck.pop();
         return { faceUp: false, value: cardValue };
       }));
-
-      // Create a new document in the pyramid collection
-      const pyramidDocRef = await addDoc(pyramidCollectionRef, {
-        roomCode: localRoomCode
-      });
-    
+  
+      const pyramidDocRef = await addDoc(pyramidCollectionRef, { roomCode: localRoomCode });
+  
       let rowIndex = 0;
       let fieldIndex = 0;
       pyramidCards.forEach(row => {
@@ -66,32 +63,27 @@ const BusDriver = () => {
           fieldIndex++;
           const fieldName = "c" + fieldIndex;
           const { faceUp, value: cardValue } = card;
-    
-          // Update the fields of the created document
-          updateDoc(pyramidDocRef, {
-            [fieldName]: { faceUp, name: cardValue, row: rowIndex }
-          });
+          updateDoc(pyramidDocRef, { [fieldName]: { faceUp, name: cardValue, row: rowIndex } });
         });
         rowIndex++;
       });
-    
+  
       setPyramid(pyramidCards);
-      setHand(deck.splice(0, 5)); // Give the player the first 5 cards from the remaining deck
+      setHand(deck.splice(0, 5));
       setCardsTurned(new Array(pyramidSetup.length).fill(false));
       setGameOver(false);
-      setWin(false); // Reset win state
-      setCurrentRow(4); // Reset to the bottom row
+      setWin(false);
+      setCurrentRow(4);
     } else {
-      // Fetch the existing pyramid data if not the host
       const q = query(pyramidCollectionRef, where('roomCode', '==', localRoomCode));
       const querySnapshot = await getDocs(q);
-
+  
       if (!querySnapshot.empty) {
         const pyramidData = querySnapshot.docs[0].data();
         const pyramidCards = [];
         let currentRow = [];
         let currentRowIndex = 0;
-
+  
         for (const key in pyramidData) {
           if (key.startsWith('c')) {
             const { faceUp, name, row } = pyramidData[key];
@@ -103,11 +95,9 @@ const BusDriver = () => {
             currentRow.push({ faceUp, value: name });
           }
         }
-        pyramidCards.push(currentRow); // push the last row
+        pyramidCards.push(currentRow);
         setPyramid(pyramidCards);
-
-        // For simplicity, assume the remaining deck is stored somewhere, or handle this logic separately
-        // setHand(remainingDeckFromFirestore); // You need to implement fetching the hand for non-host players
+  
         setCardsTurned(new Array(pyramidCards.length).fill(false));
         setGameOver(false);
         setWin(false);
@@ -144,13 +134,42 @@ const BusDriver = () => {
     }
   };
 
+  const restartGame = async () => {
+    // Fetch and shuffle a new deck
+    let deck = await fetchDeck();
+    deck = shuffleDeck(deck);
+    
+    // Create a copy of the current pyramid
+    const newPyramid = [...pyramid];
+  
+    // Iterate through each card in the pyramid
+    newPyramid.forEach(row => {
+      row.forEach(card => {
+        if (card.faceUp) {
+          card.value = deck.pop(); // Marked line: Assign a new card value and remove it from the deck
+          card.faceUp = false; // Set the card to be face down
+        }
+      });
+    });
+  
+    // Update the state with the new pyramid and new hand
+    setPyramid(newPyramid);
+    setHand(deck.splice(0, 5)); // Give the player the first 5 cards from the remaining deck
+    
+    // Reset the state for a new game
+    setCardsTurned(new Array(pyramid.length).fill(false));
+    setGameOver(false);
+    setWin(false);
+    setCurrentRow(4);
+  };
+
   return (
     <div className="bus-driver-container">
       <div className="bus-driver">
         <h1>Bus Driver Game</h1>
         <Pyramid pyramid={pyramid} onCardClick={handleCardClick} />
-        <Hand hand={hand} />
-        {gameOver && <button onClick={setupGame}>Restart</button>}
+        {/* <Hand hand={hand} /> */}
+        {gameOver && <button onClick={restartGame}>Restart</button>}
         {win && (
           <div className="overlay">
             <div className="overlay-content">
