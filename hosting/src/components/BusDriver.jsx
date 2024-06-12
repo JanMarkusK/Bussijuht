@@ -1,6 +1,6 @@
 // src/components/BusDriver.jsx
 import React, { useState, useEffect } from 'react';
-import { firestoreDB, collection, addDoc, doc, updateDoc, getDoc, getDocs, onSnapshot, query, where } from '../firebase';
+import { firestoreDB, writeBatch, collection, addDoc, doc, updateDoc, getDoc, getDocs, onSnapshot, query, where } from '../firebase';
 import Pyramid from './Pyramid';
 import Hand from './Hand';
 import { fetchDeck, shuffleDeck } from '../utils/deck';
@@ -58,22 +58,32 @@ const BusDriver = () => {
       const pyramidDocRef = await addDoc(pyramidCollectionRef, {
         roomCode: localRoomCode
       });
-    
+      
       let rowIndex = 0;
       let fieldIndex = 0;
+      const batch = writeBatch();  // Create a batch for batched writes
+      
       pyramidCards.forEach(row => {
         row.forEach(card => {
           fieldIndex++;
-          const fieldName = "c" + fieldIndex;
+          const fieldName = `row${rowIndex}_col${fieldIndex}`;
           const { faceUp, value: cardValue } = card;
-    
-          // Update the fields of the created document
-          updateDoc(pyramidDocRef, {
+      
+          // Add the update to the batch
+          batch.update(pyramidDocRef, {
             [fieldName]: { faceUp, name: cardValue, row: rowIndex }
           });
         });
         rowIndex++;
       });
+      
+      // Commit the batch
+      try {
+        await batch.commit();
+        console.log('Pyramid created and Firestore updated');
+      } catch (error) {
+        console.error('Error creating pyramid:', error);
+      }
     
       setPyramid(pyramidCards);
       setHand(deck.splice(0, 5)); // Give the player the first 5 cards from the remaining deck
