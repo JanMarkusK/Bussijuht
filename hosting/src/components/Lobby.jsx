@@ -13,6 +13,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   const navigate = useNavigate();
   const lobbyCollectionRef = collection(firestoreDB, "Lobby");
 
+  console.log ("laen lehte")
   useEffect(() => {
     if (localRoomCode) {
       const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));

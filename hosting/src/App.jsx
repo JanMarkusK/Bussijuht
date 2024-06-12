@@ -38,11 +38,7 @@ const App = () => {
             />
           } />
           <Route path="/2faas" element={
-            <BusDriver
-              roomCode={roomCode}
-              playerName={playerName}
-              gameData={gameData}
-            />
+            <BusDriver/>
           } />
         </Routes>
       </div>
