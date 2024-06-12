@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import '../assets/css/HomePage.css';
 import '../assets/css/banner.css';
 import '../assets/css/bannerbuss.css';
-import drinkingImage from '../assets/drinking.png'; 
 import teeImage from '/banner/tee.png';
 import bussImage from '/banner/buss.png';
 import peatusImage from '/banner/peatus.png';
@@ -54,7 +53,6 @@ const HomePage = ({ setInLobby, setInRules, setInCreateAccount, setInLogIn }) =>
       <main>
         <h1>Welcome to the Bus Driver Game!</h1>
         <h2>Mathematicians solve beers!</h2>
-        <img src={drinkingImage} alt="Drinking Game" className="home-page-image" />
         <div className="button-container">
           <button onClick={handleCreateAccountClick}>Create Account</button>
           <button onClick={handleJoinGameClick}>Join by Guest</button>
@@ -65,10 +63,6 @@ const HomePage = ({ setInLobby, setInRules, setInCreateAccount, setInLogIn }) =>
           <button onClick={handleProfileClick}>Profile</button>
         </div>
       </main>
-      <footer>
-        <hr />
-        <address>TLÜ, Narva mnt 25, Tallinn 10120</address>
-      </footer>
     </div>
   );
 };

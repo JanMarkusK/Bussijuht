@@ -33,12 +33,6 @@
   text-shadow: 2px 2px 4px #000000;
 }
 
-.home-page-image { 
-  max-width: 15%;
-  height: auto;
-  margin-bottom: 20px;
-}
-
 .button-container {
   display: grid;
   grid-template-columns: repeat(2, auto);
@@ -125,6 +119,7 @@
 /* Huge size (Larger screen) 1281px and greater */
 @media (min-width: 1281px) {
   .banner-container {
+    top: 25px;
     width: 1200px;
     height: 300px;
     border: 1px solid black;
