@@ -23,10 +23,14 @@
 .home-page h1 {
   font-size: 2em;
   margin-bottom: 20px;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px #000000;
 }
 
 .home-page h2 {
   margin-bottom: 20px;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px #000000;
 }
 
 .home-page-image { 

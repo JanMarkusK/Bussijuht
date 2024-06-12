@@ -56,8 +56,8 @@ const HomePage = ({ setInLobby, setInRules, setInCreateAccount, setInLogIn }) =>
         <HomePageBanner />
       </header>
       <main>
-        <h1>Tere tulemast Bussijuhi mängu!</h1>
-        <h2>Matemaatikud lahendavad õllesid!</h2>
+        <h1>Welcome to the Bus Driver Game!</h1>
+        <h2>Mathematicians solve beers!</h2>
         <img src={drinkingImage} alt="Drinking Game" className="home-page-image" />
         <div className="button-container">
           <button onClick={handleCreateAccountClick}>Create Account(puudub)</button>
