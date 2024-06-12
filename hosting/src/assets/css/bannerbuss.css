@@ -5,8 +5,8 @@
   height: 200px;
   position: relative;
   overflow: hidden;
-  border: 1px solid black;*/
-  margin: 0 auto; /* Center the banner horizontally*/
+  border: 1px solid black;
+  margin: 0 auto; /* Center the banner horizontally */
 }
 
 .road-container {
@@ -38,7 +38,7 @@
   animation-delay: 0s;
 }
 
-.buss, /*.smoke, */.pealkiri {
+.buss, .pealkiri {
   position: absolute;
 }
 
@@ -50,31 +50,6 @@
   z-index: 1;
   animation: moveBuss 5s linear forwards;
   transform: scaleX(-1);
-}
-
-.smoke {
-  /*top: 100px;
-  left: 350px;
-  width: 50px;
-  height: auto;
-  animation: smoking 3s ease-out infinite;*/
-  
-}
-
-.smoke2 {/*
-  animation-delay: 0.5s;*/
-}
-.smoke3 {/*
-  animation-delay: 1s;*/
-}
-.smoke4 {/*
-  animation-delay: 1.5s;*/
-}
-.smoke5 {/*
-  animation-delay: 2s;*/
-}
-.smoke6 {/*
-  animation-delay: 2.5s;*/
 }
 
 .pealkiri {
@@ -100,25 +75,5 @@
   }
   100% {
     left: 400px;
-  }
-}
-
-@keyframes moveSmokeWithBus {
-  0% {
-    left: -55px;
-  }
-  100% {
-    left: 380px; /* Adjusted to move with the bus */
-  }
-}
-
-@keyframes smoking {
-  0% {
-    transform: translate(0px, 30px) scale(0.1);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-130px, -25px) scale(1);
-    opacity: 0;
   }
 }

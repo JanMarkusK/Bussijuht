@@ -6,7 +6,7 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  text-align: center; /* Center text and image horizontally */
+  text-align: center;
   background-image: url('/banner/taust.png'); /* Adjust the path according to your project structure */
   background-size: cover;
   background-position: center;
@@ -34,7 +34,7 @@
 }
 
 .home-page-image { 
-  max-width: 15%; /* pildi suurus 15% peaks sobima */
+  max-width: 15%;
   height: auto;
   margin-bottom: 20px;
 }
@@ -44,7 +44,7 @@
   grid-template-columns: repeat(2, auto);
   grid-gap: 20px;
   justify-content: center;
-  margin-bottom: 50px; /* Space below the first two rows of buttons */
+  margin-bottom: 50px;
 }
 
 .button-centered {
@@ -59,6 +59,124 @@
 }
 
 .offset-button {
-  margin-top: 50px; /* 50px below the previous button */
-  margin-left: 350px; /* 20px to the right of the centered button */
+  margin-top: 50px;
+  margin-left: 350px;
+}
+
+/* Mobile (Smartphone) 480px and below */
+@media (max-width: 480px) {
+  .banner-container {
+    width: 100%;
+    height: auto;
+    border: none;
+  }
+
+  .road-container {
+    width: 100%;
+    height: auto;
+  }
+
+  .tee-image {
+    width: 1500px; /* Adjust width for smaller screen */
+    height: auto;
+  }
+
+  .buss {
+    top: 40px;
+    left: 50px;
+    width: 100px;
+  }
+
+  .peatus {
+    top: 15px;
+    left: 1050px;
+    width: 150px;
+  }
+
+  .pealkiri {
+    top: 5px;
+    left: 50px;
+    width: 200px;
+  }
+
+  .home-page h1, .home-page h2 {
+    font-size: 1.5em;
+  }
+
+  .home-page-image {
+    max-width: 50%;
+  }
+
+  .button-container {
+    grid-template-columns: 1fr;
+    grid-gap: 10px;
+  }
+
+  .offset-button {
+    margin-left: 0;
+    margin-top: 20px;
+  }
+
+  .home-page button {
+    font-size: 1em;
+  }
+}
+
+/* Huge size (Larger screen) 1281px and greater */
+@media (min-width: 1281px) {
+  .banner-container {
+    width: 1200px;
+    height: 300px;
+    border: 1px solid black;
+  }
+
+  .road-container {
+    width: 100%;
+    height: 100%;
+  }
+
+  .tee-image {
+    width: 3000px;
+    height: 300px;
+  }
+
+  .buss {
+    top: 80px;
+    left: 400px;
+    width: 180px;
+  }
+
+  .peatus {
+    top: 20px;
+    left: 2500px;
+    width: 300px;
+  }
+
+  .pealkiri {
+    top: 15px;
+    left: 300px;
+    width: 500px;
+  }
+
+  .home-page h1, .home-page h2 {
+    font-size: 3em;
+  }
+
+  .home-page-image {
+    max-width: 20%;
+  }
+
+  .button-container {
+    grid-template-columns: repeat(3, auto);
+    grid-gap: 30px;
+  }
+
+  .offset-button {
+    margin-left: 400px;
+    margin-top: 30px;
+  }
+
+  .home-page button {
+    font-size: 1.5em;
+  }
 }
