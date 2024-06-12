@@ -24,7 +24,7 @@ const SignUp = () => {
     const userCollectionRef = collection(firestoreDB, "User");
 
     const handleSignUp = async () => {
-        // Paneb kõik vajaliku info Firestore doci
+        //Paneb kõik vajaliku info Firestore doci
         await addDoc(userCollectionRef, {
             firstName: firstName,
             lastName: lastName,
@@ -33,7 +33,6 @@ const SignUp = () => {
             age: age,
             relationshipStatus: relationshipStatus,
             favoriteDrink: favoriteDrink,
-            email: email,
         });
     };
 
@@ -47,8 +46,8 @@ const SignUp = () => {
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 console.log(userCredential);
-                handleSignUp();
                 setSuccessMessage("User created successfully!");
+                // Additional user information can be saved to your database here
             }).catch((error) => {
                 console.log(error);
                 setErrorMessage(error.message);
@@ -62,7 +61,7 @@ const SignUp = () => {
 
                 <input 
                     type="text" 
-                    placeholder='Enter your first name' 
+                    placeholder='Enter your first name *' 
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     required
@@ -70,7 +69,7 @@ const SignUp = () => {
 
                 <input 
                     type="text" 
-                    placeholder='Enter your last name' 
+                    placeholder='Enter your last name *' 
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     required
@@ -78,7 +77,7 @@ const SignUp = () => {
 
                 <input 
                     type="text" 
-                    placeholder='Enter your username' 
+                    placeholder='Enter your username *' 
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     required
@@ -86,7 +85,7 @@ const SignUp = () => {
 
                 <input 
                     type="email" 
-                    placeholder='Enter your email' 
+                    placeholder='Enter your email *' 
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -94,7 +93,7 @@ const SignUp = () => {
 
                 <input 
                     type="password" 
-                    placeholder='Enter your password' 
+                    placeholder='Enter your password *' 
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -102,7 +101,7 @@ const SignUp = () => {
 
                 <input 
                     type="password" 
-                    placeholder='Confirm your password' 
+                    placeholder='Confirm your password *' 
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
@@ -125,7 +124,7 @@ const SignUp = () => {
                     onChange={(e) => setAge(e.target.value)}
                     min="1"
                     max="100"
-                    required
+                    
                 />
 
                 <select
@@ -148,8 +147,7 @@ const SignUp = () => {
                 {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                 {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
                 
-                <button type='submit'>Sign Up</button>
-                {successMessage && <button onClick={() => navigate('/profile')}>My Profile</button>}
+                <button type='submit' onClick={handleSignUp}>Sign Up</button>
             </form>
             <Link to="/login" className='login-link'>Have an account? Log in</Link>
             <button onClick={() => navigate('/')} className='back-button'>Back</button>
