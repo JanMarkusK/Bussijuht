@@ -19,6 +19,7 @@ const HomePageBanner = () => {
         <img id="tee" src={teeImage} alt="tee" className="tee-image" />
         <img id="peatus" src={peatusImage} alt="peatus" className="overlay-image peatus" />
       </div>
+      <img id="pealkiri" src={pealkiriImage} alt="pealkiri" className="overlay-image pealkiri" />
       <img id="buss" src={bussImage} alt="buss" className="overlay-image buss" />
       <img id="smoke" src={smokeImage} alt="smoke" className="overlay-image smoke" />
       <img id="smoke" src={smokeImage} alt="smoke" className="overlay-image smoke smoke2" />
@@ -26,7 +27,6 @@ const HomePageBanner = () => {
       <img id="smoke" src={smokeImage} alt="smoke" className="overlay-image smoke smoke4" />
       <img id="smoke" src={smokeImage} alt="smoke" className="overlay-image smoke smoke5" />
       <img id="smoke" src={smokeImage} alt="smoke" className="overlay-image smoke smoke6" />
-      <img id="pealkiri" src={pealkiriImage} alt="pealkiri" className="overlay-image pealkiri" />
     </div>
   );
 };

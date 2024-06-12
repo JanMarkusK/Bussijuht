@@ -5,8 +5,8 @@
   height: 200px;
   position: relative;
   overflow: hidden;
-  border: 1px solid black;
-  margin: 0 auto; /* Center the banner horizontally */
+  border: 1px solid black;*/
+  margin: 0 auto; /* Center the banner horizontally*/
 }
 
 .road-container {
@@ -28,15 +28,17 @@
 }
 
 .peatus {
-  width: 100px; /* Adjust the size as needed */
+  top: 15px; /* Adjust position as needed */
+  left: 1550px; /* Center the bus horizontally */
+  width: 200px; /* Adjust the size as needed */
   height: auto;
   position: absolute;
-  top: 50px; /* Adjust position as needed */
+  z-index: 3;
   animation: moveTee 5s linear infinite;
   animation-delay: 0s;
 }
 
-.buss, .smoke, .pealkiri {
+.buss, /*.smoke, */.pealkiri {
   position: absolute;
 }
 
@@ -45,34 +47,34 @@
   left: 250px; /* Center the bus horizontally */
   width: 120px; /* Adjust size as needed */
   height: auto;
+  z-index: 1;
   animation: moveBuss 5s linear forwards;
-  transform: scaleX(-1)
-  
+  transform: scaleX(-1);
 }
 
 .smoke {
-  top: 100px; /* Adjust position as needed */
-  left: 350px; /* Adjust position as needed */
-  width: 50px; /* Adjust size as needed */
+  /*top: 100px;
+  left: 350px;
+  width: 50px;
   height: auto;
-  animation: smoking 3s ease-out infinite;
-  transform: scaleX(-1)
+  animation: smoking 3s ease-out infinite;*/
+  
 }
 
-.smoke2 {
-	animation-delay: .5s;
+.smoke2 {/*
+  animation-delay: 0.5s;*/
 }
-.smoke3 {
-	animation-delay: 1s;
+.smoke3 {/*
+  animation-delay: 1s;*/
 }
-.smoke4 {
-	animation-delay: 1.5s;
+.smoke4 {/*
+  animation-delay: 1.5s;*/
 }
-.smoke5 {
-	animation-delay: 2s;
+.smoke5 {/*
+  animation-delay: 2s;*/
 }
-.smoke6 {
-	animation-delay: 2.5s;
+.smoke6 {/*
+  animation-delay: 2.5s;*/
 }
 
 .pealkiri {
@@ -80,6 +82,7 @@
   left: 185px; /* Center the title horizontally */
   width: 350px; /* Adjust size as needed */
   height: auto;
+  z-index: 2;
 }
 
 @keyframes moveTee {
@@ -100,13 +103,22 @@
   }
 }
 
-@keyframes smoking {
+@keyframes moveSmokeWithBus {
   0% {
-    left: 380px;
+    left: -55px;
   }
   100% {
-    left: 150px;
+    left: 380px; /* Adjusted to move with the bus */
   }
-	0%{transform: translate(0px, 20px) scale(.1); opacity: 1;}
-	100%{transform: translate(80px, -30px) scale(1); opacity: 0;}
+}
+
+@keyframes smoking {
+  0% {
+    transform: translate(0px, 30px) scale(0.1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-130px, -25px) scale(1);
+    opacity: 0;
+  }
 }
