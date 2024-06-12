@@ -14,15 +14,20 @@ import pealkiriImage from '/banner/pealkiri.png';
 
 const HomePageBanner = () => {
   return (
-      <div className="bannerbussijuht">
-        <div className="road-container">
-          <img id="tee" src={teeImage} alt="tee" className="tee-image" />
-          <img id="buss" src={bussImage} alt="buss" className="overlay-image buss" />
-          <img id="peatus" src={peatusImage} alt="peatus" className="overlay-image peatus" />
-          <img id="smoke" src={smokeImage} alt="smoke" className="overlay-image smoke" />
-          <img id="pealkiri" src={pealkiriImage} alt="pealkiri" className="overlay-image pealkiri" />
-        </div>
+    <div className="banner-container">
+      <div className="road-container">
+        <img id="tee" src={teeImage} alt="tee" className="tee-image" />
+        <img id="peatus" src={peatusImage} alt="peatus" className="overlay-image peatus" />
       </div>
+      <img id="buss" src={bussImage} alt="buss" className="overlay-image buss" />
+      <img id="smoke" src={smokeImage} alt="smoke" className="overlay-image smoke" />
+      <img id="smoke" src={smokeImage} alt="smoke" className="overlay-image smoke smoke2" />
+      <img id="smoke" src={smokeImage} alt="smoke" className="overlay-image smoke smoke3" />
+      <img id="smoke" src={smokeImage} alt="smoke" className="overlay-image smoke smoke4" />
+      <img id="smoke" src={smokeImage} alt="smoke" className="overlay-image smoke smoke5" />
+      <img id="smoke" src={smokeImage} alt="smoke" className="overlay-image smoke smoke6" />
+      <img id="pealkiri" src={pealkiriImage} alt="pealkiri" className="overlay-image pealkiri" />
+    </div>
   );
 };
 
@@ -48,44 +53,7 @@ const HomePage = ({ setInLobby, setInRules, setInCreateAccount, setInLogIn }) =>
   return (
     <div className="home-page">
       <header id="pagebegin">
-        <img 
-          src={teeImage} 
-          alt="lehe bänner" 
-          className="bannerbussijuht"
-        />
-        <div class="animation-container">
-          <div class="box"></div>
-          <div class="invisible-box box1"></div>
-          <div class="invisible-box box2"></div>
-          <div id="alumine" className="alumine">
-            <div className="alumine-border">
-              <img 
-                id="buss" 
-                className="buss" 
-                src={bussImage} 
-                alt="buss" 
-              />
-            </div>  
-            <img 
-              id="peatus" 
-              className="peatus" 
-              src={peatusImage} 
-              alt="peatus" 
-            />
-            <img 
-              id="smoke" 
-              className="smoke" 
-              src={smokeImage} 
-              alt="smoke" 
-            />
-            <img 
-              id="pealkiri" 
-              className="pealkiri" 
-              src={pealkiriImage} 
-              alt="pealkiri" 
-            />
-          </div>
-        </div>
+        <HomePageBanner />
       </header>
       <main>
         <h1>Tere tulemast Bussijuhi mängu!</h1>

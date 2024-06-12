@@ -1,137 +1,112 @@
-.bannerbussijuht {
-	border: 1px solid black;
-	width: 4000px;
-	height: 250px;
-    justify-content: center;
-	position: relative;
-	overflow: hidden;
-}
+/* src/assets/css/bannerbuss.css */
 
-.bannerbussijuht {
-    animation: moveTee 5s linear infinite;
-    left: 520px;
-  }
+.banner-container {
+  width: 800px;
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid black;
+  margin: 0 auto; /* Center the banner horizontally */
+}
 
 .road-container {
-    width: 900px;
-	height: 250px;
-  }
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
 
-.buss, .peatus, .smoke {
-    position: absolute;
-  }
+.tee-image {
+  width: 2500px;
+  height: 200px;
+  position: absolute;
+  left: 300px;
+  animation: moveTee 5s linear infinite;
+}
+
+.peatus {
+  width: 100px; /* Adjust the size as needed */
+  height: auto;
+  position: absolute;
+  top: 50px; /* Adjust position as needed */
+  animation: moveTee 5s linear infinite;
+  animation-delay: 0s;
+}
+
+.buss, .smoke, .pealkiri {
+  position: absolute;
+}
 
 .buss {
-    top: 110px;
-    animation: moveBuss 12s linear;
-    height: 130px;
-    transform: scaleX(-1)
-  }
+  top: 60px; /* Adjust position as needed */
+  left: 250px; /* Center the bus horizontally */
+  width: 120px; /* Adjust size as needed */
+  height: auto;
+  animation: moveBuss 5s linear forwards;
+  transform: scaleX(-1)
   
-.peatus {
-    top: 30px;
-    left: 520px;
-    width: 250px;
-	height: auto;
-    animation: moveTee 5s linear infinite;
-  }
-  
+}
+
 .smoke {
-    left: 80px;
-    top: 350px;
-    animation: moveBuss 12s linear;
-    animation: moveSmoke 3s linear infinite;
-    animation-delay: .5s;
-  }
-  
+  top: 100px; /* Adjust position as needed */
+  left: 350px; /* Adjust position as needed */
+  width: 50px; /* Adjust size as needed */
+  height: auto;
+  animation: smoking 3s ease-out infinite;
+  transform: scaleX(-1)
+}
+
+.smoke2 {
+	animation-delay: .5s;
+}
+.smoke3 {
+	animation-delay: 1s;
+}
+.smoke4 {
+	animation-delay: 1.5s;
+}
+.smoke5 {
+	animation-delay: 2s;
+}
+.smoke6 {
+	animation-delay: 2.5s;
+}
+
 .pealkiri {
-    animation-delay: .5s;
-    top: 500px;
-    width: 350px;
-	height: auto;
-    /*animation: smoking 3s ease-out infinite;*/
-  }
+  top: 10px; /* Adjust position as needed */
+  left: 185px; /* Center the title horizontally */
+  width: 350px; /* Adjust size as needed */
+  height: auto;
+}
 
-  @keyframes moveTee {
-    0% {
-      left: 1300px;
-    }
-    100% {
-      left: -1500px;
-    }
+@keyframes moveTee {
+  0% {
+    transform: translateX(-300px);
   }
-
+  100% {
+    transform: translateX(-1867px);
+  }
+}
 
 @keyframes moveBuss {
-    0% {
-      left: 100px;
-    }
-    100% {
-      left: 500px;
-    }
+  0% {
+    left: -100px;
   }
-  
-@keyframes moveSmoke {
-    0% {
-        transform: translate(0px, 0px) scale(.1);
-        opacity: 1;
-    }
-    100% {
-        transform: translate(-800px, -400px) scale(20);
-        opacity: 0;
-    }
+  100% {
+    left: 400px;
   }
-  
-
-
-
-
-
-
-.animation-container {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    overflow: hidden; /* Säilita animatsioonid konteineri sees */
 }
 
-/* Näidisanimatsioon */
-.animation-container .box {
-    width: 50px;
-    height: 50px;
-    background-color: red;
-    position: absolute;
-    animation: move 5s linear infinite;
-}
-
-@keyframes move {
-    0% { top: 0; left: 0; }
-    50% { top: calc(100% - 50px); left: calc(100% - 50px); }
-    100% { top: 0; left: 0; }
-}
-
-
-
-
-
-
-.invisible-box {
-    width: 1000px; /* Ruudu laius */
-    height: 260px; /* Ruudu kõrgus */
-    position: absolute; /* Võimaldab ruutudel paigutuda täpselt soovitud kohta */
-    background-color: black; /* Läbipaistev taust transparent*/
-    border: none; /* Puudub piir *//*overflow: hidden;          see peaks nagu hea olema aga ei tööta*/
-}
-
-/* Näidise jaoks, et määrata ruutude asukoht */
-.invisible-box.box1 {
-    top: 10px; /* Näidispositsioon */
-    left: -835px; /* Näidispositsioon */
-}
-
-.invisible-box.box2 {
-    top: 10px; /* Näidispositsioon */
-    left: 1008px; /* Näidispositsioon */
+@keyframes smoking {
+  0% {
+    left: 380px;
+  }
+  100% {
+    left: 150px;
+  }
+	0%{transform: translate(0px, 20px) scale(.1); opacity: 1;}
+	100%{transform: translate(80px, -30px) scale(1); opacity: 0;}
 }

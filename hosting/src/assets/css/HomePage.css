@@ -6,8 +6,18 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: #6ec03c; /* Saad muuta taustavärvi vajadusel */
   text-align: center; /* Center text and image horizontally */
+  background-image: url('/banner/taust.png'); /* Adjust the path according to your project structure */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
+
+.home-page header,
+.home-page main,
+.home-page footer {
+  flex: 0 1 auto;
 }
 
 .home-page h1 {
@@ -33,7 +43,7 @@
   margin-bottom: 50px; /* Space below the first two rows of buttons */
 }
 
-.button-container .button-centered {
+.button-centered {
   grid-column: span 2;
   justify-self: center;
 }
@@ -44,7 +54,7 @@
   cursor: pointer;
 }
 
-.home-page .offset-button {
+.offset-button {
   margin-top: 50px; /* 50px below the previous button */
   margin-left: 350px; /* 20px to the right of the centered button */
 }
