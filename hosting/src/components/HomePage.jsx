@@ -35,7 +35,7 @@ const HomePage = ({ setInLobby, setInRules, setInCreateAccount, setInLogIn }) =>
   };
 
   const handleLogInClick = () => {
-    setInLogIn(true);
+    navigate('/login');
   };
 
   const handleRulesClick = () => {
@@ -58,7 +58,7 @@ const HomePage = ({ setInLobby, setInRules, setInCreateAccount, setInLogIn }) =>
         <div className="button-container">
           <button onClick={handleCreateAccountClick}>Create Account</button>
           <button onClick={handleJoinGameClick}>Join by Guest</button>
-          <button onClick={handleLogInClick} className="button-centered">Log In(puudub)</button>
+          <button onClick={handleLogInClick} className="button-centered">Log In</button>
         </div>  
         <button onClick={handleRulesClick} className="offset-button">Rules</button>
         <div>
