@@ -158,10 +158,8 @@ const BusDriver = () => {
     const newCardsTurned = [...cardsTurned];
     newCardsTurned[rowIndex] = true;
     setCardsTurned(newCardsTurned);
-
-    if (newCardsTurned.some((turned, index) => index > rowIndex && turned)) {
-      setCurrentRow(currentRow - 1);
-    }
+    
+    setCurrentRow(currentRow - 1);
 
     const cardValue = newPyramid[rowIndex][cardIndex].value.split('_')[0];
     if (cardValue === 'J' || cardValue === 'Q' || cardValue === 'K' || cardValue === 'A') {
