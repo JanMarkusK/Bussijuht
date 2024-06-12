@@ -1,6 +1,6 @@
 // src/components/BusDriver.jsx
 import React, { useState, useEffect } from 'react';
-import { firestoreDB, collection, addDoc, doc, updateDoc, getDoc, getDocs, onSnapshot, query, where } from '../firebase';
+import { firestoreDB, writeBatch, collection, addDoc, doc, updateDoc, getDoc, getDocs, onSnapshot, query, where } from '../firebase';
 import Pyramid from './Pyramid';
 import Hand from './Hand';
 import { fetchDeck, shuffleDeck } from '../utils/deck';
@@ -19,6 +19,7 @@ const BusDriver = () => {
   const pyramidCollectionRef = collection(firestoreDB, "Pyramid");
   const localPlayerName = localStorage.getItem('playerName')
   const localRoomCode = localStorage.getItem('lobbyCode')
+  const localDocID = localStorage.getItem('doc_id')
 
 
   useEffect(() => {
@@ -29,86 +30,124 @@ const BusDriver = () => {
     console.log('Setup game started');
     console.log('Room Code:', localRoomCode);
     console.log('Player Name:', localPlayerName);
-  
-    const q = query(lobbyCollectionRef, 
+
+
+    //Hosti kontroll
+    /*const q = query(lobbyCollectionRef, 
+
       where('roomCode', '==', localRoomCode),
       where('players.name', '==', localPlayerName),
       where('players.host', '==', true)
     );
     const querySnapshotHost = await getDocs(q);
-  
-    if (!querySnapshotHost.empty) {
-      let deck = await fetchDeck();
-      deck = shuffleDeck(deck);
-  
-      const pyramidSetup = [
-        Array(1).fill('X'),
-        Array(2).fill('X'),
-        Array(3).fill('X'),
-        Array(4).fill('X'),
-        Array(5).fill('X')
-      ];
-  
-      const pyramidCards = pyramidSetup.map(row => row.map(() => {
-        const cardValue = deck.pop();
-        return { faceUp: false, value: cardValue };
-      }));
-  
-      const pyramidDocRef = await addDoc(pyramidCollectionRef, { roomCode: localRoomCode });
-  
-      let rowIndex = 0;
-      let fieldIndex = 0;
-      pyramidCards.forEach(row => {
-        row.forEach(card => {
-          fieldIndex++;
-          const fieldName = "c" + fieldIndex;
-          const { faceUp, value: cardValue } = card;
-          updateDoc(pyramidDocRef, { [fieldName]: { faceUp, name: cardValue, row: rowIndex } });
+
+    console.log(querySnapshotHost);
+    */
+
+    const roomDocRef = doc(lobbyCollectionRef, localDocID);
+
+    const roomDocSnap = await getDoc(roomDocRef);
+
+    if (roomDocSnap.exists()) {
+        const roomData = roomDocSnap.data();
+        console.log(roomData);
+
+        // Check if the player is in the map and is the host
+        const players = roomData.players;
+        const localPlayer = Object.values(players).find(player => player.name === localPlayerName);
+      
+      if (localPlayer && localPlayer.host) {
+        let deck = await fetchDeck(); // Fetch the deck from Firestore
+        deck = shuffleDeck(deck); // Shuffle the fetched deck
+        console.log('Olen host');
+        const pyramidSetup = [
+          Array(1).fill('X'),
+          Array(2).fill('X'),
+          Array(3).fill('X'),
+          Array(4).fill('X'),
+          Array(5).fill('X')
+        ];
+      
+        const pyramidCards = pyramidSetup.map(row => row.map(() => {
+          const cardValue = deck.pop();
+          return { faceUp: false, value: cardValue };
+        }));
+
+        // Create a new document in the pyramid collection
+        const pyramidDocRef = await addDoc(pyramidCollectionRef, {});
+        
+        let rowIndex = 0;
+        let fieldIndex = 0;
+        const batch = writeBatch(firestoreDB);  // Create a batch for batched writes
+        
+        pyramidCards.forEach(row => {
+          row.forEach(card => {
+            fieldIndex++;
+            const fieldName = `row${rowIndex}_col${fieldIndex}`;
+            const { faceUp, value: cardValue } = card;
+        
+            // Add the update to the batch
+            batch.update(pyramidDocRef, {
+              roomCode: localRoomCode,
+              [fieldName]: { faceUp, name: cardValue, row: rowIndex }
+            });
+          });
+          rowIndex++;
         });
-        rowIndex++;
-      });
-  
-      setPyramid(pyramidCards);
-      setHand(deck.splice(0, 5));
-      setCardsTurned(new Array(pyramidSetup.length).fill(false));
-      setGameOver(false);
-      setWin(false);
-      setCurrentRow(4);
-    } else {
-      const q = query(pyramidCollectionRef, where('roomCode', '==', localRoomCode));
-      const querySnapshot = await getDocs(q);
-  
-      if (!querySnapshot.empty) {
-        const pyramidData = querySnapshot.docs[0].data();
-        const pyramidCards = [];
-        let currentRow = [];
-        let currentRowIndex = 0;
-  
-        for (const key in pyramidData) {
-          if (key.startsWith('c')) {
-            const { faceUp, name, row } = pyramidData[key];
-            if (row !== currentRowIndex) {
-              pyramidCards.push(currentRow);
-              currentRow = [];
-              currentRowIndex = row;
-            }
-            currentRow.push({ faceUp, value: name });
-          }
+        
+        // Commit the batch
+        try {
+          await batch.commit();
+          console.log('Pyramid created and Firestore updated');
+        } catch (error) {
+          console.error('Error creating pyramid:', error);
         }
-        pyramidCards.push(currentRow);
+      
         setPyramid(pyramidCards);
-  
-        setCardsTurned(new Array(pyramidCards.length).fill(false));
+        setHand(deck.splice(0, 5)); // Give the player the first 5 cards from the remaining deck
+        setCardsTurned(new Array(pyramidSetup.length).fill(false));
         setGameOver(false);
-        setWin(false);
-        setCurrentRow(4);
+        setWin(false); // Reset win state
+        setCurrentRow(4); // Reset to the bottom row
       } else {
-        console.error('No pyramid data found for this room code.');
+        // Fetch the existing pyramid data if not the host
+        const q = query(pyramidCollectionRef, where('roomCode', '==', localRoomCode));
+        const querySnapshot = await getDocs(q);
+
+        if (localPlayer) {
+          const pyramidData = querySnapshot.docs[0].data();
+          const pyramidCards = [];
+          let currentRow = [];
+          let currentRowIndex = 0;
+
+          for (const key in pyramidData) {
+            if (key.startsWith('c')) {
+              const { faceUp, name, row } = pyramidData[key];
+              if (row !== currentRowIndex) {
+                pyramidCards.push(currentRow);
+                currentRow = [];
+                currentRowIndex = row;
+              }
+              currentRow.push({ faceUp, value: name });
+            }
+          }
+          pyramidCards.push(currentRow); // push the last row
+          setPyramid(pyramidCards);
+
+          // For simplicity, assume the remaining deck is stored somewhere, or handle this logic separately
+          // setHand(remainingDeckFromFirestore); // You need to implement fetching the hand for non-host players
+          setCardsTurned(new Array(pyramidCards.length).fill(false));
+          setGameOver(false);
+          setWin(false);
+          setCurrentRow(4);
+        } else {
+          console.error('No pyramid data found for this room code.');
+        }
       }
+      console.log('Setup game completed');
     }
-    console.log('Setup game completed');
   };
-  
+    
   const handleCardClick = (rowIndex, cardIndex) => {
     if (gameOver || win || cardsTurned[rowIndex] || rowIndex !== currentRow) return;
 

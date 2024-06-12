@@ -45,13 +45,15 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     //Teeb ruumi koodi
     const newRoomCode = await handleRoomCode();
     //Paneb kõik vajaliku info Firestore doci
-    await addDoc(lobbyCollectionRef, {
+    const lobbyDocRef = await addDoc(lobbyCollectionRef, {
       roomCode: newRoomCode,
       players: [{ name: localPlayerName, host: true, ready: false }],
       inGame: false
     });
     localStorage.setItem('lobbyCode', newRoomCode)
     localStorage.setItem('playerName', localPlayerName)
+    localStorage.setItem('doc_id', lobbyDocRef.id)
+    console.log("Document ID host:", lobbyDocRef.id);
     //Muudab proppide valuet, mdea kas need on tegelt vajalikud veel
     setPlayerName(localPlayerName);
     setRoomCode(localRoomCode);
@@ -64,11 +66,19 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
       return;
     }
     localStorage.setItem('playerName', localPlayerName)
+    localStorage.setItem('lobbyCode', localRoomCode)
+    console.log()
     const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
     const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {
       querySnapshot.forEach(async (doc) => {
         const roomData = doc.data();
+        localStorage.setItem('doc_id', doc.id)
+        //test
+        const localTestPlayerName = localStorage.getItem('playerName')
+        const localTestLobbyCode = localStorage.getItem('lobbyCode')
+        console.log("Liituja nimi:", localTestPlayerName);
+        console.log("Liituja kood:", localTestLobbyCode);
         const updatedPlayers = [...roomData.players, { name: localPlayerName, host: false, ready: false }];
         await updateDoc(doc.ref, { players: updatedPlayers });
       });
