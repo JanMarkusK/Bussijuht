@@ -1,5 +1,6 @@
-/* src/assets/css/SignUp.css */
-.sign-up-container {
+/* src/assets/css/SignIn.css */
+
+.sign-in-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -8,7 +9,7 @@
     background-color: #6ec03c; /* Light green background color */
 }
 
-.sign-up-form {
+.sign-in-form {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -18,13 +19,12 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.sign-up-form label {
+.sign-in-form label {
     font-size: 1.5em;
     margin-bottom: 20px;
 }
 
-.sign-up-form input,
-.sign-up-form select {
+.sign-in-form input {
     margin-bottom: 10px;
     padding: 10px;
     width: 100%;
@@ -33,7 +33,7 @@
     border-radius: 5px;
 }
 
-.sign-up-form button {
+.sign-in-form button {
     padding: 10px 20px;
     font-size: 1em;
     color: white;
@@ -44,12 +44,23 @@
     margin-top: 10px;
 }
 
-.sign-up-form button:hover {
+.sign-in-form button:hover {
     background-color: #45a049;
 }
 
+.signup-link {
+    margin-top: 10px;
+    color: #007bff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.signup-link:hover {
+    text-decoration: underline;
+}
+
 .back-button {
-    margin-top: 20px;
+    margin-top: 10px;
     padding: 10px 20px;
     font-size: 1em;
     color: white;
@@ -60,16 +71,5 @@
 }
 
 .back-button:hover {
-    background-color: #e53935;
-}
-
-.login-link {
-    margin-top: 10px;
-    color: #007bff;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.login-link:hover {
-    text-decoration: underline;
+    background-color: #d32f2f;
 }

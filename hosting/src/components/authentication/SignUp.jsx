@@ -1,9 +1,10 @@
+//src/components/authentication/SignUp.jsx
+
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase";
-import { useNavigate } from 'react-router-dom';
-import { firestoreDB, collection, addDoc, doc, updateDoc, getDocs, onSnapshot, query, where } from '../../firebase';
-
+import { useNavigate, Link } from 'react-router-dom';
+import { firestoreDB, collection, addDoc } from '../../firebase';
 import '../../assets/css/SignUp.css';
 
 const SignUp = () => {
@@ -23,16 +24,17 @@ const SignUp = () => {
     const userCollectionRef = collection(firestoreDB, "User");
 
     const handleSignUp = async () => {
-      //Paneb kõik vajaliku info Firestore doci
-      await addDoc(userCollectionRef, {
-        firstName: firstName,
-        lastName: lastName,
-        username: username,
-        gender: gender,
-        age: age,
-        relationshipStatus: relationshipStatus,
-        favoriteDrink: favoriteDrink,
-      });
+        // Paneb kõik vajaliku info Firestore doci
+        await addDoc(userCollectionRef, {
+            firstName: firstName,
+            lastName: lastName,
+            username: username,
+            gender: gender,
+            age: age,
+            relationshipStatus: relationshipStatus,
+            favoriteDrink: favoriteDrink,
+            email: email,
+        });
     };
 
     const signUp = (e) => {
@@ -45,8 +47,8 @@ const SignUp = () => {
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 console.log(userCredential);
+                handleSignUp();
                 setSuccessMessage("User created successfully!");
-                // Additional user information can be saved to your database here
             }).catch((error) => {
                 console.log(error);
                 setErrorMessage(error.message);
@@ -146,8 +148,10 @@ const SignUp = () => {
                 {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                 {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
                 
-                <button type='submit' onClick={handleSignUp}>Sign Up</button>
+                <button type='submit'>Sign Up</button>
+                {successMessage && <button onClick={() => navigate('/profile')}>My Profile</button>}
             </form>
+            <Link to="/login" className='login-link'>Have an account? Log in</Link>
             <button onClick={() => navigate('/')} className='back-button'>Back</button>
         </div>
     )
