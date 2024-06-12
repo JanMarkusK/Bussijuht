@@ -1,3 +1,4 @@
+//src/App.jsx
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Lobby from './components/Lobby';
@@ -23,8 +24,6 @@ const App = () => {
           <Route path="/" element={
             <>
               <HomePage setInLobby={setInLobby} setInRules={setInRules} />
-              <SignIn />
-              <AuthDetails />
             </>
           } />
           <Route path="/signup" element={<SignUp />} />
@@ -37,6 +36,7 @@ const App = () => {
               setInGame={setInGame}
             />
           } />
+          <Route path="/login" element={<SignIn />} />
           <Route path="/2faas" element={
             <BusDriver
               roomCode={roomCode}
