@@ -2,7 +2,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../assets/css/HomePage.css';
-import '../assets/css/banner.css';
 import '../assets/css/bannerbuss.css';
 import teeImage from '/banner/tee.png';
 import bussImage from '/banner/buss.png';
@@ -41,26 +40,21 @@ const HomePage = () => {
     navigate('/rules');
   };
 
-  const handleProfileClick = () => {
-    navigate('/profile');
-  };
-
   return (
     <div className="home-page">
       <header id="pagebegin">
         <HomePageBanner />
       </header>
       <main>
-        <h1>Welcome to the Bus Driver Game!</h1>
-        <h2>Mathematicians solve beers!</h2>
+        <h1>Bus Driver Game</h1>
+        <h3>The best game after your mom. Drink water and have fun with your friends!</h3>
         <div className="button-container">
           <button onClick={handleCreateAccountClick}>Create Account</button>
-          <button onClick={handleJoinGameClick}>Join by Guest</button>
           <button onClick={handleLogInClick} className="button-centered">Log In</button>
         </div>
-        <button onClick={handleRulesClick} className="offset-button">Rules</button>
-        <div>
-          <button onClick={handleProfileClick}>Profile</button>
+        <div className="centered-button-container">
+          <button onClick={handleJoinGameClick} className="centered-button">Join by Guest</button>
+          <button onClick={handleRulesClick} className="rules-button">Rules</button>
         </div>
       </main>
     </div>

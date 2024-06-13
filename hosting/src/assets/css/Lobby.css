@@ -6,7 +6,7 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background-color: #6ec03c; /* Same background color as HomePage for consistency */
+    background-image: url('/banner/taust.png');
     text-align: center; /* Center text and image horizontally */
   }
   

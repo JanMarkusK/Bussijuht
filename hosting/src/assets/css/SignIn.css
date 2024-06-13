@@ -6,7 +6,7 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background-color: #6ec03c; /* Light green background color */
+    background-image: url('/banner/taust.png');
 }
 
 .sign-in-form {
@@ -50,7 +50,8 @@
 
 .signup-link {
     margin-top: 10px;
-    color: #007bff;
+    color: #01a2ff;
+    text-shadow: 2px 2px 8px #000000;
     text-decoration: none;
     cursor: pointer;
 }
