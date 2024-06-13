@@ -21,20 +21,17 @@ const BusDriver = () => {
   const localRoomCode = localStorage.getItem('lobbyCode');
   const localDocID = localStorage.getItem('doc_id');
   const pyramidDocId = localStorage.getItem('pyramidDocId');
-  //peaks tegema kontroll useState vist, mist vaatab kas local deck on olemas ja siis kui on siis kutsub useeffecti
-  let deck = []; // Declare localDeck as a regular let
 
   
   console.log ("laen lehte")
   useEffect(() => {
-    getDeck();
     setupGame(); // Pass the room code and player name to setupGame
   }, []); // Include roomCode and playerName in the dependency array
   
   useEffect(() => {
     console.log('pyramidDocId:', pyramidDocId); // Add this line to check the value of pyramidDocId
     const pyramidDocRef = doc(pyramidCollectionRef, pyramidDocId);
-  
+
     const unsubscribe = onSnapshot(pyramidDocRef, (doc) => {
       if (doc.exists()) {
         const pyramidData = doc.data();
@@ -67,7 +64,6 @@ const BusDriver = () => {
     if (win){
       return () => unsubscribe();
     }
-    
   }, [pyramidDocId]);
   
 
@@ -85,9 +81,12 @@ const BusDriver = () => {
 
   
   const getDeck = async () => {
+    let deck = [];
     deck = await fetchDeck(); // Fetch the deck from Firestore
-    console.log("sain selle decki " + deck)
+    localStorage.setItem('deck', JSON.stringify(deck));
+    console.log("sain selle decki " + deck);
   }
+
   const firestoreQuery = async () => {
     const roomDocRef = doc(lobbyCollectionRef, localDocID);
 
@@ -138,8 +137,6 @@ const BusDriver = () => {
   };
   
 
-
-
   const setupGame = async () => {
     console.log('Setup game started');
     console.log('Room Code:', localRoomCode);
@@ -166,6 +163,9 @@ const BusDriver = () => {
       
       if (localPlayer && localPlayer.host) {
         //HOST
+        await getDeck();
+        let deck = [];
+        deck = JSON.parse(localStorage.getItem('deck'));
         deck = shuffleDeck(deck); // Shuffle the fetched deck
         console.log('Olen host');
         const pyramidSetup = [
@@ -212,16 +212,18 @@ const BusDriver = () => {
         } catch (error) {
           console.error('Error creating pyramid:', error);
         }
-      
+
         setPyramid(pyramidCards);
-        setHand(deck.splice(0, 5)); // Give the player the first 5 cards from the remaining deck
+        //setHand(deck.splice(0, 5)); // Give the player the first 5 cards from the remaining deck
         setCardsTurned(new Array(pyramidSetup.length).fill(false));
         setGameOver(false);
         setWin(false); // Reset win state
         setCurrentRow(4); // Reset to the bottom row
+        localStorage.setItem('deck', JSON.stringify(deck));
       } else {
-        setTimeout(joinerStart, 5000);
+        setTimeout(joinerStart, 1000);
       }
+      
     };  
 
 
@@ -260,8 +262,11 @@ const BusDriver = () => {
   };
 
   const restartGame = async () => {
+    // siia panna if statement kui kaardi pakkis on vahem kui umberpooratuid kaarte teeb kaardi decki uuesti ja savib local storagisse
+    let deck = []
+    deck = JSON.parse(localStorage.getItem('deck'));
     deck = shuffleDeck(deck);
-    
+    console.log("restart deck"+deck)
     // Create a copy of the current pyramid
     const newPyramid = [...pyramid];
   
@@ -273,7 +278,9 @@ const BusDriver = () => {
     newPyramid.forEach((row, rowIndex) => {
       row.forEach((card, colIndex) => {
         if (card.faceUp) {
-          const cardValue = deck.pop();
+          console.log("restart deck2"+deck)
+          const newCard = deck.pop();
+          card.value = newCard;
           card.faceUp = false; // Set the card to be face down
           const fieldName = `row${rowIndex}_col${colIndex}`;
           batch.update(pyramidDocRef, {
