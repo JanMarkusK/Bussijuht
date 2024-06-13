@@ -1,6 +1,6 @@
+// src/components/HomePage.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import '../assets/css/HomePage.css';
 import '../assets/css/banner.css';
 import '../assets/css/bannerbuss.css';
@@ -22,7 +22,7 @@ const HomePageBanner = () => {
   );
 };
 
-const HomePage = ({ setInLobby, setInRules, setInCreateAccount, setInLogIn }) => {
+const HomePage = () => {
   const navigate = useNavigate();
 
   const handleCreateAccountClick = () => {
@@ -57,7 +57,7 @@ const HomePage = ({ setInLobby, setInRules, setInCreateAccount, setInLogIn }) =>
           <button onClick={handleCreateAccountClick}>Create Account</button>
           <button onClick={handleJoinGameClick}>Join by Guest</button>
           <button onClick={handleLogInClick} className="button-centered">Log In</button>
-        </div>  
+        </div>
         <button onClick={handleRulesClick} className="offset-button">Rules</button>
         <div>
           <button onClick={handleProfileClick}>Profile</button>
@@ -65,14 +65,6 @@ const HomePage = ({ setInLobby, setInRules, setInCreateAccount, setInLogIn }) =>
       </main>
     </div>
   );
-};
-
-HomePage.propTypes = {
-  setInCreateAccount: PropTypes.func.isRequired,
-  setInLobby: PropTypes.func.isRequired,
-  setInLogIn: PropTypes.func.isRequired,
-  setInRules: PropTypes.func.isRequired,
-  setInProfile: PropTypes.func.isRequired,
 };
 
 export default HomePage;

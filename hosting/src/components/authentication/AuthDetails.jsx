@@ -1,3 +1,4 @@
+//src/components/authentication/AuthDetails.jsx
 import React, { useState, useEffect } from 'react';
 import { auth } from "../../firebase.js";
 import { onAuthStateChanged, signOut } from 'firebase/auth';

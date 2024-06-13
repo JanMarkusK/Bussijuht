@@ -1,4 +1,4 @@
-//src/App.jsx
+// src/App.jsx
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Lobby from './components/Lobby';
@@ -7,6 +7,7 @@ import HomePage from './components/HomePage';
 import RulesPage from './components/RulesPage';
 import SignIn from './components/authentication/SignIn';
 import SignUp from './components/authentication/SignUp';
+import ProfilePage from './components/ProfilePage';
 import AuthDetails from './components/authentication/AuthDetails';
 
 const App = () => {
@@ -20,6 +21,7 @@ const App = () => {
   return (
     <Router>
       <div>
+        <AuthDetails />
         <Routes>
           <Route path="/" element={
             <>
@@ -27,6 +29,8 @@ const App = () => {
             </>
           } />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<SignIn />} />
+          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/rules" element={<RulesPage setInRules={setInRules} />} />
           <Route path="/guestlobby" element={
             <Lobby
@@ -36,7 +40,6 @@ const App = () => {
               setInGame={setInGame}
             />
           } />
-          <Route path="/login" element={<SignIn />} />
           <Route path="/2faas" element={
             <BusDriver
               roomCode={roomCode}
