@@ -1,13 +1,6 @@
 /* src/assets/css/bannerbuss.css */
 
-.banner-container {
-  width: 800px;
-  height: 200px;
-  position: relative;
-  overflow: hidden;
-  border: 1px solid black;
-  margin: 0 auto; /* Center the banner horizontally */
-}
+
 
 .road-container {
   display: flex;

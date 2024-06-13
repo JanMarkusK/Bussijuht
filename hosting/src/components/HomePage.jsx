@@ -47,7 +47,7 @@ const HomePage = () => {
       </header>
       <main>
         <h1>Bus Driver Game</h1>
-        <h3>The best game after your mom. Drink water and have fun with your friends!</h3>
+        <h3>Drink water and have fun with your friends!</h3>
         <div className="button-container">
           <button onClick={handleCreateAccountClick}>Create Account</button>
           <button onClick={handleLogInClick} className="button-centered">Log In</button>

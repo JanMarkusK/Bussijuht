@@ -1,43 +1,96 @@
-/*src/assets/css/RulesPage.css*/
+/* src/assets/css/RulesPage.css */
+
 .rules-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-image: url('/banner/taust.png');
-    padding: 20px;
-    text-align: center;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: url('/banner/taust.png');
+  padding: 20px;
   
+  text-align: center;
+}
+
+.rules-page h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.rules-page h2 {
+  margin-bottom: 20px;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+.rules-page h3 {
+  font-size: 1em;
+  margin-bottom: 7px;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+.rules-page p {
+  margin-bottom: 20px;
+  font-size: 1em;
+  line-height: 1.5;
+}
+
+.rules-page button {
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+/* Mobile (Smartphone) 480px and below */
+@media (max-width: 480px) {
+  .rules-page {
+    padding: 10px;
+  }
+
   .rules-page h1 {
-    font-size: 2em;
-    margin-bottom: 20px;
+    font-size: 1.5em;
   }
 
   .rules-page h2 {
-    margin-bottom: 20px;
-    color: #ffffff;
-    text-shadow: 2px 2px 4px #000000;
+    font-size: 1.2em;
   }
 
-  .rules-page h3{
-    font-size: 1em;
-    margin-bottom: 7px;
-    color: #ffffff;
-    text-shadow: 2px 2px 4px #000000;
+  .rules-page h3 {
+    font-size: 0.8em;
   }
-  
+
   .rules-page p {
-    margin-bottom: 20px;
-    font-size: 1em;
-    line-height: 1.5;
+    font-size: 0.8em;
   }
-  
+
   .rules-page button {
-    margin: 10px;
-    padding: 10px 20px;
-    font-size: 1.2em;
-    cursor: pointer;
+    font-size: 1em;
+    padding: 8px 16px;
   }
-  
+}
+
+/* Huge size (Larger screen) 1281px and greater */
+@media (min-width: 1281px) {
+  .rules-page h1 {
+    font-size: 3em;
+  }
+
+  .rules-page h2 {
+    font-size: 2.5em;
+  }
+
+  .rules-page h3 {
+    font-size: 1.5em;
+  }
+
+  .rules-page p {
+    font-size: 1.5em;
+  }
+
+  .rules-page button {
+    font-size: 1.5em;
+    padding: 12px 24px;
+  }
+}
