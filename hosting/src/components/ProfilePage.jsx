@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, firestoreDB } from "../firebase";
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, updateDoc, doc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import '../assets/css/Profile.css';
 
@@ -14,12 +14,12 @@ const ProfilePage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUserData = async (uid) => {
-      console.log("Fetching data for UID: ", uid);
+    const fetchUserData = async (email) => {
       try {
-        const userDocRef = doc(firestoreDB, "User", uid);
-        const userDoc = await getDoc(userDocRef);
-        if (userDoc.exists()) {
+        const q = query(collection(firestoreDB, "User"), where("email", "==", email));
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+          const userDoc = querySnapshot.docs[0];
           console.log("User data: ", userDoc.data());
           setUserData(userDoc.data());
           setUpdatedData(userDoc.data());
@@ -35,7 +35,7 @@ const ProfilePage = () => {
 
     const listen = onAuthStateChanged(auth, (user) => {
       if (user) {
-        fetchUserData(user.uid);
+        fetchUserData(user.email);
       } else {
         setLoading(false);
         navigate('/login');
@@ -56,10 +56,15 @@ const ProfilePage = () => {
   };
 
   const handleSaveClick = async () => {
-    const userDocRef = doc(firestoreDB, "User", auth.currentUser.uid);
-    await updateDoc(userDocRef, updatedData);
-    setUserData(updatedData);
-    setEditMode(false);
+    const q = query(collection(firestoreDB, "User"), where("email", "==", auth.currentUser.email));
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+      const userDoc = querySnapshot.docs[0];
+      const userDocRef = doc(firestoreDB, "User", userDoc.id);
+      await updateDoc(userDocRef, updatedData);
+      setUserData(updatedData);
+      setEditMode(false);
+    }
   };
 
   const handleChange = (e) => {

@@ -23,9 +23,11 @@ const SignUp = () => {
     const navigate = useNavigate();
     const userCollectionRef = collection(firestoreDB, "User");
 
-    const handleSignUp = async () => {
+    const handleSignUp = async (uid) => {
         //Paneb kõik vajaliku info Firestore doci
         await addDoc(userCollectionRef, {
+            uid: uid,
+            email: email,
             firstName: firstName,
             lastName: lastName,
             username: username,
@@ -45,9 +47,10 @@ const SignUp = () => {
         setErrorMessage('');
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                console.log(userCredential);
+                const user = userCredential.user;
+                console.log(user);
                 setSuccessMessage("User created successfully!");
-                // Additional user information can be saved to your database here
+                handleSignUp(user.uid);
             }).catch((error) => {
                 console.log(error);
                 setErrorMessage(error.message);
@@ -147,7 +150,7 @@ const SignUp = () => {
                 {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                 {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
                 
-                <button type='submit' onClick={handleSignUp}>Sign Up</button>
+                <button type='submit'>Sign Up</button>
             </form>
             <Link to="/login" className='login-link'>Have an account? Log in</Link>
             <button onClick={() => navigate('/')} className='back-button'>Back</button>
