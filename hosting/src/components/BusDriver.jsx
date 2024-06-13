@@ -267,6 +267,9 @@ const BusDriver = () => {
     deck = JSON.parse(localStorage.getItem('deck'));
     deck = shuffleDeck(deck);
     console.log("restart deck"+deck)
+    if(deck.length > 1){
+      getDeck;
+    }
     // Create a copy of the current pyramid
     const newPyramid = [...pyramid];
   
