@@ -8,7 +8,6 @@ import RulesPage from './components/RulesPage';
 import SignIn from './components/authentication/SignIn';
 import SignUp from './components/authentication/SignUp';
 import ProfilePage from './components/ProfilePage';
-import AuthDetails from './components/authentication/AuthDetails';
 
 const App = () => {
   const [gameData, setGameData] = useState(null);
@@ -21,7 +20,6 @@ const App = () => {
   return (
     <Router>
       <div>
-        <AuthDetails />
         <Routes>
           <Route path="/" element={
             <>

@@ -5,7 +5,7 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background-color: #6ec03c; /* Saad muuta taustavärvi vajadusel */
+    background-image: url('/banner/taust.png');
     padding: 20px;
     text-align: center;
   }
@@ -13,6 +13,19 @@
   .rules-page h1 {
     font-size: 2em;
     margin-bottom: 20px;
+  }
+
+  .rules-page h2 {
+    margin-bottom: 20px;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px #000000;
+  }
+
+  .rules-page h3{
+    font-size: 1em;
+    margin-bottom: 7px;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px #000000;
   }
   
   .rules-page p {

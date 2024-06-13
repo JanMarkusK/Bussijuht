@@ -13,8 +13,8 @@ const RulesPage = ({ setInRules }) => {
 
   return (
     <div className="rules-page">
-      <h1>Rules</h1>
-      <p>
+      <h2>Rules</h2>
+      <h3>
         The deck of cards is made into a pyramid - 5 cards, 4, 3, 2, and 1 card in a row. <br />
         The remaining cards are distributed among the players. <br />
         Then they start taking all the cards from the bottom (where there are five cards in a row) and turn them the right way. <br />
@@ -25,7 +25,7 @@ const RulesPage = ({ setInRules }) => {
         Next, the same pyramid is made and now, starting from the bottom, the bus driver has to take one card from each row and turn it over. <br />
         If it is a picture, the bus driver takes actions according to how many rows it was (1 action, 2 actions, etc.) and the flipped cards are put back into the deck and new ones replaced. <br />
         Max 8 people.
-      </p>
+      </h3>
       <button onClick={handleBackClick}>Back</button>
     </div>
   );
