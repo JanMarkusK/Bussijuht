@@ -22,7 +22,7 @@ const BusDriver = () => {
   const localDocID = localStorage.getItem('doc_id');
   const pyramidDocId = localStorage.getItem('pyramidDocId');
   //peaks tegema kontroll useState vist, mist vaatab kas local deck on olemas ja siis kui on siis kutsub useeffecti
-  let deck = []; // Declare localDeck as a regular let
+  const [localDeck, setLocalDeck] = useState([]);
 
   
   console.log ("laen lehte")
@@ -85,8 +85,11 @@ const BusDriver = () => {
 
   
   const getDeck = async () => {
+    let deck = []
     deck = await fetchDeck(); // Fetch the deck from Firestore
+    setLocalDeck[deck]
     console.log("sain selle decki " + deck)
+    console.log("localdeck siin" + localDeck)
   }
   const firestoreQuery = async () => {
     const roomDocRef = doc(lobbyCollectionRef, localDocID);
@@ -166,7 +169,8 @@ const BusDriver = () => {
       
       if (localPlayer && localPlayer.host) {
         //HOST
-        deck = shuffleDeck(deck); // Shuffle the fetched deck
+        console.log("localdeck siin" + localDeck)
+        setLocalDeck(shuffleDeck(localDeck)); // Shuffle the fetched deck
         console.log('Olen host');
         const pyramidSetup = [
           Array(1).fill('X'),
@@ -177,7 +181,9 @@ const BusDriver = () => {
         ];
       
         const pyramidCards = pyramidSetup.map(row => row.map(() => {
-          const cardValue = deck.pop();
+          const newLocalDeck = [...localDeck]
+          const cardValue = newLocalDeck.pop();
+          setLocalDeck([...newLocalDeck]); // Update the state with the new array
           return { faceUp: false, value: cardValue };
         }));
 
@@ -214,7 +220,7 @@ const BusDriver = () => {
         }
       
         setPyramid(pyramidCards);
-        setHand(deck.splice(0, 5)); // Give the player the first 5 cards from the remaining deck
+        setHand(localDeck.splice(0, 5)); // Give the player the first 5 cards from the remaining deck
         setCardsTurned(new Array(pyramidSetup.length).fill(false));
         setGameOver(false);
         setWin(false); // Reset win state
@@ -260,7 +266,7 @@ const BusDriver = () => {
   };
 
   const restartGame = async () => {
-    deck = shuffleDeck(deck);
+    setLocalDeck(shuffleDeck(localDeck))
     
     // Create a copy of the current pyramid
     const newPyramid = [...pyramid];
@@ -273,7 +279,10 @@ const BusDriver = () => {
     newPyramid.forEach((row, rowIndex) => {
       row.forEach((card, colIndex) => {
         if (card.faceUp) {
-          const cardValue = deck.pop();
+          const newLocalDeck = [...localDeck]
+          const cardValue = newLocalDeck.pop();
+          setLocalDeck([...newLocalDeck]);
+          console.log(localDeck);
           card.faceUp = false; // Set the card to be face down
           const fieldName = `row${rowIndex}_col${colIndex}`;
           batch.update(pyramidDocRef, {
@@ -293,7 +302,7 @@ const BusDriver = () => {
   
     // Update the state with the new pyramid and new hand
     setPyramid(newPyramid);
-    setHand(deck.splice(0, 5)); // Give the player the first 5 cards from the remaining deck
+    setHand(localDeck.splice(0, 5)); // Give the player the first 5 cards from the remaining deck
     
     // Reset the state for a new game
     setCardsTurned(new Array(pyramid.length).fill(false));
