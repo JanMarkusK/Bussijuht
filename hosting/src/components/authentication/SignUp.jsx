@@ -50,6 +50,7 @@ const SignUp = () => {
                 const user = userCredential.user;
                 console.log(user);
                 setSuccessMessage("User created successfully!");
+                navigate('/guestlobby');
                 handleSignUp(user.uid);
             }).catch((error) => {
                 console.log(error);
@@ -110,16 +111,6 @@ const SignUp = () => {
                     required
                 />
 
-                <select
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value)}
-                >
-                    <option value="">Select gender</option>
-                    <option value="Mees">Mees</option>
-                    <option value="Naine">Naine</option>
-                    <option value="Muu">Muu</option>
-                </select>
-
                 <input 
                     type="number" 
                     placeholder='Enter your age' 
@@ -131,13 +122,44 @@ const SignUp = () => {
                 />
 
                 <select
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                >
+                    <option value="">Select gender</option>
+                    <option value="Man">Man</option>
+                    <option value="Woman">Woman</option>
+                    <option value="Another">Another</option>
+                </select>
+
+                <select
                     value={relationshipStatus}
                     onChange={(e) => setRelationshipStatus(e.target.value)}
                 >
                     <option value="">Select relationship status</option>
-                    <option value="vaba">vaba</option>
-                    <option value="hõivatud">hõivatud</option>
-                    <option value="ei tea">ei tea</option>
+                    <option value="Single">Single</option>
+                    <option value="Married">Married</option>
+                    <option value="In a relationship">In a relationship</option>
+                    <option value="Do not know">Do not know</option>
+                    <option value="Drunk">Drunk</option>
+
+                </select>
+
+                <select
+                    value={favoriteDrink}
+                    onChange={(e) => setFavoriteDrink(e.target.value)}
+                >
+                    <option value="">Enter your favorite drink</option>
+                    <option value="Milk">Milk</option>
+                    <option value="Water">Water</option>
+                    <option value="Coffee">Coffee</option>
+                    <option value="Wine">Wine</option>
+                    <option value="Whiskey">Whiskey</option>
+                    <option value="Beer">Beer</option>
+                    <option value="Cocktail">Cocktail</option>
+                    <option value="Cider">Cider</option>
+                    <option value="Rum">Rum</option>
+                    <option value="Lilimpa limonaadder">Limpa limonaad</option>
+
                 </select>
 
                 <input 

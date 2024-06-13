@@ -31,8 +31,8 @@ const SignIn = () => {
             setSuccessMessage("Successfully logged in!");
             setErrorMessage('');
 
-            // Navigate to another page or handle successful sign-in
-            // navigate('/dashboard'); // Example: Navigate to a dashboard page after sign-in
+            // Navigate to the lobby page after successful sign-in
+            navigate('/guestlobby');
 
         } catch (error) {
             console.log(error);
