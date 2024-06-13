@@ -1,7 +1,7 @@
 // src/components/Lobby.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth, firestoreDB, collection, addDoc, doc, updateDoc, getDocs, onSnapshot, query, where } from '../firebase';
+import { auth, firestoreDB, collection, addDoc, updateDoc, getDocs, onSnapshot, query, where } from '../firebase';
 import PropTypes from 'prop-types';
 import '../assets/css/Lobby.css'; // Import the CSS file
 
@@ -11,10 +11,11 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   const [isJoining, setIsJoining] = useState(true);
   const [players, setPlayers] = useState([]);
   const [roomCreated, setRoomCreated] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [notification, setNotification] = useState('');
   const navigate = useNavigate();
   const lobbyCollectionRef = collection(firestoreDB, "Lobby");
 
-  // Uus: Kasutaja nime saamiseks Firestore'ist
   useEffect(() => {
     const fetchUserName = async (email) => {
       try {
@@ -24,6 +25,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
           const userDoc = querySnapshot.docs[0];
           const userData = userDoc.data();
           setLocalPlayerName(userData.username);
+          setIsLoggedIn(true);
         }
       } catch (error) {
         console.error("Error fetching user data: ", error);
@@ -36,7 +38,6 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     }
   }, []);
 
-  console.log("laen lehte")
   useEffect(() => {
     if (localRoomCode) {
       const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
@@ -57,7 +58,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
       return () => unsubscribe();
     }
   }, [localRoomCode, setGameData, setInGame, navigate]);
-  
+
   const handleRoomCode = async () => {
     const newRoomCode = Math.floor(Math.random() * 90000) + 10000;
     setRoomCode(newRoomCode);
@@ -66,9 +67,11 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   };
 
   const handleCreateRoom = async () => {
-    // Teeb ruumi koodi
+    if (!localPlayerName) {
+      alert("Please enter a player name.");
+      return;
+    }
     const newRoomCode = await handleRoomCode();
-    // Paneb kõik vajaliku info Firestore doci
     const lobbyDocRef = await addDoc(lobbyCollectionRef, {
       roomCode: newRoomCode,
       players: [{ name: localPlayerName, host: true, ready: false }],
@@ -77,8 +80,6 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     localStorage.setItem('lobbyCode', newRoomCode);
     localStorage.setItem('playerName', localPlayerName);
     localStorage.setItem('doc_id', lobbyDocRef.id);
-    console.log("Document ID host:", lobbyDocRef.id);
-    // Muudab proppide valuet, mdea kas need on tegelt vajalikud veel
     setPlayerName(localPlayerName);
     setRoomCode(localRoomCode);
     setRoomCreated(true);
@@ -119,6 +120,11 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     }
   };
 
+  const handleDisabledClick = () => {
+    setNotification("You must be logged in");
+    setTimeout(() => setNotification(''), 3000); // Clear notification after 3 seconds
+  };
+
   return (
     <div className="lobby-page">
       <div className="input-container">
@@ -133,17 +139,35 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
           roomCreated && <div>Room Code: {localRoomCode}</div>
         )}
         <div>
-          <span>Player Name: {localPlayerName}</span>
+          {isLoggedIn ? (
+            <span>Player Name: {localPlayerName}</span>
+          ) : (
+            <input
+              type="text"
+              placeholder="Player Name"
+              value={localPlayerName}
+              onChange={(e) => setLocalPlayerName(e.target.value)}
+            />
+          )}
         </div>
-        {isJoining ? (
-          <button onClick={handleJoinRoom}>Join Room</button>
+        {isLoggedIn ? (
+          isJoining ? (
+            <button onClick={handleJoinRoom}>Join Room</button>
+          ) : (
+            <button onClick={handleCreateRoom}>Create Room</button>
+          )
         ) : (
-          <button onClick={handleCreateRoom}>Create Room</button>
+          <button onClick={handleJoinRoom}>Join Room</button>
         )}
-        <button onClick={() => setIsJoining(!isJoining)}>
+        <button
+          onClick={isLoggedIn ? () => setIsJoining(!isJoining) : handleDisabledClick}
+        >
           {isJoining ? 'Switch to Create' : 'Switch to Join'}
         </button>
-        <button onClick={handleStartGame}>Start Game</button>
+        <button onClick={isLoggedIn ? handleStartGame : handleDisabledClick}>
+          Start Game
+        </button>
+        {notification && <p className="notification">{notification}</p>}
       </div>
       <div className="player-list-container">
         <h3>Players in Lobby:</h3>
