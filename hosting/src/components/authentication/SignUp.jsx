@@ -158,16 +158,9 @@ const SignUp = () => {
                     <option value="Cocktail">Cocktail</option>
                     <option value="Cider">Cider</option>
                     <option value="Rum">Rum</option>
-                    <option value="Lilimpa limonaadder">Limpa limonaad</option>
+                    <option value="Lilimpa limonaad">Limpa limonaad</option>
 
                 </select>
-
-                <input 
-                    type="text" 
-                    placeholder='Enter your favorite drink' 
-                    value={favoriteDrink}
-                    onChange={(e) => setFavoriteDrink(e.target.value)}
-                />
 
                 {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                 {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
