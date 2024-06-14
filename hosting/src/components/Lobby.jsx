@@ -1,4 +1,3 @@
-// src/components/Lobby.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, firestoreDB, collection, addDoc, updateDoc, getDocs, onSnapshot, query, where } from '../firebase';
@@ -13,6 +12,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   const [roomCreated, setRoomCreated] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [notification, setNotification] = useState('');
+  const [isHost, setIsHost] = useState(false); // State to track if the user is the host
   const navigate = useNavigate();
   const lobbyCollectionRef = collection(firestoreDB, "Lobby");
 
@@ -51,13 +51,14 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
               setGameData(data);
               navigate('/2faas');
             }
+            setIsHost(data.players.some(player => player.name === localPlayerName && player.host)); // Check if current user is the host
           }
         });
       });
 
       return () => unsubscribe();
     }
-  }, [localRoomCode, setGameData, setInGame, navigate]);
+  }, [localRoomCode, localPlayerName, setGameData, setInGame, navigate, lobbyCollectionRef]);
 
   const handleRoomCode = async () => {
     const newRoomCode = Math.floor(Math.random() * 90000) + 10000;
@@ -83,6 +84,8 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     setPlayerName(localPlayerName);
     setRoomCode(localRoomCode);
     setRoomCreated(true);
+    setIsJoining(false);
+    setIsHost(true); // The creator of the room is always the host
   };
 
   const handleJoinRoom = async () => {
@@ -125,48 +128,61 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     setTimeout(() => setNotification(''), 3000); // Clear notification after 3 seconds
   };
 
+  const handleSwitchToCreate = async () => {
+    if (!localPlayerName) {
+      alert("Please enter a player name.");
+      return;
+    }
+    await handleCreateRoom();
+  };
+
   return (
     <div className="lobby-page">
       <div className="input-container">
-        {isJoining ? (
-          <input
-            type="text"
-            placeholder="Room Code"
-            value={localRoomCode}
-            onChange={(e) => setLocalRoomCode(e.target.value)}
-          />
+        {isLoggedIn ? (
+          <>
+            <div className="top-buttons">
+              <button onClick={isJoining ? handleSwitchToCreate : () => setIsJoining(true)}>
+                {isJoining ? 'Switch to Create' : 'Switch to Join'}
+              </button>
+            </div>
+            {isJoining ? (
+              <input
+                type="text"
+                placeholder="Room Code"
+                value={localRoomCode}
+                onChange={(e) => setLocalRoomCode(e.target.value)}
+              />
+            ) : (
+              roomCreated && <div>Room Code: {localRoomCode}</div>
+            )}
+            <div>
+              <span>Player Name: {localPlayerName}</span>
+            </div>
+            {isJoining ? (
+              <button onClick={handleJoinRoom}>Join Room</button>
+            ) : null}
+            {isHost && !isJoining && (
+              <button onClick={handleStartGame}>Start Game</button>
+            )}
+          </>
         ) : (
-          roomCreated && <div>Room Code: {localRoomCode}</div>
-        )}
-        <div>
-          {isLoggedIn ? (
-            <span>Player Name: {localPlayerName}</span>
-          ) : (
+          <>
+            <input
+              type="text"
+              placeholder="Room Code"
+              value={localRoomCode}
+              onChange={(e) => setLocalRoomCode(e.target.value)}
+            />
             <input
               type="text"
               placeholder="Player Name"
               value={localPlayerName}
               onChange={(e) => setLocalPlayerName(e.target.value)}
             />
-          )}
-        </div>
-        {isLoggedIn ? (
-          isJoining ? (
             <button onClick={handleJoinRoom}>Join Room</button>
-          ) : (
-            <button onClick={handleCreateRoom}>Create Room</button>
-          )
-        ) : (
-          <button onClick={handleJoinRoom}>Join Room</button>
+          </>
         )}
-        <button
-          onClick={isLoggedIn ? () => setIsJoining(!isJoining) : handleDisabledClick}
-        >
-          {isJoining ? 'Switch to Create' : 'Switch to Join'}
-        </button>
-        <button onClick={isLoggedIn ? handleStartGame : handleDisabledClick}>
-          Start Game
-        </button>
         {notification && <p className="notification">{notification}</p>}
       </div>
       <div className="player-list-container">
