@@ -1,20 +1,25 @@
 // src/components/BusDriver.jsx
 /**/import React, { useState, useEffect } from 'react';
-import { firestoreDB, writeBatch, collection, addDoc, doc, updateDoc, getDoc, getDocs, onSnapshot, query, where } from '../firebase';
+import { firestoreDB, writeBatch, collection, addDoc, doc, updateDoc, getDoc, getDocs, onSnapshot, query, where, deleteDoc } from '../firebase';
 import Pyramid from './Pyramid';
 import Hand from './Hand';
 import { fetchDeck, shuffleDeck } from '../utils/deck';
 import '../assets/css/styles.css';
 import { array } from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
 
 const BusDriver = () => {
   const [pyramid, setPyramid] = useState([]);
   const [hand, setHand] = useState([]);
-  const [currentRow, setCurrentRow] = useState(4);
+  const [currentRow, setCurrentRow] = useState();
   const [cardsTurned, setCardsTurned] = useState([]);
   const [gameOver, setGameOver] = useState(false);
   const [win, setWin] = useState(false); // win condition state
+  const [cardCounter, setCardCounter] = useState(0);
+  const [notInGame, setNotInGame] = useState('');
+  const navigate = useNavigate();
+
   const lobbyCollectionRef = collection(firestoreDB, "Lobby");
   const pyramidCollectionRef = collection(firestoreDB, "Pyramid");
   const localPlayerName = localStorage.getItem('playerName');
@@ -36,34 +41,53 @@ const BusDriver = () => {
       if (doc.exists()) {
         const pyramidData = doc.data();
         const pyramidCards = [[], [], [], [], []]; // Initialize pyramid structure with 5 rows
-  
+
         for (const key in pyramidData) {
           if (key.startsWith('row')) {
             const { faceUp, name, row, col } = pyramidData[key];
             pyramidCards[row][col] = { faceUp, value: name }; // Place card in the correct position in the pyramid
-            if (faceUp){
-              setCurrentRow(row -1);
-            }
-          }
-          const allCardsFaceDown = pyramidCards.every(row => row.every(card => !card.faceUp));
-          if (allCardsFaceDown) {
-            setCurrentRow(4);
           }
         }
-  
+
         setPyramid(pyramidCards);
+
+        let lastFlippedRow = 4;
+        console.log("lasFlippedRow: " + lastFlippedRow)
+        for (let i = 0; i < pyramidCards.length; i++) {
+          if (pyramidCards[i].some(card => card && card.faceUp)) {
+            console.log("index: " + i )
+            if (i == 0) {
+              lastFlippedRow = i
+            } else{
+              lastFlippedRow = i -1;
+            }
+            console.log("lasFlippedRow2: " + lastFlippedRow)
+            setCurrentRow(lastFlippedRow);
+            break;
+
+          }
+        }
+
+        // Update currentRow
+
+        console.log("lasFlippedRow3: " + lastFlippedRow)
+        // Check for the win condition
+        if (lastFlippedRow === 0) {
+          const lastCard = pyramidCards[0].find(card => card && card.faceUp);
+          if (lastCard) {
+            const cardValue = lastCard.value.split('_')[0];
+            const cardFace = lastCard.faceUp;
+            if (cardValue !== 'J' && cardValue !== 'Q' && cardValue !== 'K' && cardValue !== 'A', cardFace ) {
+              setWin(true);
+              console.log("voitsin")
+            }
+          }
+        }
       }
     });
-
-    if (currentRow === 0 && cardValue !== 'J' && cardValue !== 'Q' && cardValue !== 'K' && cardValue !== 'A') {
-      setWin(true);
-      setCurrentRow(4);
-      console.log("voitsin");
-    }
-
-    if (win){
-      return () => unsubscribe();
-    }
+    // if (win){
+    //   return () => unsubscribe();
+    // }
   }, [pyramidDocId]);
   
 
@@ -83,7 +107,8 @@ const BusDriver = () => {
   const getDeck = async () => {
     let deck = [];
     deck = await fetchDeck(); // Fetch the deck from Firestore
-    localStorage.setItem('deck', JSON.stringify(deck));
+    deck = shuffleDeck(deck);
+    localStorage.setItem('deck', deck);
     console.log("sain selle decki " + deck);
   }
 
@@ -165,8 +190,7 @@ const BusDriver = () => {
         //HOST
         await getDeck();
         let deck = [];
-        deck = JSON.parse(localStorage.getItem('deck'));
-        deck = shuffleDeck(deck); // Shuffle the fetched deck
+        deck = localStorage.getItem('deck').split(',');        
         console.log('Olen host');
         const pyramidSetup = [
           Array(1).fill('X'),
@@ -219,7 +243,7 @@ const BusDriver = () => {
         setGameOver(false);
         setWin(false); // Reset win state
         setCurrentRow(4); // Reset to the bottom row
-        localStorage.setItem('deck', JSON.stringify(deck));
+        localStorage.setItem('deck', deck.join(','));
       } else {
         setTimeout(joinerStart, 1000);
       }
@@ -227,7 +251,7 @@ const BusDriver = () => {
     };  
 
 
-    const updateCardFaceUpInFirestore = async (rowIndex, cardIndex) => {
+  const updateCardFaceUpInFirestore = async (rowIndex, cardIndex) => {
       const pyramidDocRef = doc(pyramidCollectionRef, pyramidDocId);
       const cardFieldName = `row${rowIndex}_col${cardIndex}`;
       await updateDoc(pyramidDocRef, {
@@ -237,7 +261,7 @@ const BusDriver = () => {
 
   const handleCardClick = async (rowIndex, cardIndex) => {
     if (gameOver || win || cardsTurned[rowIndex] || rowIndex !== currentRow) return;
-
+    setCardCounter(cardCounter +1)
     const newPyramid = [...pyramid];
     newPyramid[rowIndex][cardIndex].faceUp = true;
     setPyramid(newPyramid);
@@ -248,7 +272,7 @@ const BusDriver = () => {
 
     await updateCardFaceUpInFirestore(rowIndex, cardIndex); // Update Firestore
 
-    setCurrentRow(currentRow - 1);
+    //setCurrentRow(currentRow - 1);
     
     const cardValue = newPyramid[rowIndex][cardIndex].value.split('_')[0];
     if (cardValue === 'J' || cardValue === 'Q' || cardValue === 'K' || cardValue === 'A') {
@@ -264,15 +288,34 @@ const BusDriver = () => {
   const restartGame = async () => {
     // siia panna if statement kui kaardi pakkis on vahem kui umberpooratuid kaarte teeb kaardi decki uuesti ja savib local storagisse
     let deck = []
-    deck = JSON.parse(localStorage.getItem('deck'));
-    deck = shuffleDeck(deck);
-    console.log("restart deck"+deck)
-    if(deck.length > 1){
-      getDeck;
+    let storedDeck = localStorage.getItem('deck');
+    console.log("kaarte pööratud: " + cardCounter)
+    if (storedDeck) {
+      try {
+        deck = storedDeck.split(',');
+      } catch (error) {
+        console.error('Error parsing deck from localStorage:', error);
+      }
     }
+    //kontroll kui on vaja uut decki TEE KA NII ET SEE ANNAB ÜLEJÄÄNUD FUNKTSIOONILE DECKI
+    if (deck.length < cardCounter) {
+      // If so, fetch a new deck
+      await getDeck();
+      storedDeck = localStorage.getItem('deck'); // Update storedDeck after fetching new deck
+      console.log("tegin uue decki :))");
+      
+      // Parse the newly fetched deck
+      if (storedDeck) {
+        try {
+          deck = storedDeck.split(',');
+        } catch (error) {
+          console.error('Error parsing deck from localStorage:', error);
+        }
+      }
+    }
+
     // Create a copy of the current pyramid
     const newPyramid = [...pyramid];
-  
     // Initialize Firestore batch
     const batch = writeBatch(firestoreDB);
     const pyramidDocRef = doc(pyramidCollectionRef, pyramidDocId);
@@ -310,6 +353,31 @@ const BusDriver = () => {
     setGameOver(false);
     setWin(false);
     setCurrentRow(4);
+    localStorage.setItem('deck', deck.join(','));
+  };
+  const handleWin = async () => {
+    const pyramidDocRef = doc(pyramidCollectionRef, pyramidDocId);
+    try {
+      await deleteDoc(pyramidDocRef);
+      console.log("Document successfully deleted!");
+      //navigate('/');
+    } catch (error) {
+      console.error("Error removing document: ", error);
+    }
+
+    const roomDocRef = doc(lobbyCollectionRef, localDocID);
+
+    const roomDocSnap = await getDoc(roomDocRef);
+
+    if (roomDocSnap.exists()) {
+        const roomData = roomDocSnap.data();
+        console.log(roomData);
+        await updateDoc(roomDocRef, {inGame: false})
+        console.log(roomData);
+        // Check if the player is in the map and is the host
+        setNotInGame(true);
+
+    }
   };
 
   return (
@@ -323,7 +391,7 @@ const BusDriver = () => {
           <div className="overlay">
             <div className="overlay-content">
               <h1>You win!</h1>
-              <button onClick={setupGame}>Go again!</button>
+              <button onClick={handleWin}>Go to endscreen</button>
             </div>
           </div>
         )}
