@@ -1,3 +1,5 @@
+/* src/assets/css/HomePage.css */
+
 .home-page {
   display: flex;
   flex-direction: column;
@@ -5,7 +7,7 @@
   justify-content: center;
   height: 100vh;
   text-align: center;
-  background-image: url('/banner/taust.png'); /* Adjust the path according to your project structure */
+  background-image: url('/banner/taust.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -37,23 +39,40 @@
   text-shadow: 2px 2px 4px #000000;
 }
 
-.button-container,
-.logged-in-button-container {
+.button-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
-.button-container button,
-.logged-in-button-container button {
+.home-page button {
   padding: 10px 15px;
   font-size: 1.2em;
   cursor: pointer;
-  margin-bottom: 10px;
+}
+
+.home-page .logout-button {
+  background-color: red;
+  color: white;
 }
 
 /* Mobile (Smartphone) 480px and below */
 @media (max-width: 480px) {
+  .banner-container {
+    display: none; /* Hide large banner on small screens */
+  }
+
+  .banner-container-telole {
+    display: block; /* Show mobile banner on small screens */
+    width: 100%;
+  }
+
+  .banner-telole-image {
+    width: 100%;
+  }
+
   .home-page h1, .home-page h2 {
     font-size: 1.5em;
   }
@@ -62,16 +81,23 @@
     max-width: 50%;
   }
 
-  .button-container,
-  .logged-in-button-container {
-    flex-direction: column;
-    align-items: center;
+  .button-container {
+    gap: 10px;
   }
 
-  .button-container button,
-  .logged-in-button-container button {
+  .home-page button {
     font-size: 1em;
-    margin-bottom: 10px;
+  }
+}
+
+/* Large screens 481px and above */
+@media (min-width: 481px) {
+  .banner-container {
+    display: block; /* Show large banner on large screens */
+  }
+
+  .banner-container-telole {
+    display: none; /* Hide mobile banner on large screens */
   }
 }
 
@@ -123,21 +149,11 @@
     max-width: 20%;
   }
 
-  .button-container,
-  .logged-in-button-container {
-    flex-direction: column;
-    align-items: center;
+  .button-container {
+    gap: 30px;
   }
 
-  .button-container button,
-  .logged-in-button-container button {
+  .home-page button {
     font-size: 1.5em;
-    margin-bottom: 15px;
-  }
-}
-
-@media (max-width: 1280px) {
-  .banner-container {
-    display: none; /* Hide banner on screens up to 1280px wide */
   }
 }

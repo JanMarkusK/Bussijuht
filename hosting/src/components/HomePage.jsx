@@ -8,6 +8,7 @@ import teeImage from '/banner/tee.png';
 import bussImage from '/banner/buss.png';
 import peatusImage from '/banner/peatus.png';
 import pealkiriImage from '/banner/pealkiri.png';
+import bannerTeloleImage from '/banner/bannertelole.png';
 
 const HomePageBanner = () => {
   return (
@@ -18,6 +19,14 @@ const HomePageBanner = () => {
       </div>
       <img id="pealkiri" src={pealkiriImage} alt="pealkiri" className="overlay-image pealkiri" />
       <img id="buss" src={bussImage} alt="buss" className="overlay-image buss" />
+    </div>
+  );
+};
+
+const HomePageBannerTelole = () => {
+  return (
+    <div className="banner-container-telole">
+      <img id="bannerTelole" src={bannerTeloleImage} alt="bannertelole" className="banner-telole-image" />  
     </div>
   );
 };
@@ -65,26 +74,24 @@ const HomePage = () => {
     <div className="home-page">
       <header id="pagebegin">
         <HomePageBanner />
+        <HomePageBannerTelole />
       </header>
       <main>
         <h1>Bus Driver Game</h1>
         <h3>Drink water and have fun with your friends!</h3>
         {!isLoggedIn ? (
           <div className="button-container">
-            <button onClick={handleLogInClick} className="button-centered">Log In</button>
             <button onClick={handleCreateAccountClick}>Create Account</button>
-            <button onClick={handleJoinGameClick} className="button-centered">Join as guest</button>
-            <button onClick={handleRulesClick} className="button-centered">Rules</button>
-
-
+            <button onClick={handleLogInClick}>Log In</button>
+            <button onClick={handleJoinGameClick}>Join / Create</button>
+            <button onClick={handleRulesClick}>Rules</button>
           </div>
         ) : (
-          <div className="logged-in-button-container">
-            <button onClick={handleJoinGameClick} className="button-centered">Join / Create</button>
-            <button onClick={handleProfileClick} className="button-centered">Profile</button>
-            <button onClick={handleRulesClick} className="button-centered">Rules</button>
-            <button onClick={handleLogOutClick} className="button-centered">Log Out</button>
-
+          <div className="button-container">
+            <button onClick={handleJoinGameClick}>Join / Create</button>
+            <button onClick={handleProfileClick}>Profile</button>
+            <button onClick={handleRulesClick}>Rules</button>
+            <button onClick={handleLogOutClick} className="logout-button">Log Out</button>
           </div>
         )}
       </main>
