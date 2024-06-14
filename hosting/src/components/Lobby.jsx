@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { firestoreDB, collection, addDoc, doc, updateDoc, getDocs, onSnapshot, query, where } from '../firebase';
+import { firestoreDB, collection, addDoc, doc, updateDoc, getDocs, onSnapshot, query, where, setDoc } from '../firebase';
 import PropTypes from 'prop-types';
-import '../assets/css/Lobby.css'; // Import the CSS file
+import { fetchDeck, shuffleDeck } from '../utils/deck';
+import '../assets/css/Lobby.css';
 
 const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   const [localRoomCode, setLocalRoomCode] = useState('');
@@ -13,7 +14,6 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   const navigate = useNavigate();
   const lobbyCollectionRef = collection(firestoreDB, "Lobby");
 
-  console.log ("laen lehte")
   useEffect(() => {
     if (localRoomCode) {
       const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
@@ -34,7 +34,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
       return () => unsubscribe();
     }
   }, [localRoomCode, setGameData, setInGame, navigate]);
-  
+
   const handleRoomCode = async () => {
     const newRoomCode = Math.floor(Math.random() * 90000) + 10000;
     setRoomCode(newRoomCode);
@@ -43,21 +43,22 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   };
 
   const handleCreateRoom = async () => {
-    //Teeb ruumi koodi
     const newRoomCode = await handleRoomCode();
-    //Paneb kõik vajaliku info Firestore doci
     const lobbyDocRef = await addDoc(lobbyCollectionRef, {
       roomCode: newRoomCode,
-      players: [{ name: localPlayerName, host: true, ready: false }],
-      inGame: false
+      players: [{ name: localPlayerName, host: true, ready: false, hand: [] }],
+      inGame: false,
+      pyramid: [], // Initialize pyramid array
+      currentTurn: 0,
+      currentRow: 4,
+      gameOver: false,
+      win: false,
     });
-    localStorage.setItem('lobbyCode', newRoomCode)
-    localStorage.setItem('playerName', localPlayerName)
-    localStorage.setItem('doc_id', lobbyDocRef.id)
-    console.log("Document ID host:", lobbyDocRef.id);
-    //Muudab proppide valuet, mdea kas need on tegelt vajalikud veel
+    localStorage.setItem('lobbyCode', newRoomCode);
+    localStorage.setItem('playerName', localPlayerName);
+    localStorage.setItem('doc_id', lobbyDocRef.id);
     setPlayerName(localPlayerName);
-    setRoomCode(localRoomCode);
+    setRoomCode(newRoomCode);
     setRoomCreated(true);
   };
 
@@ -66,21 +67,15 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
       alert("Please enter both a room code and a player name.");
       return;
     }
-    localStorage.setItem('playerName', localPlayerName)
-    localStorage.setItem('lobbyCode', localRoomCode)
-    console.log()
+    localStorage.setItem('playerName', localPlayerName);
+    localStorage.setItem('lobbyCode', localRoomCode);
     const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
     const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {
       querySnapshot.forEach(async (doc) => {
         const roomData = doc.data();
-        localStorage.setItem('doc_id', doc.id)
-        //test
-        const localTestPlayerName = localStorage.getItem('playerName')
-        const localTestLobbyCode = localStorage.getItem('lobbyCode')
-        console.log("Liituja nimi:", localTestPlayerName);
-        console.log("Liituja kood:", localTestLobbyCode);
-        const updatedPlayers = [...roomData.players, { name: localPlayerName, host: false, ready: false }];
+        localStorage.setItem('doc_id', doc.id);
+        const updatedPlayers = [...roomData.players, { name: localPlayerName, host: false, ready: false, hand: [] }];
         await updateDoc(doc.ref, { players: updatedPlayers });
       });
     } else {
@@ -93,14 +88,53 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {
       querySnapshot.forEach(async (doc) => {
-        await updateDoc(doc.ref, { inGame: true });
+        const data = doc.data();
+        if (Object.keys(data.players).length < 2) {
+          alert('Need at least 2 players to start the game.');
+          return;
+        }
+  
+        // Setup game logic here (syncing pyramid, hands, etc.)
+        const deck = await fetchDeck(); // Replace with your deck fetching logic
+        const shuffledDeck = shuffleDeck(deck);
+        const pyramidSetup = [
+          Array(1).fill('X'),
+          Array(2).fill('X'),
+          Array(3).fill('X'),
+          Array(4).fill('X'),
+          Array(5).fill('X')
+        ];
+        const pyramidCards = pyramidSetup.map(row => row.map(() => {
+          const cardValue = shuffledDeck.pop();
+          return { faceUp: false, value: cardValue };
+        }));
+  
+        // Update players' hands
+        const updatedPlayers = {};
+        Object.keys(data.players).forEach(playerId => {
+          updatedPlayers[playerId] = {
+            ...data.players[playerId],
+            hand: shuffledDeck.splice(0, Math.ceil(deck.length / Object.keys(data.players).length)),
+          };
+        });
+  
+        await updateDoc(doc.ref, {
+          inGame: true,
+          pyramid: pyramidCards,
+          players: updatedPlayers,
+        });
+  
+        setGameData({ ...data, inGame: true, pyramid: pyramidCards });
         setInGame(true);
-        navigate('/2faas');
+        navigate('/1faas');
       });
     } else {
       alert('No matching room found for the provided room code.');
     }
   };
+  
+  
+  
 
   return (
     <div className="lobby-page">
