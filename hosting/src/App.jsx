@@ -9,6 +9,7 @@ import SignIn from './components/authentication/SignIn';
 import SignUp from './components/authentication/SignUp';
 import ProfilePage from './components/ProfilePage';
 import Premium from './components/Premium';
+import AuthDetails from './components/authentication/AuthDetails' //rida mulle et ma näeksin kas on sisseloginud
 
 const App = () => {
   const [gameData, setGameData] = useState(null);
@@ -19,9 +20,10 @@ const App = () => {
   const [inRules, setInRules] = useState(false);
   const [inPremium, setInPremium] = useState(false);
 
-  return (
+  return ( //rinda 24 on minu jaoks
     <Router>
       <div>
+        <AuthDetails/> 
         <Routes>
           <Route path="/" element={
             <>
