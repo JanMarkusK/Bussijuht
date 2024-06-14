@@ -1,11 +1,49 @@
 /* src/assets/css/Profile.css */
+
 .profile-page {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: #f0f0f0;
+  background-image: url('/banner/taust.png');
+  background-position: center;
+  background-size: cover;
+  padding: 20px;
+}
+
+.profile-container {
+  position: relative;
+  z-index: 1;
+  background-color: rgba(255, 255, 255, 0.9); /* Valge taust, läbipaistvus 90% */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  width: 100%;
+}
+
+.profile-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.profile-field {
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #f0f0f0; /* Hall taustavärv */
+  border-radius: 5px;
+}
+
+.profile-field label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.profile-field p {
+  margin: 0;
 }
 
 .profile-form {
@@ -16,6 +54,7 @@
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
 }
 
 .profile-form input,
@@ -56,5 +95,4 @@ button {
 
 button:hover {
   background-color: #3d0274;
-
 }
