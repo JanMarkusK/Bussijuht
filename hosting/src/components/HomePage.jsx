@@ -88,7 +88,7 @@ const HomePage = () => {
           </div>
         ) : (
           <div className="button-container">
-            <button onClick={handleJoinGameClick}>Join / Create</button>
+            <button onClick={handleJoinGameClick}>Join as guest</button>
             <button onClick={handleProfileClick}>Profile</button>
             <button onClick={handleRulesClick}>Rules</button>
             <button onClick={handleLogOutClick} className="logout-button">Log Out</button>
