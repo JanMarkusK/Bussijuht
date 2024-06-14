@@ -12,8 +12,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: white;
-    padding: 20px;
+    background-color: rgba(73, 110, 66, 0.507);
+    padding: 10px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -49,7 +49,7 @@
 }
 
 .back-button {
-    margin-top: 20px;
+    margin-top: 2px;
     padding: 10px 20px;
     font-size: 1em;
     color: white;
@@ -65,7 +65,7 @@
 
 .login-link {
     margin-top: 10px;
-    color: #0066ff;
+    color: #19beff;
     text-shadow: 2px 2px 8px #000000;
     text-decoration: none;
     cursor: pointer;
@@ -73,4 +73,8 @@
 
 .login-link:hover {
     text-decoration: underline;
+}
+
+.sign-up-container{
+    color: rgb(230, 230, 230);
 }

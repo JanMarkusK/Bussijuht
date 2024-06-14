@@ -173,8 +173,9 @@ const SignUp = () => {
                 {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
                 
                 <button type='submit'>Sign Up</button>
+                <Link to="/login" className='login-link'>Have an account? Log in</Link>
             </form>
-            <Link to="/login" className='login-link'>Have an account? Log in</Link>
+            
             <button onClick={() => navigate('/')} className='back-button'>Back</button>
         </div>
     )

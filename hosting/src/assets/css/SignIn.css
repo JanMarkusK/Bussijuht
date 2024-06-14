@@ -13,8 +13,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: white;
-    padding: 20px;
+    background-color: rgba(73, 110, 66, 0.507);
+    padding: 15px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -50,7 +50,7 @@
 
 .signup-link {
     margin-top: 10px;
-    color: #01a2ff;
+    color: #20ddff;
     text-shadow: 2px 2px 8px #000000;
     text-decoration: none;
     cursor: pointer;
@@ -73,4 +73,8 @@
 
 .back-button:hover {
     background-color: #d32f2f;
+}
+
+.sign-in-container{
+    color: rgb(230, 230, 230);
 }

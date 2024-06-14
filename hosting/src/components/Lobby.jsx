@@ -124,7 +124,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   };
 
   const handleDisabledClick = () => {
-    setNotification("You must be logged in");
+    setNotification("You must be logged in to create lobby");
     setTimeout(() => setNotification(''), 3000); // Clear notification after 3 seconds
   };
 
@@ -137,63 +137,69 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   };
 
   return (
-    <div className="lobby-page">
-      <div className="input-container">
-        {isLoggedIn ? (
-          <>
-            <div className="top-buttons">
-              <button onClick={isJoining ? handleSwitchToCreate : () => setIsJoining(true)}>
-                {isJoining ? 'Switch to Create' : 'Switch to Join'}
-              </button>
-            </div>
-            {isJoining ? (
-              <input
-                type="text"
-                placeholder="Room Code"
-                value={localRoomCode}
-                onChange={(e) => setLocalRoomCode(e.target.value)}
-              />
-            ) : (
-              roomCreated && <div>Room Code: {localRoomCode}</div>
-            )}
-            <div>
-              <span>Player Name: {localPlayerName}</span>
-            </div>
-            {isJoining ? (
-              <button onClick={handleJoinRoom}>Join Room</button>
-            ) : null}
-            {isHost && !isJoining && (
-              <button onClick={handleStartGame}>Start Game</button>
-            )}
-          </>
+    // Lobby.jsx
+
+<div className="lobby-page">
+  <div className="input-container">
+    {isLoggedIn ? (
+      <>
+        <div className="top-buttons">
+          <div className="switch-buttons-container">
+            <button onClick={isJoining ? handleSwitchToCreate : () => setIsJoining(true)}>
+              {isJoining ? 'Switch to Create' : 'Switch to Join'}
+            </button>
+          </div>
+        </div>
+        {isJoining ? (
+          <input
+            type="text"
+            placeholder="Room Code"
+            value={localRoomCode}
+            onChange={(e) => setLocalRoomCode(e.target.value)}
+          />
         ) : (
-          <>
-            <input
-              type="text"
-              placeholder="Room Code"
-              value={localRoomCode}
-              onChange={(e) => setLocalRoomCode(e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="Player Name"
-              value={localPlayerName}
-              onChange={(e) => setLocalPlayerName(e.target.value)}
-            />
-            <button onClick={handleJoinRoom}>Join Room</button>
-          </>
+          roomCreated && <div>Room Code: {localRoomCode}</div>
         )}
-        {notification && <p className="notification">{notification}</p>}
-      </div>
-      <div className="player-list-container">
-        <h3>Players in Lobby:</h3>
-        <ul>
-          {players.map((player, index) => (
-            <li key={index}>{player.name}</li>
-          ))}
-        </ul>
-      </div>
-    </div>
+        <div className="player-name-container">
+          <span>Name: {localPlayerName}</span>
+        </div>
+        {isJoining ? (
+          <button onClick={handleJoinRoom}>Join Room</button>
+        ) : null}
+        {isHost && !isJoining && (
+          <button onClick={handleStartGame}>Start Game</button>
+        )}
+      </>
+    ) : (
+      <>
+        <input
+          type="text"
+          placeholder="Room Code"
+          value={localRoomCode}
+          onChange={(e) => setLocalRoomCode(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Player Name"
+          value={localPlayerName}
+          onChange={(e) => setLocalPlayerName(e.target.value)}
+        />
+        <button onClick={handleJoinRoom}>Join Room</button>
+      </>
+    )}
+    {notification && <p className="notification">{notification}</p>}
+  </div>
+  <div className="player-list-container">
+    <h3>Players in Lobby:</h3>
+    <ul>
+      {players.map((player, index) => (
+        <li key={index}>{player.name}</li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+
   );
 };
 

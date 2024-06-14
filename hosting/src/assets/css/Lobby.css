@@ -1,62 +1,71 @@
 /* src/assets/css/Lobby.css */
 
 .lobby-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-image: url('/banner/taust.png');
-    text-align: center; /* Center text and image horizontally */
-  }
-  
-  .lobby-page h3 {
-    font-size: 2em;
-    margin-bottom: 20px;
-  }
-  
-  .lobby-page input {
-    padding: 10px;
-    font-size: 1em;
-    margin: 10px 0;
-    width: 200px;
-    border-radius: 10px;
-  }
-  
-  .lobby-page button {
-    padding: 10px 20px;
-    font-size: 1.2em;
-    cursor: pointer;
-    margin: 10px;
-  }
-  
-  .lobby-page ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .lobby-page li {
-    margin: 5px 0;
-  }
-  
-  .input-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .player-list-container {
-    margin-top: 20px;
-  }
-  
-  .lobby-page .button-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .lobby-page .button-container button {
-    margin: 10px;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: url('/banner/taust.png');
+  text-align: center; /* Center text and image horizontally */
+}
+
+.lobby-page h3 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.lobby-page input {
+  padding: 10px;
+  font-size: 1em;
+  margin: 10px 0;
+  width: 200px;
+  border-radius: 10px;
+}
+
+.lobby-page button {
+  padding: 10px 20px;
+  font-size: 1.2em;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.lobby-page ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.lobby-page li {
+  margin: 5px 0;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 25px; /* Increased margin-bottom */
+}
+
+.player-name-container {
+  background-color: #e9d414; /* Hall taustavärv */
+  padding: 5px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.player-list-container {
+  margin-top: 20px;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+.top-buttons {
+  margin-bottom: 10px;
+}
+
+.top-buttons button {
+  padding: 10px 20px;
+  font-size: 1.2em;
+  cursor: pointer;
+  margin: 40px; /* Vähendatud nuppude vaheline vahe */
+}

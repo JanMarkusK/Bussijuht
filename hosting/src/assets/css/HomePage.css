@@ -33,11 +33,6 @@
   text-shadow: 2px 2px 4px #000000;
 }
 
-.home-page h3 {
-  margin-bottom: 10px;
-  color: #ffffff;
-  text-shadow: 2px 2px 4px #000000;
-}
 
 .button-container {
   display: flex;
@@ -87,6 +82,12 @@
 
   .home-page button {
     font-size: 1em;
+  }
+  .home-page h3 {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px #000000;
   }
 }
 
@@ -155,5 +156,10 @@
 
   .home-page button {
     font-size: 1.5em;
+  }
+  .home-page h3 {
+    margin-bottom: 10px;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px #000000;
   }
 }
