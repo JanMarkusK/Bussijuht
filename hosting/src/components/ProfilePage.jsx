@@ -113,9 +113,9 @@ const ProfilePage = () => {
                 onChange={handleChange}
               >
                 <option value="">Select gender</option>
-                <option value="Mees">Mees</option>
-                <option value="Naine">Naine</option>
-                <option value="Muu">Muu</option>
+                <option value="Man">Man</option>
+                <option value="Woman">Woman</option>
+                <option value="Another">Another</option>
               </select>
               <label>Age:</label>
               <input 
@@ -131,9 +131,11 @@ const ProfilePage = () => {
                 onChange={handleChange}
               >
                 <option value="">Select relationship status</option>
-                <option value="vaba">vaba</option>
-                <option value="hõivatud">hõivatud</option>
-                <option value="ei tea">ei tea</option>
+                <option value="Single">Single</option>
+                <option value="Married">Married</option>
+                <option value="In a relationship">In a relationship</option>
+                <option value="Do not know">Do not know</option>
+                <option value="Drunk">Drunk</option>
               </select>
               <label>Favorite Drink:</label>
               <input 
