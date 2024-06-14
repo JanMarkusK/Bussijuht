@@ -71,9 +71,9 @@ const HomePage = () => {
         <h3>Drink water and have fun with your friends!</h3>
         {!isLoggedIn ? (
           <div className="button-container">
-            <button onClick={handleCreateAccountClick}>Create Account</button>
             <button onClick={handleLogInClick} className="button-centered">Log In</button>
-            <button onClick={handleJoinGameClick} className="button-centered">Join / Create</button>
+            <button onClick={handleCreateAccountClick}>Create Account</button>
+            <button onClick={handleJoinGameClick} className="button-centered">Join as guest</button>
             <button onClick={handleRulesClick} className="button-centered">Rules</button>
 
 
