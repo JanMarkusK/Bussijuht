@@ -158,6 +158,7 @@ const SignUp = () => {
                     <option value="Cocktail">Cocktail</option>
                     <option value="Cider">Cider</option>
                     <option value="Rum">Rum</option>
+                    <option value="Vodka">Vodka</option>
                     <option value="Lilimpa limonaad">Limpa limonaad</option>
 
                 </select>
