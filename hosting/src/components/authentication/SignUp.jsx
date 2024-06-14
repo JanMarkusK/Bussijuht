@@ -50,7 +50,7 @@ const SignUp = () => {
                 const user = userCredential.user;
                 console.log(user);
                 setSuccessMessage("User created successfully!");
-                navigate('/guestlobby');
+                navigate('../');
                 handleSignUp(user.uid);
             }).catch((error) => {
                 console.log(error);

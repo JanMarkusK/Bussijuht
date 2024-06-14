@@ -1,6 +1,7 @@
 // src/components/HomePage.jsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { auth } from '../firebase'; // Import auth from Firebase
 import '../assets/css/HomePage.css';
 import '../assets/css/bannerbuss.css';
 import teeImage from '/banner/tee.png';
@@ -23,6 +24,15 @@ const HomePageBanner = () => {
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      setIsLoggedIn(!!user);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const handleCreateAccountClick = () => {
     navigate('/signup');
@@ -34,6 +44,17 @@ const HomePage = () => {
 
   const handleLogInClick = () => {
     navigate('/login');
+  };
+
+  const handleLogOutClick = () => {
+    auth.signOut().then(() => {
+      setIsLoggedIn(false);
+      navigate('/');
+    });
+  };
+
+  const handleProfileClick = () => {
+    navigate('/profile');
   };
 
   const handleRulesClick = () => {
@@ -48,14 +69,24 @@ const HomePage = () => {
       <main>
         <h1>Bus Driver Game</h1>
         <h3>Drink water and have fun with your friends!</h3>
-        <div className="button-container">
-          <button onClick={handleCreateAccountClick}>Create Account</button>
-          <button onClick={handleLogInClick} className="button-centered">Log In</button>
-        </div>
-        <div className="centered-button-container">
-          <button onClick={handleJoinGameClick} className="centered-button">Join by Guest</button>
-          <button onClick={handleRulesClick} className="rules-button">Rules</button>
-        </div>
+        {!isLoggedIn ? (
+          <div className="button-container">
+            <button onClick={handleCreateAccountClick}>Create Account</button>
+            <button onClick={handleLogInClick} className="button-centered">Log In</button>
+            <button onClick={handleJoinGameClick} className="button-centered">Join / Create</button>
+            <button onClick={handleRulesClick} className="button-centered">Rules</button>
+
+
+          </div>
+        ) : (
+          <div className="logged-in-button-container">
+            <button onClick={handleJoinGameClick} className="button-centered">Join / Create</button>
+            <button onClick={handleProfileClick} className="button-centered">Profile</button>
+            <button onClick={handleRulesClick} className="button-centered">Rules</button>
+            <button onClick={handleLogOutClick} className="button-centered">Log Out</button>
+
+          </div>
+        )}
       </main>
     </div>
   );

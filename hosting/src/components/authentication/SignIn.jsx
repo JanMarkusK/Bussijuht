@@ -32,7 +32,7 @@ const SignIn = () => {
             setErrorMessage('');
 
             // Navigate to the lobby page after successful sign-in
-            navigate('/guestlobby');
+            navigate('../');
 
         } catch (error) {
             console.log(error);
