@@ -6,6 +6,7 @@ import { auth } from "../../firebase";
 import { useNavigate, Link } from 'react-router-dom';
 import { firestoreDB, collection, addDoc } from '../../firebase';
 import '../../assets/css/SignUp.css';
+import Premium from "../Premium";
 
 const SignUp = () => {
     const [firstName, setFirstName] = useState('');
@@ -172,7 +173,7 @@ const SignUp = () => {
                 {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                 {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
                 
-                <button type='submit'>Sign Up</button>
+                <button type='submit' onClick={() => navigate('/premium')}>Sign Up</button>
             </form>
             <Link to="/login" className='login-link'>Have an account? Log in</Link>
             <button onClick={() => navigate('/')} className='back-button'>Back</button>

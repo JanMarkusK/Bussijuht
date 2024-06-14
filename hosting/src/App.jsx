@@ -8,6 +8,7 @@ import RulesPage from './components/RulesPage';
 import SignIn from './components/authentication/SignIn';
 import SignUp from './components/authentication/SignUp';
 import ProfilePage from './components/ProfilePage';
+import Premium from './components/Premium';
 
 const App = () => {
   const [gameData, setGameData] = useState(null);
@@ -16,6 +17,7 @@ const App = () => {
   const [inGame, setInGame] = useState(false);
   const [inLobby, setInLobby] = useState(false);
   const [inRules, setInRules] = useState(false);
+  const [inPremium, setInPremium] = useState(false);
 
   return (
     <Router>
@@ -30,12 +32,14 @@ const App = () => {
           <Route path="/login" element={<SignIn />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/rules" element={<RulesPage setInRules={setInRules} />} />
+          <Route path="/premium" element={<Premium />} />
           <Route path="/guestlobby" element={
             <Lobby
               setGameData={setGameData}
               setRoomCode={setRoomCode}
               setPlayerName={setPlayerName}
               setInGame={setInGame}
+              setInPremium={setInPremium}
             />
           } />
           <Route path="/2faas" element={

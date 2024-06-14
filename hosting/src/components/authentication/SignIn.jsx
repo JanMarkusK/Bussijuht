@@ -61,7 +61,7 @@ const SignIn = () => {
                 />
                 {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                 {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-                <button type='submit'>Log In</button>
+                <button type='submit' onClick={() => navigate('/premium')}>Log In</button>
             </form>
             <Link to="/signup" className='signup-link'>No account? Create an account</Link>
             <button onClick={() => navigate('/')} className='back-button'>Back</button>
