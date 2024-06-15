@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Lobby from './components/Lobby';
 import BusDriver from './components/BusDriver';
+import FirstPhase from './components/FirstPhase';
 import HomePage from './components/HomePage';
 import RulesPage from './components/RulesPage';
 import SignIn from './components/authentication/SignIn';
@@ -39,11 +40,10 @@ const App = () => {
             />
           } />
           <Route path="/2faas" element={
-            <BusDriver
-              roomCode={roomCode}
-              playerName={playerName}
-              gameData={gameData}
-            />
+            <BusDriver/>
+          } />
+          <Route path="/1faas" element={
+            <FirstPhase/>
           } />
         </Routes>
       </div>

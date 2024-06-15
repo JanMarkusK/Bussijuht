@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 const Card = ({ card, onClick }) => {
   const cardFileName = card.faceUp ? `${card.value.replace(/ /g, '_')}.png` : 'back.png';
-  const cardImage = `/cards/${cardFileName}`;
+  const cardImage = `../../cards/${cardFileName}`;
 
   return (
     <div className={`card ${card.faceUp ? 'flipped' : ''}`} onClick={onClick}>
