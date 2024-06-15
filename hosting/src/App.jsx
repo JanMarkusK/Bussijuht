@@ -41,7 +41,6 @@ const App = () => {
           <Route path="/2faas" element={
             <BusDriver/>
           } />
-          } />
           <Route path="/1faas" element={
             <FirstPhase/>
           } />

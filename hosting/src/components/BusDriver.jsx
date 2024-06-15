@@ -77,7 +77,7 @@ const BusDriver = () => {
           if (lastCard) {
             const cardValue = lastCard.value.split('_')[0];
             const cardFace = lastCard.faceUp;
-            if (cardValue !== 'J' && cardValue !== 'Q' && cardValue !== 'K' && cardValue !== 'A', cardFace ) {
+            if (cardValue !== 'J' && cardValue !== 'Q' && cardValue !== 'K', cardFace ) {
               setWin(true);
               console.log("voitsin")
             }
@@ -275,11 +275,11 @@ const BusDriver = () => {
     //setCurrentRow(currentRow - 1);
     
     const cardValue = newPyramid[rowIndex][cardIndex].value.split('_')[0];
-    if (cardValue === 'J' || cardValue === 'Q' || cardValue === 'K' || cardValue === 'A') {
+    if (cardValue === 'J' || cardValue === 'Q' || cardValue === 'K') {
       setGameOver(true);
     }
 
-    if (currentRow === 0 && cardValue !== 'J' && cardValue !== 'Q' && cardValue !== 'K' && cardValue !== 'A') {
+    if (currentRow === 0 && cardValue !== 'J' && cardValue !== 'Q' && cardValue !== 'K') {
       setWin(true);
     }
     
