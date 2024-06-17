@@ -1,7 +1,7 @@
 //src/components/authentication/SignIn.jsx
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth, firestoreDB, collection, getDocs, query, where } from "../../firebase";
+import { auth, firestoreDB, collection, getDocs, query, where, updateDoc, doc } from "../../firebase";
 import { useNavigate, Link } from 'react-router-dom';
 import '../../assets/css/SignIn.css';
 
@@ -10,30 +10,32 @@ const SignIn = () => {
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
-    const [userData, setUserData] = useState(null);
     const navigate = useNavigate();
     
     const signIn = async (e) => {
         e.preventDefault();
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            console.log(userCredential);
+            const user = userCredential.user;
 
             // Fetch additional user information from Firestore
             const userCollectionRef = collection(firestoreDB, "User");
             const q = query(userCollectionRef, where("email", "==", email));
             const querySnapshot = await getDocs(q);
 
-            querySnapshot.forEach((doc) => {
-                setUserData(doc.data());
-            });
+            if (!querySnapshot.empty) {
+                querySnapshot.forEach((doc) => {
+                    const userData = doc.data();
+                    if (userData.premium) {
+                        navigate('../');
+                    } else {
+                        navigate('/premium', { state: { userId: doc.id } });
+                    }
+                });
+            }
 
             setSuccessMessage("Successfully logged in!");
             setErrorMessage('');
-
-            // Navigate to the lobby page after successful sign-in
-            navigate('../');
-
         } catch (error) {
             console.log(error);
             setErrorMessage("Email or password is incorrect.");
