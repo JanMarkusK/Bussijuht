@@ -52,6 +52,13 @@
   background-color: red;
   color: white;
 }
+.home-page .logout-button:hover {
+  background-color: #c50303;
+}
+
+button:hover {
+  background-color: #3d0274;
+}
 
 /* Mobile (Smartphone) 480px and below */
 @media (max-width: 480px) {

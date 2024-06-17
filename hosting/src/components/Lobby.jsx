@@ -1,3 +1,5 @@
+// Lobby.jsx
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, firestoreDB, collection, addDoc, updateDoc, getDocs, onSnapshot, query, where } from '../firebase';
@@ -16,7 +18,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   const navigate = useNavigate();
   const lobbyCollectionRef = collection(firestoreDB, "Lobby");
 
-  console.log ("laen lehte")
+  console.log("laen lehte");
   useEffect(() => {
     const fetchUserName = async (email) => {
       try {
@@ -80,9 +82,9 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
       players: [{ name: localPlayerName, host: true, ready: false }],
       inGame: false
     });
-    localStorage.setItem('lobbyCode', newRoomCode)
-    localStorage.setItem('playerName', localPlayerName)
-    localStorage.setItem('doc_id', lobbyDocRef.id)
+    localStorage.setItem('lobbyCode', newRoomCode);
+    localStorage.setItem('playerName', localPlayerName);
+    localStorage.setItem('doc_id', lobbyDocRef.id);
     console.log("Document ID host:", lobbyDocRef.id);
     //Muudab proppide valuet, mdea kas need on tegelt vajalikud veel
     setPlayerName(localPlayerName);
@@ -97,18 +99,18 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
       alert("Please enter both a room code and a player name.");
       return;
     }
-    localStorage.setItem('playerName', localPlayerName)
-    localStorage.setItem('lobbyCode', localRoomCode)
-    console.log()
+    localStorage.setItem('playerName', localPlayerName);
+    localStorage.setItem('lobbyCode', localRoomCode);
+    console.log();
     const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
     const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {
       querySnapshot.forEach(async (doc) => {
         const roomData = doc.data();
-        localStorage.setItem('doc_id', doc.id)
+        localStorage.setItem('doc_id', doc.id);
         //test
-        const localTestPlayerName = localStorage.getItem('playerName')
-        const localTestLobbyCode = localStorage.getItem('lobbyCode')
+        const localTestPlayerName = localStorage.getItem('playerName');
+        const localTestLobbyCode = localStorage.getItem('lobbyCode');
         console.log("Liituja nimi:", localTestPlayerName);
         console.log("Liituja kood:", localTestLobbyCode);
         const updatedPlayers = [...roomData.players, { name: localPlayerName, host: false, ready: false }];
@@ -149,67 +151,67 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   return (
     // Lobby.jsx
 
-<div className="lobby-page">
-  <div className="input-container">
-    {isLoggedIn ? (
-      <>
-        <div className="top-buttons">
-          <div className="switch-buttons-container">
-            <button onClick={isJoining ? handleSwitchToCreate : () => setIsJoining(true)}>
-              {isJoining ? 'Switch to Create' : 'Switch to Join'}
-            </button>
-          </div>
-        </div>
-        {isJoining ? (
-          <input
-            type="text"
-            placeholder="Room Code"
-            value={localRoomCode}
-            onChange={(e) => setLocalRoomCode(e.target.value)}
-          />
+    <div className="lobby-page">
+      <div className="input-container">
+        {isLoggedIn ? (
+          <>
+            <div className="top-buttons">
+              <div className="switch-buttons-container">
+                <button onClick={isJoining ? handleSwitchToCreate : () => setIsJoining(true)}>
+                  {isJoining ? 'Switch to Create' : 'Switch to Join'}
+                </button>
+              </div>
+            </div>
+            <div className="room-code">
+              {isJoining ? (
+                <input
+                  type="text"
+                  placeholder="Room Code"
+                  value={localRoomCode}
+                  onChange={(e) => setLocalRoomCode(e.target.value)}
+                />
+              ) : (
+                roomCreated && <div>Room Code: {localRoomCode}</div>
+              )}
+            </div>
+            <div className="player-name-container">
+              <span>Name: {localPlayerName}</span>
+            </div>
+            {isJoining ? (
+              <button className="join-room-button" onClick={handleJoinRoom}>Join Room</button>
+            ) : null}
+            {isHost && !isJoining && (
+              <button className="start-game-button" onClick={handleStartGame}>Start Game</button>
+            )}
+          </>
         ) : (
-          roomCreated && <div>Room Code: {localRoomCode}</div>
+          <>
+            <input
+              type="text"
+              placeholder="Room Code"
+              value={localRoomCode}
+              onChange={(e) => setLocalRoomCode(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Player Name"
+              value={localPlayerName}
+              onChange={(e) => setLocalPlayerName(e.target.value)}
+            />
+            <button className="join-room-button" onClick={handleJoinRoom}>Join Room</button>
+          </>
         )}
-        <div className="player-name-container">
-          <span>Name: {localPlayerName}</span>
-        </div>
-        {isJoining ? (
-          <button onClick={handleJoinRoom}>Join Room</button>
-        ) : null}
-        {isHost && !isJoining && (
-          <button onClick={handleStartGame}>Start Game</button>
-        )}
-      </>
-    ) : (
-      <>
-        <input
-          type="text"
-          placeholder="Room Code"
-          value={localRoomCode}
-          onChange={(e) => setLocalRoomCode(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Player Name"
-          value={localPlayerName}
-          onChange={(e) => setLocalPlayerName(e.target.value)}
-        />
-        <button onClick={handleJoinRoom}>Join Room</button>
-      </>
-    )}
-    {notification && <p className="notification">{notification}</p>}
-  </div>
-  <div className="player-list-container">
-    <h3>Players in Lobby:</h3>
-    <ul>
-      {players.map((player, index) => (
-        <li key={index}>{player.name}</li>
-      ))}
-    </ul>
-  </div>
-</div>
-
-
+        {notification && <p className="notification">{notification}</p>}
+      </div>
+      <div className="player-list-container">
+        <h3>Players in Lobby:</h3>
+        <ul>
+          {players.map((player, index) => (
+            <li key={index}>{player.name}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 };
 
