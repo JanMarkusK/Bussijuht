@@ -48,7 +48,12 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           if (data) {
-            setPlayers(data.players || []);
+            setPlayers((prevPlayers) => {
+              if (JSON.stringify(prevPlayers) !== JSON.stringify(data.players)) {
+                return data.players || [];
+              }
+              return prevPlayers;
+            });
             if (data.inGame) {
               setInGame(true);
               setGameData(data);
