@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { firestoreDB, collection, addDoc, doc, updateDoc, getDocs, onSnapshot, query, where } from '../firebase';
+import { firestoreDB, collection, addDoc, doc, updateDoc, getDocs, onSnapshot, query, where } from '../firebase'; // Adjust imports based on your Firebase setup
 import PropTypes from 'prop-types';
 import '../assets/css/Lobby.css'; // Import the CSS file
 
@@ -13,7 +13,6 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   const navigate = useNavigate();
   const lobbyCollectionRef = collection(firestoreDB, "Lobby");
 
-  console.log ("laen lehte")
   useEffect(() => {
     if (localRoomCode) {
       const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
@@ -25,7 +24,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
             if (data.inGame) {
               setInGame(true);
               setGameData(data);
-              navigate('/2faas');
+              navigate('/1faas'); // Navigate to FirstFaze component upon game start
             }
           }
         });
@@ -43,21 +42,18 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   };
 
   const handleCreateRoom = async () => {
-    //Teeb ruumi koodi
     const newRoomCode = await handleRoomCode();
-    //Paneb kõik vajaliku info Firestore doci
     const lobbyDocRef = await addDoc(lobbyCollectionRef, {
       roomCode: newRoomCode,
       players: [{ name: localPlayerName, host: true, ready: false }],
       inGame: false
     });
-    localStorage.setItem('lobbyCode', newRoomCode)
-    localStorage.setItem('playerName', localPlayerName)
-    localStorage.setItem('doc_id', lobbyDocRef.id)
+    localStorage.setItem('lobbyCode', newRoomCode);
+    localStorage.setItem('playerName', localPlayerName);
+    localStorage.setItem('doc_id', lobbyDocRef.id);
     console.log("Document ID host:", lobbyDocRef.id);
-    //Muudab proppide valuet, mdea kas need on tegelt vajalikud veel
     setPlayerName(localPlayerName);
-    setRoomCode(localRoomCode);
+    setRoomCode(newRoomCode); // Corrected to setRoomCode(newRoomCode) instead of setLocalRoomCode(newRoomCode)
     setRoomCreated(true);
   };
 
@@ -66,20 +62,15 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
       alert("Please enter both a room code and a player name.");
       return;
     }
-    localStorage.setItem('playerName', localPlayerName)
-    localStorage.setItem('lobbyCode', localRoomCode)
-    console.log()
+    localStorage.setItem('playerName', localPlayerName);
+    localStorage.setItem('lobbyCode', localRoomCode);
+    console.log();
     const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
     const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {
       querySnapshot.forEach(async (doc) => {
         const roomData = doc.data();
-        localStorage.setItem('doc_id', doc.id)
-        //test
-        const localTestPlayerName = localStorage.getItem('playerName')
-        const localTestLobbyCode = localStorage.getItem('lobbyCode')
-        console.log("Liituja nimi:", localTestPlayerName);
-        console.log("Liituja kood:", localTestLobbyCode);
+        localStorage.setItem('doc_id', doc.id);
         const updatedPlayers = [...roomData.players, { name: localPlayerName, host: false, ready: false }];
         await updateDoc(doc.ref, { players: updatedPlayers });
       });
@@ -91,11 +82,17 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   const handleStartGame = async () => {
     const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
     const querySnapshot = await getDocs(q);
+    
     if (!querySnapshot.empty) {
       querySnapshot.forEach(async (doc) => {
-        await updateDoc(doc.ref, { inGame: true });
+        const roomData = doc.data();
+        
+        // Synchronize game data
         setInGame(true);
-        navigate('/2faas');
+        setGameData(roomData); // Set game data received from Firestore
+  
+        // Navigate to game page
+        navigate('/1faas'); // Navigate to FirstFaze component upon game start
       });
     } else {
       alert('No matching room found for the provided room code.');

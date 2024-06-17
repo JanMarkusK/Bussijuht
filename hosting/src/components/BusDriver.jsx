@@ -77,7 +77,7 @@ const BusDriver = () => {
           if (lastCard) {
             const cardValue = lastCard.value.split('_')[0];
             const cardFace = lastCard.faceUp;
-            if (cardValue !== 'J' && cardValue !== 'Q' && cardValue !== 'K', cardFace ) {
+            if (cardValue !== 'J' && cardValue !== 'Q' && cardValue !== 'K' && cardValue !== 'A', cardFace ) {
               setWin(true);
               console.log("voitsin")
             }
@@ -88,6 +88,11 @@ const BusDriver = () => {
     // if (win){
     //   return () => unsubscribe();
     // }
+
+    return () => {
+      console.log('Unsubscribing from onSnapshot');
+      unsubscribe();
+    };
   }, [pyramidDocId]);
   
 
@@ -252,12 +257,12 @@ const BusDriver = () => {
 
 
   const updateCardFaceUpInFirestore = async (rowIndex, cardIndex) => {
-      const pyramidDocRef = doc(pyramidCollectionRef, pyramidDocId);
-      const cardFieldName = `row${rowIndex}_col${cardIndex}`;
-      await updateDoc(pyramidDocRef, {
-        [`${cardFieldName}.faceUp`]: true
-      });
-    };
+    const pyramidDocRef = doc(pyramidCollectionRef, pyramidDocId);
+    const cardFieldName = `row${rowIndex}_col${cardIndex}`;
+    await updateDoc(pyramidDocRef, {
+      [`${cardFieldName}.faceUp`]: true
+    });
+  };
 
   const handleCardClick = async (rowIndex, cardIndex) => {
     if (gameOver || win || cardsTurned[rowIndex] || rowIndex !== currentRow) return;
@@ -275,11 +280,11 @@ const BusDriver = () => {
     //setCurrentRow(currentRow - 1);
     
     const cardValue = newPyramid[rowIndex][cardIndex].value.split('_')[0];
-    if (cardValue === 'J' || cardValue === 'Q' || cardValue === 'K') {
+    if (cardValue === 'J' || cardValue === 'Q' || cardValue === 'K' || cardValue === 'A') {
       setGameOver(true);
     }
 
-    if (currentRow === 0 && cardValue !== 'J' && cardValue !== 'Q' && cardValue !== 'K') {
+    if (currentRow === 0 && cardValue !== 'J' && cardValue !== 'Q' && cardValue !== 'K' && cardValue !== 'A') {
       setWin(true);
     }
     
