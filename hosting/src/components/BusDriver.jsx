@@ -52,7 +52,7 @@ const BusDriver = () => {
         setPyramid(pyramidCards);
 
         let lastFlippedRow = 4;
-        console.log("lasFlippedRow: " + lastFlippedRow)
+        console.log("lastFlippedRow: " + lastFlippedRow)
         for (let i = 0; i < pyramidCards.length; i++) {
           if (pyramidCards[i].some(card => card && card.faceUp)) {
             console.log("index: " + i )
@@ -61,7 +61,7 @@ const BusDriver = () => {
             } else{
               lastFlippedRow = i -1;
             }
-            console.log("lasFlippedRow2: " + lastFlippedRow)
+            console.log("lastFlippedRow2: " + lastFlippedRow)
             setCurrentRow(lastFlippedRow);
             break;
 

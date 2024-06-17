@@ -24,7 +24,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
             if (data.inGame) {
               setInGame(true);
               setGameData(data);
-              navigate('/1faas'); // Navigate to FirstFaze component upon game start
+              navigate('/1faas');
             }
           }
         });
