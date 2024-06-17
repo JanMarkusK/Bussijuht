@@ -1,6 +1,7 @@
 /* src/assets/css/Profile.css */
 
 .profile-page {
+  color: rgba(3, 3, 3, 0.952);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -53,7 +54,7 @@
   background-color: white;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(252, 250, 250, 0.1);
   margin-top: 20px;
 }
 

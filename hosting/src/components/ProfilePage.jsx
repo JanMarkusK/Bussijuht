@@ -20,7 +20,6 @@ const ProfilePage = () => {
         const querySnapshot = await getDocs(q);
         if (!querySnapshot.empty) {
           const userDoc = querySnapshot.docs[0];
-          console.log("User data: ", userDoc.data());
           setUserData(userDoc.data());
           setUpdatedData(userDoc.data());
         } else {
@@ -55,15 +54,20 @@ const ProfilePage = () => {
     setEditMode(true);
   };
 
-  const handleSaveClick = async () => {
-    const q = query(collection(firestoreDB, "User"), where("email", "==", auth.currentUser.email));
-    const querySnapshot = await getDocs(q);
-    if (!querySnapshot.empty) {
-      const userDoc = querySnapshot.docs[0];
-      const userDocRef = doc(firestoreDB, "User", userDoc.id);
-      await updateDoc(userDocRef, updatedData);
-      setUserData(updatedData);
-      setEditMode(false);
+  const handleSaveClick = async (e) => {
+    e.preventDefault();
+    try {
+      const q = query(collection(firestoreDB, "User"), where("email", "==", auth.currentUser.email));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0];
+        const userDocRef = doc(firestoreDB, "User", userDoc.id);
+        await updateDoc(userDocRef, updatedData);
+        setUserData(updatedData);
+        setEditMode(false);
+      }
+    } catch (error) {
+      console.error("Error updating user data: ", error);
     }
   };
 
@@ -82,15 +86,16 @@ const ProfilePage = () => {
     <div className="profile-page">
       <h1>Profile</h1>
       {userData ? (
-        <div>
+        <div className="profile-container">
           {editMode ? (
-            <div>
+            <form className="profile-form" onSubmit={handleSaveClick}>
               <label>First Name:</label>
               <input 
                 type="text" 
                 name="firstName" 
                 value={updatedData.firstName} 
                 onChange={handleChange} 
+                required
               />
               <label>Last Name:</label>
               <input 
@@ -98,6 +103,7 @@ const ProfilePage = () => {
                 name="lastName" 
                 value={updatedData.lastName} 
                 onChange={handleChange} 
+                required
               />
               <label>Username:</label>
               <input 
@@ -105,30 +111,36 @@ const ProfilePage = () => {
                 name="username" 
                 value={updatedData.username} 
                 onChange={handleChange} 
+                required
+              />
+              <label>Age:</label>
+              <input 
+                type="number" 
+                name="age" 
+                value={updatedData.age} 
+                onChange={handleChange}
+                min="1"
+                max="100"
+                required 
               />
               <label>Gender:</label>
               <select 
                 name="gender" 
                 value={updatedData.gender} 
                 onChange={handleChange}
+                required
               >
                 <option value="">Select gender</option>
                 <option value="Man">Man</option>
                 <option value="Woman">Woman</option>
                 <option value="Another">Another</option>
               </select>
-              <label>Age:</label>
-              <input 
-                type="number" 
-                name="age" 
-                value={updatedData.age} 
-                onChange={handleChange} 
-              />
               <label>Relationship Status:</label>
               <select 
                 name="relationshipStatus" 
                 value={updatedData.relationshipStatus} 
                 onChange={handleChange}
+                required
               >
                 <option value="">Select relationship status</option>
                 <option value="Single">Single</option>
@@ -138,23 +150,50 @@ const ProfilePage = () => {
                 <option value="Drunk">Drunk</option>
               </select>
               <label>Favorite Drink:</label>
-              <input 
-                type="text" 
+              <select 
                 name="favoriteDrink" 
                 value={updatedData.favoriteDrink} 
-                onChange={handleChange} 
-              />
-              <button onClick={handleSaveClick}>Save</button>
-            </div>
+                onChange={handleChange}
+                required
+              >
+                <option value="">Enter your favorite drink</option>
+                <option value="Milk">Milk</option>
+                <option value="Water">Water</option>
+                <option value="Coffee">Coffee</option>
+                <option value="Wine">Wine</option>
+                <option value="Whiskey">Whiskey</option>
+                <option value="Beer">Beer</option>
+                <option value="Cocktail">Cocktail</option>
+                <option value="Cider">Cider</option>
+                <option value="Rum">Rum</option>
+                <option value="Vodka">Vodka</option>
+                <option value="Limpa limonaad">Limpa limonaad</option>
+              </select>
+              <button type="submit">Save</button>
+            </form>
           ) : (
-            <div>
-              <p>First Name: {userData.firstName}</p>
-              <p>Last Name: {userData.lastName}</p>
-              <p>Username: {userData.username}</p>
-              <p>Gender: {userData.gender}</p>
-              <p>Age: {userData.age}</p>
-              <p>Relationship Status: {userData.relationshipStatus}</p>
-              <p>Favorite Drink: {userData.favoriteDrink}</p>
+            <div className="profile-content">
+              <div className="profile-field">
+                <p>First Name: {userData.firstName}</p>
+              </div>
+              <div className="profile-field">
+                <p>Last Name: {userData.lastName}</p>
+              </div>
+              <div className="profile-field">
+                <p>Username: {userData.username}</p>
+              </div>
+              <div className="profile-field">
+                <p>Age: {userData.age}</p>
+              </div>
+              <div className="profile-field">
+                <p>Gender: {userData.gender}</p>
+              </div>
+              <div className="profile-field">
+                <p>Relationship Status: {userData.relationshipStatus}</p>
+              </div>
+              <div className="profile-field">
+                <p>Favorite Drink: {userData.favoriteDrink}</p>
+              </div>
               <button onClick={handleEditClick}>Edit</button>
             </div>
           )}

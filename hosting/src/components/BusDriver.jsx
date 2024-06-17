@@ -88,6 +88,7 @@ const BusDriver = () => {
     // if (win){
     //   return () => unsubscribe();
     // }
+    return () => unsubscribe();
   }, [pyramidDocId]);
   
 

@@ -1,4 +1,4 @@
-//src/components/authentication/SignUp.jsx
+// src/components/authentication/SignUp.jsx
 
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -24,7 +24,7 @@ const SignUp = () => {
     const userCollectionRef = collection(firestoreDB, "User");
 
     const handleSignUp = async (uid) => {
-        //Paneb kõik vajaliku info Firestore doci
+        // Save user data to Firestore
         await addDoc(userCollectionRef, {
             uid: uid,
             email: email,
@@ -35,6 +35,7 @@ const SignUp = () => {
             age: age,
             relationshipStatus: relationshipStatus,
             favoriteDrink: favoriteDrink,
+            premium: false // Default value for premium
         });
     };
 
@@ -48,10 +49,10 @@ const SignUp = () => {
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
-                console.log(user);
-                setSuccessMessage("User created successfully!");
-                navigate('../');
-                handleSignUp(user.uid);
+                handleSignUp(user.uid).then(() => {
+                    setSuccessMessage("User created successfully!");
+                    navigate('/premium'); // Navigate to the Premium page
+                });
             }).catch((error) => {
                 console.log(error);
                 setErrorMessage(error.message);
@@ -118,7 +119,6 @@ const SignUp = () => {
                     onChange={(e) => setAge(e.target.value)}
                     min="1"
                     max="100"
-                    
                 />
 
                 <select
@@ -141,7 +141,6 @@ const SignUp = () => {
                     <option value="In a relationship">In a relationship</option>
                     <option value="Do not know">Do not know</option>
                     <option value="Drunk">Drunk</option>
-
                 </select>
 
                 <select
@@ -159,8 +158,7 @@ const SignUp = () => {
                     <option value="Cider">Cider</option>
                     <option value="Rum">Rum</option>
                     <option value="Vodka">Vodka</option>
-                    <option value="Lilimpa limonaad">Limpa limonaad</option>
-
+                    <option value="Limpa limonaad">Limpa limonaad</option>
                 </select>
 
                 {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
