@@ -1,5 +1,3 @@
-// src/components/Lobby.jsx
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, firestoreDB, collection, addDoc, updateDoc, getDocs, onSnapshot, query, where } from '../firebase';
@@ -15,6 +13,8 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [notification, setNotification] = useState('');
   const [isHost, setIsHost] = useState(false); // State to track if the user is the host
+  const [isPremium, setIsPremium] = useState(false); // State to track if the user is premium
+  const [cardBack, setCardBack] = useState('default.png'); // State to track current card back
   const navigate = useNavigate();
   const lobbyCollectionRef = collection(firestoreDB, "Lobby");
 
@@ -29,6 +29,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
           const userData = userDoc.data();
           setLocalPlayerName(userData.username);
           setIsLoggedIn(true);
+          setIsPremium(userData.premium || false); // Check if user is premium
         }
       } catch (error) {
         console.error("Error fetching user data: ", error);
@@ -85,7 +86,8 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     const lobbyDocRef = await addDoc(lobbyCollectionRef, {
       roomCode: newRoomCode,
       players: [{ name: localPlayerName, host: true, ready: false }],
-      inGame: false
+      inGame: false,
+      cardBack: 'default.png' // Default card back
     });
     localStorage.setItem('lobbyCode', newRoomCode);
     localStorage.setItem('playerName', localPlayerName);
@@ -120,6 +122,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
         console.log("Liituja kood:", localTestLobbyCode);
         const updatedPlayers = [...roomData.players, { name: localPlayerName, host: false, ready: false }];
         await updateDoc(doc.ref, { players: updatedPlayers });
+        setCardBack(roomData.cardBack); // Set the card back for the room
       });
     } else {
       alert('No matching room found for the provided room code.');
@@ -153,9 +156,22 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     await handleCreateRoom();
   };
 
-  return (
-    // Lobby.jsx
+  const handleCardBackChange = async (newCardBack) => {
+    if (isPremium) {
+      setCardBack(newCardBack);
+      const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach(async (doc) => {
+          await updateDoc(doc.ref, { cardBack: newCardBack });
+        });
+      }
+    } else {
+      alert("You must be a premium user to change the card back.");
+    }
+  };
 
+  return (
     <div className="lobby-page">
       <div className="input-container">
         {isLoggedIn ? (
@@ -191,6 +207,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
           </>
         ) : (
           <>
+          <h4>You must be logged in to create a game</h4>
             <input
               type="text"
               placeholder="Room Code"
@@ -215,6 +232,26 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
             <li key={index}>{player.name}</li>
           ))}
         </ul>
+      </div>
+      {isPremium && !isJoining && isHost && (
+        <div className="card-back-selector">
+          <h3>Select Card Back:</h3>
+          <div className="card-backs">
+            {['back1.png', 'back2.png', 'back3.png'].map((back, index) => (
+              <img
+                key={index}
+                src={`/cards/back/${back}`}
+                alt={`Card back ${index}`}
+                onClick={() => handleCardBackChange(back)}
+                className={`card-back-option ${cardBack === back ? 'selected' : ''}`}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+      <div className="current-card-back">
+        <h3>Current Card Back:</h3>
+        <img src={`../../cards/back/${cardBack}`} alt="Current card back" />
       </div>
     </div>
   );
