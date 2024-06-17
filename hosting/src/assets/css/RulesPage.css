@@ -8,7 +8,7 @@
   height: 100vh;
   background-image: url('/banner/taust.png');
   padding: 20px;
-  text-align: center;
+  text-align: left; /* Changed from center to left */
 }
 
 .rules-page h1 {
@@ -57,7 +57,9 @@
   }
 
   .rules-page h3 {
-    font-size: 0.8em;
+    font-size: 0.75em;
+    margin: 0 20px; /* Adds margins to left and right */
+    max-width: 800px; /* Limits the maximum width */
   }
 
   .rules-page p {
@@ -81,7 +83,9 @@
   }
 
   .rules-page h3 {
-    font-size: 1.5em;
+    font-size: 1.1em;
+    margin: 0 20px; /* Adds margins to left and right */
+    max-width: 800px; /* Limits the maximum width */
   }
 
   .rules-page p {

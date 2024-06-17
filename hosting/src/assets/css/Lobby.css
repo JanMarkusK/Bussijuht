@@ -43,14 +43,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 25px; /* Increased margin-bottom */
+  background-color: #5e5e5e4b; /* Hall taustavärv */
+  border-radius: 8px;
+  padding: 20px;
 }
 
 .player-name-container {
   background-color: #e9d414; /* Hall taustavärv */
   padding: 5px;
   border-radius: 5px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .player-list-container {
@@ -68,4 +70,26 @@
   font-size: 1.2em;
   cursor: pointer;
   margin: 40px; /* Vähendatud nuppude vaheline vahe */
+}
+
+.room-code {
+  color: #fc0000;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+.join-room-button,
+.start-game-button {
+  background-color: #4caf50; /* Green background */
+  color: white; /* White text */
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1.2em;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.join-room-button:hover,
+.start-game-button:hover {
+  background-color: #45a049; /* Darker green on hover */
 }
