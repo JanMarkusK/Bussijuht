@@ -24,7 +24,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
             if (data.inGame) {
               setInGame(true);
               setGameData(data);
-              navigate('/1faas');
+              navigate('/2faas');
             }
           }
         });

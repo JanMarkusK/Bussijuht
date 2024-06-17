@@ -12,6 +12,7 @@ const FirstFaze = () => {
   const [selectedCardIndex, setSelectedCardIndex] = useState(null);
   const [selectedHandCard, setSelectedHandCard] = useState(null);
   const [isHost, setIsHost] = useState(false); // State to determine if current player is host
+  const [skipSnapshot, setSkipSnapshot] = useState(false);
 
   const pyramid1CollectionRef = collection(firestoreDB, "Pyramid1");
   const localPlayerName = localStorage.getItem('playerName');
@@ -28,6 +29,9 @@ const FirstFaze = () => {
       const pyramidDocRef = doc(pyramid1CollectionRef, pyramidDocId);
 
       const unsubscribe = onSnapshot(pyramidDocRef, (doc) => {
+        if (skipSnapshot) {
+          return; // Skip updating state if skipSnapshot is true
+        }
         if (doc.exists()) {
           const pyramidData = doc.data();
           const pyramidCards = [[], [], [], [], []];
@@ -41,7 +45,7 @@ const FirstFaze = () => {
 
           setPyramid(pyramidCards);
 
-          let lastFlippedRow = 4;
+          let lastFlippedRow = 3;
           for (let i = 0; i < pyramidCards.length; i++) {
             console.log("index: " + i )
             if (pyramidCards[i].some(card => card && card.faceUp)) {
@@ -212,14 +216,22 @@ const FirstFaze = () => {
 
   const handlePyramidCardClick = async (rowIndex, cardIndex) => {
     if (gameOver) return;
-
+  
     const pyramidDocRef = doc(pyramid1CollectionRef, pyramidDocId);
   
     try {
+      console.log(`Clicked card at row ${rowIndex}, col ${cardIndex}`);
+  
       if (rowIndex === currentRow - 1) {
+        setSkipSnapshot(true); // Disable snapshot listener
+  
         const newPyramid = [...pyramid];
-        newPyramid[rowIndex].forEach(card => card.faceUp = true);
-        setPyramid(newPyramid);
+        newPyramid[rowIndex].forEach(card => {
+          card.faceUp = true; // Set faceUp to true for all cards in the row
+        });
+        console.log('newPyramid before setState:', newPyramid);
+        setPyramid(newPyramid); // Update local state
+        console.log('newPyramid after setState:', pyramid);
   
         const batch = writeBatch(firestoreDB);
         newPyramid[rowIndex].forEach((card, colIndex) => {
@@ -229,9 +241,15 @@ const FirstFaze = () => {
           });
         });
   
-        await batch.commit();
-        setCurrentRow(currentRow - 1);
-        console.log(`Row ${rowIndex} turned over`);
+        await batch.commit(); // Commit batch update to Firestore
+        console.log('Firestore updated with flipped cards');
+        
+        setTimeout(() => {
+          setCurrentRow(currentRow - 1); // Move to the next row
+          console.log(`currentRow updated to ${currentRow - 1}`);
+          console.log(`Row ${rowIndex} turned over`);
+          setSkipSnapshot(false); // Re-enable snapshot listener
+        }, 500); // Adjust the delay as needed
   
       } else {
         const handCardValue = selectedHandCard.split('_')[0];
@@ -241,6 +259,8 @@ const FirstFaze = () => {
   
         const handCardIndex = hand.findIndex(card => card === selectedHandCard);
         if (handCardIndex === -1) return;
+  
+        setSkipSnapshot(true); // Disable snapshot listener
   
         const newHand = [...hand];
         newHand.splice(handCardIndex, 1);
@@ -257,7 +277,10 @@ const FirstFaze = () => {
         if (rowIndex === 0) {
           setGameOver(true); // Set game over logic here
         } else if (newPyramid[rowIndex - 1].every(card => card.faceUp)) {
-          setCurrentRow(currentRow - 1);
+          setTimeout(() => {
+            setCurrentRow(currentRow - 1);
+            setSkipSnapshot(false); // Re-enable snapshot listener
+          }, 500); // Adjust the delay as needed
         }
   
         setSelectedCardIndex(null);
@@ -267,7 +290,7 @@ const FirstFaze = () => {
   
     } catch (error) {
       console.error('Error updating pyramid:', error);
-      // Add appropriate error handling or retry logic if needed
+      setSkipSnapshot(false); // Re-enable snapshot listener in case of error
     }
   };
   
