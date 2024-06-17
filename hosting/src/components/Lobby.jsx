@@ -207,7 +207,9 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
           </>
         ) : (
           <>
-          <h4>You must be logged in to create a game</h4>
+          <div className="sulPoleKontot">
+            <h4>You must be logged in to create a game</h4>
+          </div>
             <input
               type="text"
               placeholder="Room Code"

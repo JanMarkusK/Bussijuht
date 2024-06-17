@@ -1,5 +1,3 @@
-/* src/assets/css/Lobby.css */
-
 .lobby-page {
   display: flex;
   flex-direction: column;
@@ -92,4 +90,17 @@
 .join-room-button:hover,
 .start-game-button:hover {
   background-color: #45a049; /* Darker green on hover */
+}
+
+/* Additional styles for specific text colors */
+.lobby-page .sulPoleKontot {
+  font-size: 1em;
+  margin-bottom: 20px;
+  color: rgb(255, 0, 0); /* "You must be logged in to create a game" text color */
+  text-shadow: 2px 2px 4px #000000;
+}
+
+.lobby-page .current-card-back h3 {
+  color: white; /* "Current Card Back:" text color */
+  text-shadow: 2px 2px 4px #000000;
 }
