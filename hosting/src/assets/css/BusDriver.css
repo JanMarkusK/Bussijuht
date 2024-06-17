@@ -1,92 +1,79 @@
-/* src/assets/css/BusDriver.css */
-
-.bus-driver-page {
+.bus-driver-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  min-height: 100vh; /* Use min-height to ensure full screen height */
   background-image: url('/banner/taust.png');
+  background-size: cover;
+  background-position: center;
   text-align: center; /* Center text and image horizontally */
 }
 
-.bus-driver-page h3 {
+.bus-driver h1 {
+  background: rgba(255, 255, 255, 0.8);
   font-size: 2em;
   margin-bottom: 20px;
 }
 
-.bus-driver-page button {
+.bus-driver button {
   padding: 10px 20px;
   font-size: 1.2em;
   cursor: pointer;
   margin: 10px;
 }
 
-.bus-driver-page ul {
-  list-style-type: none;
-  padding: 0;
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.bus-driver-page li {
-  margin: 5px 0;
+.overlay-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
 }
 
-.player-list-container {
-  margin-top: 20px;
+.overlay-content h1 {
+  margin-bottom: 20px;
 }
 
 /* Mobile (Smartphone) 480px and below */
 @media (max-width: 480px) {
-  .bus-driver-page {
-    padding: 10px;
-    height: 100vh; /* Ensure it takes full screen height */
-    background-size: cover; /* Ensure background image covers the full screen */
-  }
-
-  .bus-driver-page h3 {
+  .bus-driver h1 {
     font-size: 1.5em;
   }
 
-  .bus-driver-page button {
+  .bus-driver button {
     font-size: 1em;
     padding: 8px 16px;
   }
 
-  .player-list-container {
-    margin-top: 10px;
-  }
-
-  .bus-driver-page ul {
-    padding: 0;
-  }
-
-  .bus-driver-page li {
-    margin: 5px 0;
-    font-size: 0.9em;
+  .overlay-content h1 {
+    font-size: 1.5em;
   }
 }
 
 /* Huge size (Larger screen) 1281px and greater */
 @media (min-width: 1281px) {
-  .bus-driver-page h3 {
+  .bus-driver h1 {
     font-size: 3em;
   }
 
-  .bus-driver-page button {
+  .bus-driver button {
     font-size: 1.5em;
     padding: 12px 24px;
   }
 
-  .player-list-container {
-    margin-top: 30px;
-  }
-
-  .bus-driver-page ul {
-    padding: 0;
-  }
-
-  .bus-driver-page li {
-    margin: 10px 0;
-    font-size: 1.2em;
+  .overlay-content h1 {
+    font-size: 3em;
   }
 }

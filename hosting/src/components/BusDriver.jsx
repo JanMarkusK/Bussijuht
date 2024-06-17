@@ -5,9 +5,9 @@ import Pyramid from './Pyramid';
 import Hand from './Hand';
 import { fetchDeck, shuffleDeck } from '../utils/deck';
 import '../assets/css/styles.css';
+import '../assets/css/BusDriver.css';
 import { array } from 'prop-types';
 import { useNavigate } from 'react-router-dom';
-
 
 const BusDriver = () => {
   const [pyramid, setPyramid] = useState([]);
@@ -88,7 +88,6 @@ const BusDriver = () => {
     // if (win){
     //   return () => unsubscribe();
     // }
-    
   }, [pyramidDocId]);
   
 
@@ -100,6 +99,7 @@ const BusDriver = () => {
   //     batch.delete(doc.ref);
   //   });
 
+  //   await batch.commit();
   //   console.log('All documents in the collection have been deleted.');
   // };
 
