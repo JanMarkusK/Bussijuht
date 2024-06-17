@@ -88,7 +88,7 @@ const BusDriver = () => {
     // if (win){
     //   return () => unsubscribe();
     // }
-    return () => unsubscribe();
+    
   }, [pyramidDocId]);
   
 
@@ -100,7 +100,6 @@ const BusDriver = () => {
   //     batch.delete(doc.ref);
   //   });
 
-  //   await batch.commit();
   //   console.log('All documents in the collection have been deleted.');
   // };
 
