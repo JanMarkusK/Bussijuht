@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth, firestoreDB, collection, addDoc, updateDoc, getDocs, onSnapshot, query, where } from '../firebase';
+import { auth, firestoreDB, collection, addDoc, updateDoc, getDocs, onSnapshot, query, where, doc } from '../firebase';
 import PropTypes from 'prop-types';
 import '../assets/css/Lobby.css'; // Import the CSS file
+
+const MIN_PLAYERS = 3;
+const MAX_PLAYERS = 8;
 
 const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   const [localRoomCode, setLocalRoomCode] = useState('');
@@ -55,7 +58,6 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
       return;
     }
     const newRoomCode = await handleRoomCode();
-    // Paneb kõik vajaliku info Firestore doci
     const lobbyDocRef = await addDoc(lobbyCollectionRef, {
       roomCode: newRoomCode,
       players: [{ name: localPlayerName, host: true, ready: false }],
@@ -66,12 +68,13 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     localStorage.setItem('playerName', localPlayerName);
     localStorage.setItem('doc_id', lobbyDocRef.id);
     console.log("Document ID host:", lobbyDocRef.id);
-    // Muudab proppide valuet, mdea kas need on tegelt vajalikud veel
     setPlayerName(localPlayerName);
     setRoomCode(localRoomCode);
     setRoomCreated(true);
     setIsJoining(false);
     setIsHost(true); // The creator of the room is always the host
+    setHasJoinedRoom(true);
+    setupRealTimeListener(lobbyDocRef.id); // Setup listener for players list
   };
 
   const handleJoinRoom = async () => {
@@ -81,25 +84,23 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     }
     localStorage.setItem('playerName', localPlayerName);
     localStorage.setItem('lobbyCode', localRoomCode);
-    console.log();
     const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
     const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {
       querySnapshot.forEach(async (doc) => {
         const roomData = doc.data();
         localStorage.setItem('doc_id', doc.id);
-        // Test
-        const localTestPlayerName = localStorage.getItem('playerName');
-        const localTestLobbyCode = localStorage.getItem('lobbyCode');
-        console.log("Liituja nimi:", localTestPlayerName);
-        console.log("Liituja kood:", localTestLobbyCode);
+        if (roomData.players.length >= MAX_PLAYERS) {
+          alert('Room is full.');
+          return;
+        }
         const updatedPlayers = [...roomData.players, { name: localPlayerName, host: false, ready: false }];
         await updateDoc(doc.ref, { players: updatedPlayers });
         setCardBack(roomData.cardBack); // Set the card back for the room
         setPlayers(updatedPlayers); // Update the players state
         setIsHost(false); // Joining user is not the host
         setHasJoinedRoom(true); // Set the state to true indicating the user has joined the room
-        setupCardBackListener(doc.ref); // Setup card back listener
+        setupRealTimeListener(doc.id); // Setup listener for players list
       });
     } else {
       alert('No matching room found for the provided room code.');
@@ -107,13 +108,17 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   };
 
   const handleStartGame = async () => {
+    if (players.length < MIN_PLAYERS) {
+      alert(`At least ${MIN_PLAYERS} players are required to start the game.`);
+      return;
+    }
     const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
     const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {
       querySnapshot.forEach(async (doc) => {
         await updateDoc(doc.ref, { inGame: true });
         setInGame(true);
-        navigate('/2faas');
+        navigate('/1faas'); // Host navigates to the new route
       });
     } else {
       alert('No matching room found for the provided room code.');
@@ -157,6 +162,45 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     });
   };
 
+  const setupPlayersListener = (docId) => {
+    const docRef = doc(firestoreDB, 'Lobby', docId);
+    return onSnapshot(docRef, (doc) => {
+      const data = doc.data();
+      if (data && data.players) {
+        setPlayers(data.players);
+      }
+    });
+  };
+
+  const setupGameStartListener = (docId) => {
+    const docRef = doc(firestoreDB, 'Lobby', docId);
+    return onSnapshot(docRef, (doc) => {
+      const data = doc.data();
+      if (data && data.inGame) {
+        setInGame(true);
+        navigate('/1faas'); // All players navigate to the new route
+      }
+    });
+  };
+
+  const setupRealTimeListener = (docId) => {
+    const unsubscribePlayers = setupPlayersListener(docId);
+    const unsubscribeGameStart = setupGameStartListener(docId);
+    const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
+    getDocs(q).then((querySnapshot) => {
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach((doc) => {
+          setupCardBackListener(doc.ref);
+        });
+      }
+    });
+
+    return () => {
+      unsubscribePlayers();
+      unsubscribeGameStart();
+    };
+  };
+
   useEffect(() => {
     let unsubscribe;
     if (hasJoinedRoom) {
@@ -164,7 +208,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
       getDocs(q).then((querySnapshot) => {
         if (!querySnapshot.empty) {
           querySnapshot.forEach((doc) => {
-            unsubscribe = setupCardBackListener(doc.ref);
+            unsubscribe = setupRealTimeListener(doc.id);
           });
         }
       });
@@ -207,10 +251,22 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
               <span>Name: {localPlayerName}</span>
             </div>
             {isJoining && !hasJoinedRoom && (
-              <button className="join-room-button" onClick={handleJoinRoom}>Join Room</button>
+              <button
+                className="join-room-button"
+                onClick={handleJoinRoom}
+                disabled={players.length >= MAX_PLAYERS}
+              >
+                Join Room
+              </button>
             )}
             {isHost && !isJoining && (
-              <button className="start-game-button" onClick={handleStartGame}>Start Game</button>
+              <button
+                className="start-game-button"
+                onClick={handleStartGame}
+                disabled={players.length < MIN_PLAYERS}
+              >
+                Start Game
+              </button>
             )}
           </>
         ) : (
