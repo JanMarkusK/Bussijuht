@@ -1,0 +1,51 @@
+/* src/assets/css/Premium.css */
+
+.premium-page {
+    color: rgba(3, 3, 3, 0.952);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-image: url('/banner/taust.png');
+    background-position: center;
+    background-size: cover;
+    padding: 20px;
+  }
+  
+  .premium-page h2,
+  .premium-page h3 {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .premium-button {
+    padding: 10px 20px;
+    font-size: 1em;
+    color: white;
+    background-color: #4caf50;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px;
+  }
+  
+  .premium-button:hover {
+    background-color: #45a049;
+  }
+  
+  .back-button {
+    padding: 10px 20px;
+    font-size: 1em;
+    color: white;
+    background-color: #7400aa;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .back-button:hover {
+    background-color: #3d0274;
+  }
+  

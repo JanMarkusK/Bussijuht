@@ -56,3 +56,24 @@ button {
   font-size: 16px;
   cursor: pointer;
 }
+
+
+
+.hand {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.hand img {
+  width: 80px;
+  height: auto;
+  margin: 0 5px;
+  cursor: pointer; /* Add cursor pointer for clickable elements */
+  transition: transform 0.2s ease-in-out; /* Optional: Add smooth transition */
+}
+
+.hand img.selected {
+  border: 2px solid #f0ad4e; /* Example border color */
+  box-shadow: 0 0 5px #f0ad4e; /* Example shadow effect */
+}

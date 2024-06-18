@@ -1,0 +1,77 @@
+/* src/assets/css/SignIn.css */
+
+.sign-in-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    color: rgb(255, 255, 255);
+    background-image: url('/banner/taust.png');
+}
+
+.sign-in-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(112, 112, 112, 0.329);
+    padding: 18px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sign-in-form label {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+.sign-in-form input {
+    margin-bottom: 10px;
+    padding: 10px;
+    width: 100%;
+    max-width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.sign-in-form button {
+    padding: 10px 20px;
+    font-size: 1em;
+    color: rgb(255, 255, 255);
+    background-color: #4caf50;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.sign-in-form button:hover {
+    background-color: #45a049;
+}
+
+.signup-link {
+    margin-top: 10px;
+    color: #20ddff;
+    text-shadow: 2px 2px 8px #000000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.signup-link:hover {
+    text-decoration: underline;
+}
+
+button.back-button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 1em;
+    color: white;
+    background-color: #f44336;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button.back-button:hover {
+    background-color: #d32f2f;
+}

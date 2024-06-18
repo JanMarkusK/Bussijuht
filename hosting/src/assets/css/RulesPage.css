@@ -1,30 +1,122 @@
-/*src/components/RulesPage.css*/
+/* src/assets/css/RulesPage.css */
+
 .rules-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #6ec03c; /* Saad muuta taustavärvi vajadusel */
-    padding: 20px;
-    text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: url('/banner/taust.png');
+  padding: 20px;
+  text-align: left;
+}
+
+.rules-page h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.rules-page h2 {
+  margin-bottom: 1px;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+.rules-page h3 {
+  font-size: 1em;
+  margin-bottom: 7px;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+.rules-page p {
+  margin-bottom: 20px;
+  font-size: 1em;
+  line-height: 1.5;
+}
+
+.rules-page button {
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+.rules-page li {
+  font-size: 0.9em;
+  text-shadow: 2px 2px 4px #000000;
+  color: #ffffff;
+}
+
+/* Mobile (Smartphone) 480px and below */
+@media (max-width: 480px) {
+  .rules-page {
+    padding: 10px;
+    height: auto; /* Adjusts height for better fit */
   }
-  
+
   .rules-page h1 {
-    font-size: 2em;
-    margin-bottom: 20px;
+    font-size: 1.5em;
+    margin-bottom: 10px; /* Reduce margin for better fit */
   }
-  
-  .rules-page p {
-    margin-bottom: 20px;
-    font-size: 1em;
-    line-height: 1.5;
-  }
-  
-  .rules-page button {
-    margin: 10px;
-    padding: 10px 20px;
+
+  .rules-page h2 {
     font-size: 1.2em;
-    cursor: pointer;
+    margin-bottom: 5px; /* Reduce margin for better fit */
   }
-  
+
+  .rules-page h3 {
+    font-size: 0.75em;
+    margin: 0 10px; /* Adjust margin for better fit */
+    max-width: 100%; /* Ensure it stays within the screen width */
+  }
+
+  .rules-page p {
+    font-size: 0.8em;
+    margin-bottom: 10px; /* Reduce margin for better fit */
+  }
+
+  .rules-page button {
+    font-size: 1em;
+    padding: 8px 16px;
+  }
+
+  .rules-page li {
+    font-size: 0.8em;
+    max-width: 100%; /* Ensure it stays within the screen width */
+  }
+}
+
+/* Huge size (Larger screen) 1281px and greater */
+@media (min-width: 1281px) {
+  .rules-page h1 {
+    font-size: 3em;
+  }
+
+  .rules-page h2 {
+    font-size: 2.5em;
+  }
+
+  .rules-page h3 {
+    font-size: 1.1em;
+    margin: 0 20px; /* Adds margins to left and right */
+    max-width: 800px; /* Limits the maximum width */
+  }
+
+  .rules-page li {
+    font-size: 1.1em;
+    margin: 0 20px; /* Adds margins to left and right */
+    max-width: 1000px; /* Limits the maximum width */
+    text-shadow: 2px 2px 4px #000000;
+    color: #ffffff;
+  }
+
+  .rules-page p {
+    font-size: 1.5em;
+  }
+
+  .rules-page button {
+    font-size: 1.5em;
+    padding: 12px 24px;
+  }
+}

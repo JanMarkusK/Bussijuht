@@ -1,4 +1,4 @@
-/* src/index.css */
+/* src/assets/css/index.css */
 :root {
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
@@ -72,7 +72,6 @@
     padding: 0;
     width: 100%;
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
   }
   
   button {

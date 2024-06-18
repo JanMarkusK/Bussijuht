@@ -1,29 +1,50 @@
-import React from 'react';
+// src/components/HomePage.jsx
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import '../assets/css/HomePage.css'; 
-import drinkingImage from '../assets/drinking.png'; 
-import bannerImage from '/banner/bannerRinde.png';
-import porgandImage from '/banner/porgand.png';
-import rahaImage from '/banner/200.png';
-import viinImage from '/banner/viin.png';
+import { auth } from '../firebase'; // Import auth from Firebase
+import '../assets/css/HomePage.css';
+import '../assets/css/bannerbuss.css';
+import teeImage from '/banner/tee.png';
+import bussImage from '/banner/buss.png';
+import peatusImage from '/banner/peatus.png';
+import pealkiriImage from '/banner/pealkiri.png';
+import bannerTeloleImage from '/banner/bannertelole.png';
 
 const HomePageBanner = () => {
   return (
-    <div className="banner">
-      <img src={bannerImage} alt="Banner" className="banner-image" />
-      <img src={porgandImage} alt="Porgand" className="overlay-image porgand" />
-      <img src={rahaImage} alt="200" className="overlay-image raha" />
-      <img src={viinImage} alt="Viin" className="overlay-image viin" />
+    <div className="banner-container">
+      <div className="road-container">
+        <img id="tee" src={teeImage} alt="tee" className="tee-image" />
+        <img id="peatus" src={peatusImage} alt="peatus" className="overlay-image peatus" />
+      </div>
+      <img id="pealkiri" src={pealkiriImage} alt="pealkiri" className="overlay-image pealkiri" />
+      <img id="buss" src={bussImage} alt="buss" className="overlay-image buss" />
     </div>
   );
 };
 
-const HomePage = ({ setInLobby, setInRules, setInCreateAccount, setInLogIn }) => {
+const HomePageBannerTelole = () => {
+  return (
+    <div className="banner-container-telole">
+      <img id="bannerTelole" src={bannerTeloleImage} alt="bannertelole" className="banner-telole-image" />  
+    </div>
+  );
+};
+
+const HomePage = () => {
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      setIsLoggedIn(!!user);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const handleCreateAccountClick = () => {
-    setInCreateAccount(true);
+    navigate('/signup');
   };
 
   const handleJoinGameClick = () => {
@@ -31,7 +52,18 @@ const HomePage = ({ setInLobby, setInRules, setInCreateAccount, setInLogIn }) =>
   };
 
   const handleLogInClick = () => {
-    setInLogIn(true);
+    navigate('/login');
+  };
+
+  const handleLogOutClick = () => {
+    auth.signOut().then(() => {
+      setIsLoggedIn(false);
+      navigate('/');
+    });
+  };
+
+  const handleProfileClick = () => {
+    navigate('/profile');
   };
 
   const handleRulesClick = () => {
@@ -41,55 +73,30 @@ const HomePage = ({ setInLobby, setInRules, setInCreateAccount, setInLogIn }) =>
   return (
     <div className="home-page">
       <header id="pagebegin">
-        <img 
-          src={bannerImage} 
-          alt="lehe bänner" 
-          className="banner"
-        />
-        <div id="peamine" className="peamine">
-          <div className="peamine-border">
-            <img 
-              className="porgandilaadnetoode" 
-              src={porgandImage} 
-              alt="porgand" 
-            />
-          </div>  
-          <img 
-            className="raha" 
-            src={rahaImage} 
-            alt="klots" 
-          />
-          <img 
-            className="viin" 
-            src={viinImage} 
-            alt="alx" 
-          />
-        </div>
+        <HomePageBanner />
+        <HomePageBannerTelole />
       </header>
       <main>
-        <h1>Tere tulemast Bussijuhi mängu!</h1>
-        <h2>Matemaatikud lahendavad õllesid!</h2>
-        <img src={drinkingImage} alt="Drinking Game" className="home-page-image" />
-        <div className="button-container">
-          <button onClick={handleCreateAccountClick}>Create Account(puudub)</button>
-          <button onClick={handleJoinGameClick}>Join by Guest</button>
-          <button onClick={handleLogInClick} className="button-centered">Log In(puudub)</button>
-        </div>  
-        <button onClick={handleRulesClick} className="offset-button">Rules</button>
+        <h1>Bus Driver Game</h1>
+        <h3>Drink water and have fun with your friends!</h3>
+        {!isLoggedIn ? (
+          <div className="button-container">
+            <button onClick={handleCreateAccountClick}>Create Account</button>
+            <button onClick={handleLogInClick}>Log In</button>
+            <button onClick={handleJoinGameClick}>Join / Create</button>
+            <button onClick={handleRulesClick}>Rules</button>
+          </div>
+        ) : (
+          <div className="button-container">
+            <button onClick={handleJoinGameClick}>Join / Create</button>
+            <button onClick={handleProfileClick}>Profile</button>
+            <button onClick={handleRulesClick}>Rules</button>
+            <button onClick={handleLogOutClick} className="logout-button">Log Out</button>
+          </div>
+        )}
       </main>
-      <footer>
-        <hr />
-        <address>TLÜ, Narva mnt 25, Tallinn 10120</address>
-      </footer>
     </div>
   );
-};
-
-HomePage.propTypes = {
-  setInCreateAccount: PropTypes.func.isRequired,
-  setInLobby: PropTypes.func.isRequired,
-  setInLogIn: PropTypes.func.isRequired,
-  setInRules: PropTypes.func.isRequired,
 };
 
 export default HomePage;

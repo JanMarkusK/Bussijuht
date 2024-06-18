@@ -1,62 +1,164 @@
-/* src/assets/css/Lobby.css */
-
 .lobby-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #6ec03c; /* Same background color as HomePage for consistency */
-    text-align: center; /* Center text and image horizontally */
-  }
-  
-  .lobby-page h3 {
-    font-size: 2em;
-    margin-bottom: 20px;
-  }
-  
-  .lobby-page input {
-    padding: 10px;
-    font-size: 1em;
-    margin: 10px 0;
-    width: 200px;
-    border-radius: 10px;
-  }
-  
-  .lobby-page button {
-    padding: 10px 20px;
-    font-size: 1.2em;
-    cursor: pointer;
-    margin: 10px;
-  }
-  
-  .lobby-page ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .lobby-page li {
-    margin: 5px 0;
-  }
-  
-  .input-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .player-list-container {
-    margin-top: 20px;
-  }
-  
-  .lobby-page .button-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .lobby-page .button-container button {
-    margin: 10px;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: url('/banner/taust.png');
+  text-align: center; /* Center text and image horizontally */
+}
+
+.lobby-page h3 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.lobby-page input {
+  padding: 10px;
+  font-size: 1em;
+  margin: 10px 0;
+  width: 200px;
+  border-radius: 10px;
+}
+
+.lobby-page button {
+  padding: 10px 20px;
+  font-size: 1.2em;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.lobby-page ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.lobby-page li {
+  margin: 5px 0;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #5e5e5e4b; /* Hall taustavärv */
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.player-name-container {
+  background-color: #adadad; /* Hall taustavärv */
+  padding: 1px;
+  border-radius: 3px;
+  margin-bottom: 1px;
+}
+
+.player-list-container {
+  margin-top: 20px;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+.top-buttons {
+  margin-bottom: 10px;
+}
+
+.top-buttons button {
+  padding: 10px 20px;
+  font-size: 1.2em;
+  cursor: pointer;
+  margin: 40px; /* Vähendatud nuppude vaheline vahe */
+}
+
+.room-code-container{
+  background-color: #e9d414; /* Hall taustavärv */
+  padding: 1px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.room-code {
+  color: #fc0000;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+.join-room-button,
+.start-game-button {
+  background-color: #4caf50; /* Green background */
+  color: white; /* White text */
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1.2em;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.join-room-button:hover,
+.start-game-button:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+/* Additional styles for specific text colors */
+.lobby-page .sulPoleKontot {
+  font-size: 1em;
+  margin-bottom: 20px;
+  color: rgb(255, 0, 0); /* "You must be logged in to create a game" text color */
+  text-shadow: 2px 2px 4px #000000;
+}
+
+.lobby-page .current-card-back h3 {
+  color: white; /* "Current Card Back:" text color */
+  text-shadow: 2px 2px 4px #000000;
+}
+
+/*kaardi suurused ja sellega seonduvad*/
+.card-back-selection {
+  margin-top: 20px;
+}
+
+.card-back-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.card-back-option {
+  width: 5%;
+  height: auto;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.card-back-option.selected {
+  /* border: 2px solid #000; */
+  transform: scale(1.5);
+  /* margin-bottom: 34px; */
+}
+
+/* CSS to make the Current Card Back 80% smaller for users who join */
+
+.current-card-back img {
+  width: 20%; /* Reducing the width to 20% of the original size */
+  height: auto; /* Maintaining the aspect ratio */
+}
+
+.current-card-back {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.current-card-back h3 {
+  margin-bottom: 5px;
+  color: white;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+.card-back-selector h3 {
+  margin-bottom: 5px;
+  color: white;
+  text-shadow: 2px 2px 4px #000000;
+}

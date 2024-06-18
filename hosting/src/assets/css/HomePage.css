@@ -6,114 +6,167 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: #6ec03c; /* Saad muuta taustavärvi vajadusel */
-  text-align: center; /* Center text and image horizontally */
+  text-align: center;
+  background-image: url('/banner/taust.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
+
+.home-page header,
+.home-page main,
+.home-page footer {
+  flex: 0 1 auto;
 }
 
 .home-page h1 {
   font-size: 2em;
   margin-bottom: 20px;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px #000000;
 }
 
 .home-page h2 {
   margin-bottom: 20px;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px #000000;
 }
 
-.home-page-image { 
-  max-width: 15%; /* pildi suurus 15% peaks sobima */
-  height: auto;
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
   margin-bottom: 20px;
 }
 
-.button-container {
-  display: grid;
-  grid-template-columns: repeat(2, auto);
-  grid-gap: 20px;
-  justify-content: center;
-  margin-bottom: 50px; /* Space below the first two rows of buttons */
-}
-
-.button-container .button-centered {
-  grid-column: span 2;
-  justify-self: center;
-}
-
 .home-page button {
-  padding: 10px 20px;
+  padding: 10px 15px;
   font-size: 1.2em;
   cursor: pointer;
 }
 
-.home-page .offset-button {
-  margin-top: 50px; /* 50px below the previous button */
-  margin-left: 350px; /* 20px to the right of the centered button */
+.home-page .logout-button {
+  background-color: red;
+  color: white;
+}
+.home-page .logout-button:hover {
+  background-color: #c50303;
 }
 
-/* Banner Styles */
-.peamine {
-  top: 10px;
-  left: 158px;
-  transform-origin: 50% 177px;
-  position: absolute;
+button:hover {
+  background-color: #3d0274;
 }
 
-@keyframes swing2 {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(-120deg); }
+/* Mobile (Smartphone) 480px and below */
+@media (max-width: 480px) {
+  .banner-container {
+    display: none; /* Hide large banner on small screens */
+  }
+
+  .banner-container-telole {
+    display: block; /* Show mobile banner on small screens */
+    width: 100%;
+  }
+
+  .banner-telole-image {
+    width: 100%;
+  }
+
+  .home-page h1, .home-page h2 {
+    font-size: 1.5em;
+  }
+
+  .home-page-image {
+    max-width: 50%;
+  }
+
+  .button-container {
+    gap: 10px;
+  }
+
+  .home-page button {
+    font-size: 1em;
+  }
+  .home-page h3 {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px #000000;
+  }
 }
 
-.viin {
-  transform-origin: 50% 0%;
-  animation: swing2 0.4s ease-in-out infinite alternate;
-  position: absolute;
-  width: 90px;
-  height: 60px;
-  top: 68px;
-  left: 767px;
-  animation: swing2 5s infinite;
+/* Large screens 481px and above */
+@media (min-width: 481px) {
+  .banner-container {
+    display: block; /* Show large banner on large screens */
+  }
+
+  .banner-container-telole {
+    display: none; /* Hide mobile banner on large screens */
+  }
 }
 
-@keyframes move {
-  0% { transform: translate(-70px, 350px) scale(0.1); }
-  100% { transform: translate(-220px, 60px) scale(1.4); }
+/* Huge size (Larger screen) 1281px and greater */
+@media (min-width: 1281px) {
+  .banner-container {
+    width: 800px;
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid black;
+    margin: 0 auto; /* Center the banner horizontally */
+    top: 5px;
+  }
+
+  .road-container {
+    width: 100%;
+    height: 100%;
+  }
+
+  .tee-image {
+    width: 3000px;
+    height: 300px;
+  }
+
+  .buss {
+    top: 80px;
+    left: 400px;
+    width: 180px;
+  }
+
+  .peatus {
+    top: 20px;
+    left: 2500px;
+    width: 300px;
+  }
+
+  .pealkiri {
+    top: 15px;
+    left: 300px;
+    width: 500px;
+  }
+
+  .home-page h1, .home-page h2 {
+    font-size: 3em;
+  }
+
+  .home-page-image {
+    max-width: 20%;
+  }
+
+  .button-container {
+    gap: 30px;
+  }
+
+  .home-page button {
+    font-size: 1.5em;
+  }
+  .home-page h3 {
+    margin-bottom: 10px;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px #000000;
+  }
 }
-
-.raha {
-  width: 90px;
-  height: 45px;
-  position: relative;
-  top: -70px;
-  left: 550px;
-  animation: move 10.3s linear infinite;
-}
-
-@keyframes move2 {
-  0% { transform: translate(-40px, 350px) rotate(100deg); }
-  100% { transform: translate(-190px, 65px) rotate(-100deg); }
-}
-
-.porgandilaadnetoode {
-  position: relative;
-  top: 0px;
-  left: 100px;
-  width: 150px;
-  height: 90px;
-  animation: move2 3.5s linear infinite;
-}
-
-.peamine-border {
-  position: relative;
-  top: 18px;
-  left: -77px;
-  width: 205px;
-  height: 100px;
-  overflow: hidden;
-  /* border: 4px solid black; */
-}
-
-
-/* üritan bannerilt oigesti toole saada. jaam on see et raah suurus jääb zoomides samaks ja liigub nahui
-  assets/banner.jsx       on uus ja pole kindel kas see vajalik
-  components/index.js       on uus ja pole kindel kas see vajalik
-  src/index.js failis ka mingi 4.reas vistg mingi veidrus
-   */

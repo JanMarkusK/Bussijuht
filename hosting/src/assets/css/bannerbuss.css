@@ -1,0 +1,72 @@
+/* src/assets/css/bannerbuss.css */
+
+
+
+.road-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+.tee-image {
+  width: 2500px;
+  height: 200px;
+  position: absolute;
+  left: 300px;
+  animation: moveTee 5s linear infinite;
+}
+
+.peatus {
+  top: 15px; /* Adjust position as needed */
+  left: 1550px; /* Center the bus horizontally */
+  width: 200px; /* Adjust the size as needed */
+  height: auto;
+  position: absolute;
+  z-index: 3;
+  animation: moveTee 5s linear infinite;
+  animation-delay: 0s;
+}
+
+.buss, .pealkiri {
+  position: absolute;
+}
+
+.buss {
+  top: 60px; /* Adjust position as needed */
+  left: 250px; /* Center the bus horizontally */
+  width: 120px; /* Adjust size as needed */
+  height: auto;
+  z-index: 1;
+  animation: moveBuss 5s linear forwards;
+  transform: scaleX(-1);
+}
+
+.pealkiri {
+  top: 10px; /* Adjust position as needed */
+  left: 185px; /* Center the title horizontally */
+  width: 350px; /* Adjust size as needed */
+  height: auto;
+  z-index: 2;
+}
+
+@keyframes moveTee {
+  0% {
+    transform: translateX(-300px);
+  }
+  100% {
+    transform: translateX(-1867px);
+  }
+}
+
+@keyframes moveBuss {
+  0% {
+    left: -100px;
+  }
+  100% {
+    left: 400px;
+  }
+}

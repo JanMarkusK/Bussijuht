@@ -1,25 +1,30 @@
 // src/utils/deck.jsx
-export const generateDeck = () => {
-    const suits = ['hearts', 'diamonds', 'clubs', 'spades'];
-    const values = [
-      '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'
-    ];
-    const deck = [];
-  
-    for (let suit of suits) {
-      for (let value of values) {
-        deck.push(`${value}_of_${suit}`);
+import { firestoreDB, collection, getDocs } from '../firebase';
+
+export const fetchDeck = async () => {
+  const deckCollection = collection(firestoreDB, 'CardDeck');
+  const deckSnapshot = await getDocs(deckCollection);
+
+  let deck = [];
+
+  deckSnapshot.forEach(doc => {
+    const data = doc.data();
+    for (let i = 1; i <= 52; i++) {
+      const cardKey = `c${i}`;
+      if (data.hasOwnProperty(cardKey)) {
+        deck.push(data[cardKey]);
       }
     }
-  
-    return deck;
-  };
-  
-  export const shuffleDeck = (deck) => {
-    for (let i = deck.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [deck[i], deck[j]] = [deck[j], deck[i]];
-    }
-    return deck;
-  };
-  
+  });
+
+  console.log(deck);
+  return deck;
+};
+
+export const shuffleDeck = (deck) => {
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  return deck;
+};

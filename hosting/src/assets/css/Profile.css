@@ -1,0 +1,100 @@
+/* src/assets/css/Profile.css */
+
+.profile-page {
+  color: rgba(3, 3, 3, 0.952);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: url('/banner/taust.png');
+  background-position: center;
+  background-size: cover;
+  padding: 20px;
+}
+
+.profile-page h1 {
+  color: rgba(255, 255, 255, 0.9); /* White color with 90% opacity */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Black shadow */
+}
+
+.profile-container {
+  position: relative;
+  z-index: 1;
+  background-color: rgba(255, 255, 255, 0.575); /* White background with 90% opacity */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  width: 100%;
+}
+
+.profile-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.profile-field {
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.61); /* Gray background color */
+  border-radius: 5px;
+}
+
+.profile-field label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.profile-field p {
+  margin: 0;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(252, 250, 250, 0.1);
+  margin-top: 20px;
+}
+
+.profile-form input,
+.profile-form select {
+  margin-bottom: 10px;
+  padding: 10px;
+  width: 100%;
+  max-width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.profile-form button {
+  padding: 10px 20px;
+  font-size: 1em;
+  color: white;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.profile-form button:hover {
+  background-color: #45a049;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 1em;
+  color: white;
+  background-color: #7400aa;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
