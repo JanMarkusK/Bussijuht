@@ -24,7 +24,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
             if (data.inGame) {
               setInGame(true);
               setGameData(data);
-              navigate('/2faas');
+              navigate('/1faas');
             }
           }
         });
@@ -85,13 +85,8 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     
     if (!querySnapshot.empty) {
       querySnapshot.forEach(async (doc) => {
-        const roomData = doc.data();
-        
-        // Synchronize game data
+        await updateDoc(doc.ref, { inGame: true });
         setInGame(true);
-        setGameData(roomData); // Set game data received from Firestore
-  
-        // Navigate to game page
         navigate('/1faas'); // Navigate to FirstFaze component upon game start
       });
     } else {
