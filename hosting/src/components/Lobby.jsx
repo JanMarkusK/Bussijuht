@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth, firestoreDB, collection, addDoc, updateDoc, getDocs, onSnapshot, query, where } from '../firebase';
+import { auth, firestoreDB, collection, addDoc, updateDoc, getDocs, onSnapshot, query, where, doc } from '../firebase';
 import PropTypes from 'prop-types';
 import '../assets/css/Lobby.css'; // Import the CSS file
+
+const MIN_PLAYERS = 3;
+const MAX_PLAYERS = 8;
 
 const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   const [localRoomCode, setLocalRoomCode] = useState('');
@@ -15,10 +18,22 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   const [isHost, setIsHost] = useState(false); // State to track if the user is the host
   const [isPremium, setIsPremium] = useState(false); // State to track if the user is premium
   const [cardBack, setCardBack] = useState('back.png'); // State to track current card back
+  const [hasJoinedRoom, setHasJoinedRoom] = useState(false); // State to track if the user has joined a room
   const navigate = useNavigate();
   const lobbyCollectionRef = collection(firestoreDB, "Lobby");
 
   useEffect(() => {
+    const storedPlayerName = localStorage.getItem('playerName');
+    const storedLobbyCode = localStorage.getItem('lobbyCode');
+
+    if (storedPlayerName && storedLobbyCode) {
+      setLocalPlayerName(storedPlayerName);
+      setLocalRoomCode(storedLobbyCode);
+      setIsLoggedIn(true);
+      setHasJoinedRoom(true);
+      setupRealTimeListener(localStorage.getItem('doc_id')); // Setup listener for players list
+    }
+
     const fetchUserName = async (email) => {
       try {
         const q = query(collection(firestoreDB, "User"), where("email", "==", email));
@@ -41,34 +56,6 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     }
   }, []);
 
-  useEffect(() => {
-    if (localRoomCode) {
-      const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          if (data) {
-            setPlayers((prevPlayers) => {
-              if (JSON.stringify(prevPlayers) !== JSON.stringify(data.players)) {
-                return data.players || [];
-              }
-              return prevPlayers;
-            });
-            if (data.inGame) {
-              setInGame(true);
-              setGameData(data);
-              navigate('/2faas');
-            }
-            setIsHost(data.players.some(player => player.name === localPlayerName && player.host)); // Check if current user is the host
-            setCardBack(data.cardBack); // Set the card back for the room
-          }
-        });
-      });
-
-      return () => unsubscribe();
-    }
-  }, [localRoomCode, localPlayerName, setGameData, setInGame, navigate, lobbyCollectionRef]);
-
   const handleRoomCode = async () => {
     const newRoomCode = Math.floor(Math.random() * 90000) + 10000;
     setRoomCode(newRoomCode);
@@ -82,7 +69,6 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
       return;
     }
     const newRoomCode = await handleRoomCode();
-    // Paneb kõik vajaliku info Firestore doci
     const lobbyDocRef = await addDoc(lobbyCollectionRef, {
       roomCode: newRoomCode,
       players: [{ name: localPlayerName, host: true, ready: false }],
@@ -93,12 +79,13 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     localStorage.setItem('playerName', localPlayerName);
     localStorage.setItem('doc_id', lobbyDocRef.id);
     console.log("Document ID host:", lobbyDocRef.id);
-    // Muudab proppide valuet, mdea kas need on tegelt vajalikud veel
     setPlayerName(localPlayerName);
     setRoomCode(localRoomCode);
     setRoomCreated(true);
     setIsJoining(false);
     setIsHost(true); // The creator of the room is always the host
+    setHasJoinedRoom(true);
+    setupRealTimeListener(lobbyDocRef.id); // Setup listener for players list
   };
 
   const handleJoinRoom = async () => {
@@ -108,21 +95,23 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     }
     localStorage.setItem('playerName', localPlayerName);
     localStorage.setItem('lobbyCode', localRoomCode);
-    console.log();
     const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
     const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {
       querySnapshot.forEach(async (doc) => {
         const roomData = doc.data();
         localStorage.setItem('doc_id', doc.id);
-        // Test
-        const localTestPlayerName = localStorage.getItem('playerName');
-        const localTestLobbyCode = localStorage.getItem('lobbyCode');
-        console.log("Liituja nimi:", localTestPlayerName);
-        console.log("Liituja kood:", localTestLobbyCode);
+        if (roomData.players.length >= MAX_PLAYERS) {
+          alert('Room is full.');
+          return;
+        }
         const updatedPlayers = [...roomData.players, { name: localPlayerName, host: false, ready: false }];
         await updateDoc(doc.ref, { players: updatedPlayers });
         setCardBack(roomData.cardBack); // Set the card back for the room
+        setPlayers(updatedPlayers); // Update the players state
+        setIsHost(false); // Joining user is not the host
+        setHasJoinedRoom(true); // Set the state to true indicating the user has joined the room
+        setupRealTimeListener(doc.id); // Setup listener for players list
       });
     } else {
       alert('No matching room found for the provided room code.');
@@ -130,13 +119,17 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   };
 
   const handleStartGame = async () => {
+    if (players.length < MIN_PLAYERS) {
+      alert(`At least ${MIN_PLAYERS} players are required to start the game.`);
+      return;
+    }
     const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
     const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {
       querySnapshot.forEach(async (doc) => {
         await updateDoc(doc.ref, { inGame: true });
         setInGame(true);
-        navigate('/2faas');
+        navigate('/1faas'); // Host navigates to the new route
       });
     } else {
       alert('No matching room found for the provided room code.');
@@ -171,18 +164,86 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     }
   };
 
+  const setupCardBackListener = (docRef) => {
+    return onSnapshot(docRef, (doc) => {
+      const data = doc.data();
+      if (data && data.cardBack) {
+        setCardBack(data.cardBack);
+      }
+    });
+  };
+
+  const setupPlayersListener = (docId) => {
+    const docRef = doc(firestoreDB, 'Lobby', docId);
+    return onSnapshot(docRef, (doc) => {
+      const data = doc.data();
+      if (data && data.players) {
+        setPlayers(data.players);
+      }
+    });
+  };
+
+  const setupGameStartListener = (docId) => {
+    const docRef = doc(firestoreDB, 'Lobby', docId);
+    return onSnapshot(docRef, (doc) => {
+      const data = doc.data();
+      if (data && data.inGame) {
+        setInGame(true);
+        navigate('/1faas'); // All players navigate to the new route
+      }
+    });
+  };
+
+  const setupRealTimeListener = (docId) => {
+    const unsubscribePlayers = setupPlayersListener(docId);
+    const unsubscribeGameStart = setupGameStartListener(docId);
+    const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
+    getDocs(q).then((querySnapshot) => {
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach((doc) => {
+          setupCardBackListener(doc.ref);
+        });
+      }
+    });
+
+    return () => {
+      unsubscribePlayers();
+      unsubscribeGameStart();
+    };
+  };
+
+  useEffect(() => {
+    let unsubscribe;
+    if (hasJoinedRoom) {
+      const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
+      getDocs(q).then((querySnapshot) => {
+        if (!querySnapshot.empty) {
+          querySnapshot.forEach((doc) => {
+            unsubscribe = setupRealTimeListener(doc.id);
+          });
+        }
+      });
+    }
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [hasJoinedRoom, localRoomCode]);
+
   return (
     <div className="lobby-page">
       <div className="input-container">
         {isLoggedIn ? (
           <>
-            <div className="top-buttons">
-              <div className="switch-buttons-container">
-                <button onClick={isJoining ? handleSwitchToCreate : () => setIsJoining(true)}>
-                  {isJoining ? 'Switch to Create' : 'Switch to Join'}
-                </button>
+            {!hasJoinedRoom && (
+              <div className="top-buttons">
+                <div className="switch-buttons-container">
+                  <button onClick={isJoining ? handleSwitchToCreate : () => setIsJoining(true)}>
+                    {isJoining ? 'Switch to Create' : 'Switch to Join'}
+                  </button>
+                </div>
               </div>
-            </div>
+
+            )}
             <div className="room-code-container">
               <div className="room-code">
                 {isJoining ? (
@@ -200,11 +261,23 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
             <div className="player-name-container">
               <span>Name: {localPlayerName}</span>
             </div>
-            {isJoining ? (
-              <button className="join-room-button" onClick={handleJoinRoom}>Join Room</button>
-            ) : null}
+            {isJoining && !hasJoinedRoom && (
+              <button
+                className="join-room-button"
+                onClick={handleJoinRoom}
+                disabled={players.length >= MAX_PLAYERS}
+              >
+                Join Room
+              </button>
+            )}
             {isHost && !isJoining && (
-              <button className="start-game-button" onClick={handleStartGame}>Start Game</button>
+              <button
+                className="start-game-button"
+                onClick={handleStartGame}
+                disabled={players.length < MIN_PLAYERS}
+              >
+                Start Game
+              </button>
             )}
           </>
         ) : (
@@ -224,7 +297,9 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
               value={localPlayerName}
               onChange={(e) => setLocalPlayerName(e.target.value)}
             />
-            <button className="join-room-button" onClick={handleJoinRoom}>Join Room</button>
+            {!hasJoinedRoom && (
+              <button className="join-room-button" onClick={handleJoinRoom}>Join Room</button>
+            )}
           </>
         )}
         {notification && <p className="notification">{notification}</p>}

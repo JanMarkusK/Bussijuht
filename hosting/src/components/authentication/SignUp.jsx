@@ -159,6 +159,9 @@ const SignUp = () => {
                     <option value="Rum">Rum</option>
                     <option value="Vodka">Vodka</option>
                     <option value="Limpa limonaad">Limpa limonaad</option>
+                    <option value="Sparkling wine">Sparkling wine</option>
+                    <option value="Champagne">Champagne</option>
+
                 </select>
 
                 {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
