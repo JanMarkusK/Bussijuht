@@ -129,3 +129,21 @@
   transform: scale(1.5);
   /* margin-bottom: 34px; */
 }
+
+/* CSS to make the Current Card Back 80% smaller for users who join */
+
+.current-card-back img {
+  width: 20%; /* Reducing the width to 20% of the original size */
+  height: auto; /* Maintaining the aspect ratio */
+}
+
+.current-card-back {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.current-card-back h3 {
+  margin-bottom: 10px;
+}
