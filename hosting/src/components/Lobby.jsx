@@ -183,17 +183,19 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
                 </button>
               </div>
             </div>
-            <div className="room-code">
-              {isJoining ? (
-                <input
-                  type="text"
-                  placeholder="Room Code"
-                  value={localRoomCode}
-                  onChange={(e) => setLocalRoomCode(e.target.value)}
-                />
-              ) : (
-                roomCreated && <div>Room Code: {localRoomCode}</div>
-              )}
+            <div className="room-code-container">
+              <div className="room-code">
+                {isJoining ? (
+                  <input
+                    type="text"
+                    placeholder="Room Code"
+                    value={localRoomCode}
+                    onChange={(e) => setLocalRoomCode(e.target.value)}
+                  />
+                ) : (
+                  roomCreated && <div>Room Code: {localRoomCode}</div>
+                )}
+              </div>
             </div>
             <div className="player-name-container">
               <span>Name: {localPlayerName}</span>

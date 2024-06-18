@@ -47,10 +47,10 @@
 }
 
 .player-name-container {
-  background-color: #e9d414; /* Hall taustavärv */
-  padding: 5px;
-  border-radius: 5px;
-  margin-bottom: 10px;
+  background-color: #adadad; /* Hall taustavärv */
+  padding: 1px;
+  border-radius: 3px;
+  margin-bottom: 1px;
 }
 
 .player-list-container {
@@ -68,6 +68,13 @@
   font-size: 1.2em;
   cursor: pointer;
   margin: 40px; /* Vähendatud nuppude vaheline vahe */
+}
+
+.room-code-container{
+  background-color: #e9d414; /* Hall taustavärv */
+  padding: 1px;
+  border-radius: 5px;
+  margin-bottom: 10px;
 }
 
 .room-code {
@@ -145,5 +152,13 @@
 }
 
 .current-card-back h3 {
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+  color: white;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+.card-back-selector h3 {
+  margin-bottom: 5px;
+  color: white;
+  text-shadow: 2px 2px 4px #000000;
 }

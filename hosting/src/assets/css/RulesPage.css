@@ -8,7 +8,7 @@
   height: 100vh;
   background-image: url('/banner/taust.png');
   padding: 20px;
-  text-align: left; /* Changed from center to left */
+  text-align: left;
 }
 
 .rules-page h1 {
@@ -41,46 +41,49 @@
   font-size: 1.2em;
   cursor: pointer;
 }
+
 .rules-page li {
-    font-size: 0.9em;
-    text-shadow: 2px 2px 4px #000000;
-    color: #ffffff;
+  font-size: 0.9em;
+  text-shadow: 2px 2px 4px #000000;
+  color: #ffffff;
 }
 
 /* Mobile (Smartphone) 480px and below */
 @media (max-width: 480px) {
   .rules-page {
     padding: 10px;
+    height: auto; /* Adjusts height for better fit */
   }
 
   .rules-page h1 {
     font-size: 1.5em;
+    margin-bottom: 10px; /* Reduce margin for better fit */
   }
 
   .rules-page h2 {
     font-size: 1.2em;
+    margin-bottom: 5px; /* Reduce margin for better fit */
   }
 
   .rules-page h3 {
     font-size: 0.75em;
-    margin: 0 20px; /* Adds margins to left and right */
-    max-width: 800px; /* Limits the maximum width */
+    margin: 0 10px; /* Adjust margin for better fit */
+    max-width: 100%; /* Ensure it stays within the screen width */
   }
 
   .rules-page p {
     font-size: 0.8em;
+    margin-bottom: 10px; /* Reduce margin for better fit */
   }
 
   .rules-page button {
     font-size: 1em;
     padding: 8px 16px;
   }
+
   .rules-page li {
     font-size: 0.8em;
-    margin: 10px; /* Adds margins to left and right */
-    max-width: 1000px; /* Limits the maximum width */
-    text-shadow: 2px 2px 4px #000000;
-    color: #ffffff;
+    max-width: 100%; /* Ensure it stays within the screen width */
   }
 }
 
