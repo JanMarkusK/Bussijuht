@@ -17,7 +17,7 @@
 }
 
 .rules-page h2 {
-  margin-bottom: 20px;
+  margin-bottom: 1px;
   color: #ffffff;
   text-shadow: 2px 2px 4px #000000;
 }
@@ -40,6 +40,11 @@
   padding: 10px 20px;
   font-size: 1.2em;
   cursor: pointer;
+}
+.rules-page li {
+    font-size: 0.9em;
+    text-shadow: 2px 2px 4px #000000;
+    color: #ffffff;
 }
 
 /* Mobile (Smartphone) 480px and below */
@@ -69,6 +74,13 @@
   .rules-page button {
     font-size: 1em;
     padding: 8px 16px;
+  }
+  .rules-page li {
+    font-size: 0.8em;
+    margin: 10px; /* Adds margins to left and right */
+    max-width: 1000px; /* Limits the maximum width */
+    text-shadow: 2px 2px 4px #000000;
+    color: #ffffff;
   }
 }
 
