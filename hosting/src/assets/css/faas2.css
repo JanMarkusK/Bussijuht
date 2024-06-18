@@ -1,0 +1,137 @@
+.faas2-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(3,1fr);
+  gap: 10px;
+  background-color: rgba(10, 35, 10, 0.8);
+  padding: 10px;
+  font-size: 20px;
+  text-align: left;
+  background-image: url('/banner/taust.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: repeat-y;
+}
+
+.faas2-pyramid {
+  background: transparent;
+  border: 5px solid rgba(10, 35, 10);
+  padding: 20px;
+  text-align: center;
+  align-content: center;
+  grid-column: 2 / span 3;
+  grid-row: 1 / span 1;
+}
+
+.faas2 {
+  background: rgba(10, 35, 10, 0.8);
+  border: 5px solid rgba(00, 64, 00, 0.8);
+  padding: 20px;
+  text-align: center;
+  align-content: center;
+}
+
+.faas2 h1 {
+  background: rgba(10, 35, 10, 0.8);
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.faas2 button {
+  padding: 10px 20px;
+  font-size: 1.2em;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(00, 64, 00, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.overlay-content h1 {
+  margin-bottom: 20px;
+}
+
+/* Mobile (Smartphone) 480px and below */
+@media (max-width: 480px) {
+  .faas2 h1 {
+    font-size: 1.5em;
+  }
+
+  .faas2 button {
+    font-size: 1em;
+    padding: 8px 16px;
+  }
+
+  .overlay-content h1 {
+    font-size: 1.5em;
+  }
+}
+
+/* Huge size (Larger screen) 1281px and greater */
+@media (min-width: 1281px) {
+  .faas2 h1 {
+    font-size: 3em;
+  }
+
+  .faas2 button {
+    font-size: 1.5em;
+    padding: 12px 24px;
+  }
+
+  .overlay-content h1 {
+    font-size: 3em;
+  }
+}
+
+.pyramid {
+  display: flex;
+  flex-direction: column;
+}
+
+.pyramid-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.pyramid-row {
+  display: flex;
+  justify-content: center;
+}
+
+.pyramid-card {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 5px;
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+
+
+@media (max-width: 480px) {
+  .faas2 {
+    grid-template-columns: 150px;
+    grid-template-rows: 200px;
+  }
+}

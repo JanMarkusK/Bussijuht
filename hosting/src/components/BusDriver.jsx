@@ -5,7 +5,7 @@ import Pyramid from './Pyramid';
 import Hand from './Hand';
 import { fetchDeck, shuffleDeck } from '../utils/deck';
 import '../assets/css/styles.css';
-import '../assets/css/BusDriver.css';
+import '../assets/css/faas2.css';
 import { array } from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 
@@ -381,9 +381,15 @@ const BusDriver = () => {
   };
 
   return (
-    <div className="bus-driver-container">
-      <div className="bus-driver">
-        <h1>Bus Driver Game</h1>
+    <div className="faas2-container">
+      <div className="grid-element"></div>
+      <div className="grid-element"></div>
+      <div className="grid-element"></div>
+      <div className="grid-element"></div>
+      <div className="grid-element"></div>
+      <div className="grid-element"></div>
+      <div className="grid-element"></div>
+      <div className="faas2">
         <Pyramid pyramid={pyramid} onCardClick={handleCardClick} />
         {/* <Hand hand={hand} /> */}
         {gameOver && <button onClick={restartGame}>Restart</button>}
@@ -396,6 +402,13 @@ const BusDriver = () => {
           </div>
         )}
       </div>
+      <div className="grid-element"></div>
+      <div className="grid-element"></div>
+      <div className="grid-element"></div>
+      <div className="grid-element"></div>
+      <div className="grid-element"></div>
+      <div className="grid-element"></div>
+      <div className="grid-element"></div>
     </div>
   );
 };

@@ -56,3 +56,28 @@
 .row .card {
   margin: 5px;
 }
+
+
+
+.faas2 {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto;
+  background-color: black;
+  padding: 10px;
+  font-size: 20px;
+  text-align: left;
+}
+
+
+@media (max-width: 480px) {
+  .card {
+    width: 50px; /* Fixed width for the card */
+    height: 63px; /* Fixed height for the card */
+    margin: 2px;
+    cursor: pointer;
+    perspective: 500px;
+    display: inline-block;
+    position: relative; /* Ensure each card is positioned correctly */
+    z-index: 1; /* Ensure cards are above other content */
+  }
+}
