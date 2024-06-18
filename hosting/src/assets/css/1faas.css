@@ -79,7 +79,7 @@
 }
 
 
-.playing-card-back {
+.back {
   border: 1px solid #533;
   border-radius: 4px;
   width: 100%;
@@ -89,7 +89,7 @@
   background-color: #ffe9e9;
 }
 
-.playing-card-back-box {
+.back {
   display: inline-block;
   width: 65px;
   height: 94px;
@@ -97,28 +97,28 @@
   box-sizing: border-box;
 }
 
-.playing-card{
+.card{
   width: 100%;
   height: 100%;
   background-size: 100%;
   transition: transform 0.1s ease-in-out;
 }
 
-.your-hand .playing-card {
+.hand .card {
   box-shadow:0 0 10px 1px rgba(0, 0, 0, 0.5);
 }
 
-.your-hand-holder {
+.hand-holder {
   overflow: hidden;
   max-width: 1400px;
 }
 
-.your-hand {
+.hand {
   margin: 30px 70px 100px 70px;
 }
 
-.your-hand .playing-card:hover,
-.your-hand .playing-card-picked {
+.hand .card:hover,
+.hand .card-picked {
   z-index: 2;
   transform: scale(1.5);
 }
