@@ -212,6 +212,22 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     };
   };
 
+//leave lobby kood
+  const handleLeaveLobby = () => {
+    localStorage.removeItem('lobbyCode');
+    localStorage.removeItem('playerName');
+    localStorage.removeItem('doc_id');
+    setLocalRoomCode('');
+    setLocalPlayerName('');
+    setIsLoggedIn(false);
+    setIsHost(false);
+    setHasJoinedRoom(false);
+    setPlayers([]);
+    setRoomCreated(false);
+    setInGame(false);
+    navigate('/'); // Redirect to home page
+  };
+
   useEffect(() => {
     let unsubscribe;
     if (hasJoinedRoom) {
@@ -277,6 +293,12 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
                 disabled={players.length < MIN_PLAYERS}
               >
                 Start Game
+              </button>
+            )}
+            {/* Leave Lobby button */}
+            {hasJoinedRoom && (
+              <button className="leave-lobby-button" onClick={handleLeaveLobby}>
+                Leave Lobby
               </button>
             )}
           </>
