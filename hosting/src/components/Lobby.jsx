@@ -15,6 +15,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   const [isHost, setIsHost] = useState(false); // State to track if the user is the host
   const [isPremium, setIsPremium] = useState(false); // State to track if the user is premium
   const [cardBack, setCardBack] = useState('back.png'); // State to track current card back
+  const [hasJoinedRoom, setHasJoinedRoom] = useState(false); // State to track if the user has joined a room
   const navigate = useNavigate();
   const lobbyCollectionRef = collection(firestoreDB, "Lobby");
 
@@ -40,34 +41,6 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
       fetchUserName(currentUser.email);
     }
   }, []);
-
-  useEffect(() => {
-    if (localRoomCode) {
-      const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          if (data) {
-            setPlayers((prevPlayers) => {
-              if (JSON.stringify(prevPlayers) !== JSON.stringify(data.players)) {
-                return data.players || [];
-              }
-              return prevPlayers;
-            });
-            if (data.inGame) {
-              setInGame(true);
-              setGameData(data);
-              navigate('/2faas');
-            }
-            setIsHost(data.players.some(player => player.name === localPlayerName && player.host)); // Check if current user is the host
-            setCardBack(data.cardBack); // Set the card back for the room
-          }
-        });
-      });
-
-      return () => unsubscribe();
-    }
-  }, [localRoomCode, localPlayerName, setGameData, setInGame, navigate, lobbyCollectionRef]);
 
   const handleRoomCode = async () => {
     const newRoomCode = Math.floor(Math.random() * 90000) + 10000;
@@ -123,6 +96,10 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
         const updatedPlayers = [...roomData.players, { name: localPlayerName, host: false, ready: false }];
         await updateDoc(doc.ref, { players: updatedPlayers });
         setCardBack(roomData.cardBack); // Set the card back for the room
+        setPlayers(updatedPlayers); // Update the players state
+        setIsHost(false); // Joining user is not the host
+        setHasJoinedRoom(true); // Set the state to true indicating the user has joined the room
+        setupCardBackListener(doc.ref); // Setup card back listener
       });
     } else {
       alert('No matching room found for the provided room code.');
@@ -171,18 +148,49 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     }
   };
 
+  const setupCardBackListener = (docRef) => {
+    return onSnapshot(docRef, (doc) => {
+      const data = doc.data();
+      if (data && data.cardBack) {
+        setCardBack(data.cardBack);
+      }
+    });
+  };
+
+  useEffect(() => {
+    let unsubscribe;
+    if (hasJoinedRoom) {
+      const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
+      getDocs(q).then((querySnapshot) => {
+        if (!querySnapshot.empty) {
+          querySnapshot.forEach((doc) => {
+            unsubscribe = setupCardBackListener(doc.ref);
+          });
+        }
+      });
+    }
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
+  }, [hasJoinedRoom, localRoomCode]);
+
   return (
     <div className="lobby-page">
       <div className="input-container">
         {isLoggedIn ? (
           <>
-            <div className="top-buttons">
-              <div className="switch-buttons-container">
-                <button onClick={isJoining ? handleSwitchToCreate : () => setIsJoining(true)}>
-                  {isJoining ? 'Switch to Create' : 'Switch to Join'}
-                </button>
+            {!hasJoinedRoom && (
+              <div className="top-buttons">
+                <div className="switch-buttons-container">
+                  <button onClick={isJoining ? handleSwitchToCreate : () => setIsJoining(true)}>
+                    {isJoining ? 'Switch to Create' : 'Switch to Join'}
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
             <div className="room-code">
               {isJoining ? (
                 <input
@@ -198,9 +206,9 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
             <div className="player-name-container">
               <span>Name: {localPlayerName}</span>
             </div>
-            {isJoining ? (
+            {isJoining && !hasJoinedRoom && (
               <button className="join-room-button" onClick={handleJoinRoom}>Join Room</button>
-            ) : null}
+            )}
             {isHost && !isJoining && (
               <button className="start-game-button" onClick={handleStartGame}>Start Game</button>
             )}
@@ -222,7 +230,9 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
               value={localPlayerName}
               onChange={(e) => setLocalPlayerName(e.target.value)}
             />
-            <button className="join-room-button" onClick={handleJoinRoom}>Join Room</button>
+            {!hasJoinedRoom && (
+              <button className="join-room-button" onClick={handleJoinRoom}>Join Room</button>
+            )}
           </>
         )}
         {notification && <p className="notification">{notification}</p>}
