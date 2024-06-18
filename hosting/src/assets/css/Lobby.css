@@ -104,3 +104,28 @@
   color: white; /* "Current Card Back:" text color */
   text-shadow: 2px 2px 4px #000000;
 }
+
+/*kaardi suurused ja sellega seonduvad*/
+.card-back-selection {
+  margin-top: 20px;
+}
+
+.card-back-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.card-back-option {
+  width: 5%;
+  height: auto;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.card-back-option.selected {
+  /* border: 2px solid #000; */
+  transform: scale(1.5);
+  /* margin-bottom: 34px; */
+}

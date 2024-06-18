@@ -88,6 +88,14 @@
     max-width: 800px; /* Limits the maximum width */
   }
 
+  .rules-page li {
+    font-size: 1.1em;
+    margin: 0 20px; /* Adds margins to left and right */
+    max-width: 1000px; /* Limits the maximum width */
+    text-shadow: 2px 2px 4px #000000;
+    color: #ffffff;
+  }
+
   .rules-page p {
     font-size: 1.5em;
   }

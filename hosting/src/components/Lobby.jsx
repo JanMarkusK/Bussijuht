@@ -14,11 +14,10 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   const [notification, setNotification] = useState('');
   const [isHost, setIsHost] = useState(false); // State to track if the user is the host
   const [isPremium, setIsPremium] = useState(false); // State to track if the user is premium
-  const [cardBack, setCardBack] = useState('default.png'); // State to track current card back
+  const [cardBack, setCardBack] = useState('back.png'); // State to track current card back
   const navigate = useNavigate();
   const lobbyCollectionRef = collection(firestoreDB, "Lobby");
 
-  console.log("laen lehte");
   useEffect(() => {
     const fetchUserName = async (email) => {
       try {
@@ -61,6 +60,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
               navigate('/2faas');
             }
             setIsHost(data.players.some(player => player.name === localPlayerName && player.host)); // Check if current user is the host
+            setCardBack(data.cardBack); // Set the card back for the room
           }
         });
       });
@@ -82,7 +82,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
       return;
     }
     const newRoomCode = await handleRoomCode();
-    //Paneb kõik vajaliku info Firestore doci
+    // Paneb kõik vajaliku info Firestore doci
     const lobbyDocRef = await addDoc(lobbyCollectionRef, {
       roomCode: newRoomCode,
       players: [{ name: localPlayerName, host: true, ready: false }],
@@ -93,7 +93,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     localStorage.setItem('playerName', localPlayerName);
     localStorage.setItem('doc_id', lobbyDocRef.id);
     console.log("Document ID host:", lobbyDocRef.id);
-    //Muudab proppide valuet, mdea kas need on tegelt vajalikud veel
+    // Muudab proppide valuet, mdea kas need on tegelt vajalikud veel
     setPlayerName(localPlayerName);
     setRoomCode(localRoomCode);
     setRoomCreated(true);
@@ -115,7 +115,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
       querySnapshot.forEach(async (doc) => {
         const roomData = doc.data();
         localStorage.setItem('doc_id', doc.id);
-        //test
+        // Test
         const localTestPlayerName = localStorage.getItem('playerName');
         const localTestLobbyCode = localStorage.getItem('lobbyCode');
         console.log("Liituja nimi:", localTestPlayerName);
@@ -207,9 +207,9 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
           </>
         ) : (
           <>
-          <div className="sulPoleKontot">
-            <h4>You must be logged in to create a game</h4>
-          </div>
+            <div className="sulPoleKontot">
+              <h4>You must be logged in to create a game</h4>
+            </div>
             <input
               type="text"
               placeholder="Room Code"
@@ -239,7 +239,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
         <div className="card-back-selector">
           <h3>Select Card Back:</h3>
           <div className="card-backs">
-            {['back1.png', 'back2.png', 'back3.png'].map((back, index) => (
+            {['back.png', 'back1.png', 'back2.png', 'back3.png', 'back4.png', 'back5.png', 'back6.png', 'back7.png', 'back8.png', 'back9.png', 'back10.png'].map((back, index) => (
               <img
                 key={index}
                 src={`/cards/back/${back}`}
@@ -251,10 +251,12 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
           </div>
         </div>
       )}
-      <div className="current-card-back">
-        <h3>Current Card Back:</h3>
-        <img src={`../../cards/back/${cardBack}`} alt="Current card back" />
-      </div>
+      {!isHost && (
+        <div className="current-card-back">
+          <h3>Current Card Back:</h3>
+          <img src={`/cards/back/${cardBack}`} alt="Current card back" />
+        </div>
+      )}
     </div>
   );
 };
