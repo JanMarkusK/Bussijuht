@@ -23,6 +23,17 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   const lobbyCollectionRef = collection(firestoreDB, "Lobby");
 
   useEffect(() => {
+    const storedPlayerName = localStorage.getItem('playerName');
+    const storedLobbyCode = localStorage.getItem('lobbyCode');
+
+    if (storedPlayerName && storedLobbyCode) {
+      setLocalPlayerName(storedPlayerName);
+      setLocalRoomCode(storedLobbyCode);
+      setIsLoggedIn(true);
+      setHasJoinedRoom(true);
+      setupRealTimeListener(localStorage.getItem('doc_id')); // Setup listener for players list
+    }
+
     const fetchUserName = async (email) => {
       try {
         const q = query(collection(firestoreDB, "User"), where("email", "==", email));
@@ -213,11 +224,8 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
         }
       });
     }
-
     return () => {
-      if (unsubscribe) {
-        unsubscribe();
-      }
+      if (unsubscribe) unsubscribe();
     };
   }, [hasJoinedRoom, localRoomCode]);
 
