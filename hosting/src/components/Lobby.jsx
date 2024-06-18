@@ -64,9 +64,10 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     }
     localStorage.setItem('playerName', localPlayerName);
     localStorage.setItem('lobbyCode', localRoomCode);
-    console.log();
+
     const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
     const querySnapshot = await getDocs(q);
+    
     if (!querySnapshot.empty) {
       querySnapshot.forEach(async (doc) => {
         const roomData = doc.data();
@@ -87,6 +88,11 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
       querySnapshot.forEach(async (doc) => {
         await updateDoc(doc.ref, { inGame: true });
         setInGame(true);
+        
+        // Store all player names in localStorage under one key
+        const playerNames = players.map(player => player.name).join(';');
+        localStorage.setItem('playerNames', playerNames);
+        
         navigate('/1faas'); // Navigate to FirstFaze component upon game start
       });
     } else {

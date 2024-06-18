@@ -3,6 +3,7 @@ import Pyramid from './Pyramid';
 import { firestoreDB, writeBatch, collection, doc, updateDoc, getDoc, getDocs, addDoc, query, where, onSnapshot } from '../firebase'; // Ensure all necessary Firestore functions are imported
 import { fetchDeck, shuffleDeck } from '../utils/deck';
 import '../assets/css/styles.css';
+import { useNavigate } from 'react-router-dom';
 
 const FirstFaze = () => {
   const [pyramid, setPyramid] = useState([]);
@@ -13,12 +14,18 @@ const FirstFaze = () => {
   const [selectedHandCard, setSelectedHandCard] = useState(null);
   const [isHost, setIsHost] = useState(false); // State to determine if current player is host
   const [skipSnapshot, setSkipSnapshot] = useState(false);
+  const [players, setPlayers] = useState([]);
+  const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const [points, setPoints] = useState({});
+  const navigate = useNavigate();
 
   const pyramid1CollectionRef = collection(firestoreDB, "Pyramid1");
   const localPlayerName = localStorage.getItem('playerName');
   const localRoomCode = localStorage.getItem('lobbyCode');
   const localDocID = localStorage.getItem('doc_id');
   const pyramidDocId = localStorage.getItem('pyramidDocId');
+  const allPlayers = localStorage.getItem('playerNames');
+  const playerList = allPlayers ? allPlayers.split(';') : [];
 
   useEffect(() => {
     setupGame();
@@ -264,6 +271,27 @@ const FirstFaze = () => {
     }
   };
 
+  const handleAssignPoints = async (playerName, rowIndex) => {
+
+
+    const pointValue = 5 - rowIndex; // Calculate points based on row index
+  
+    // Update points locally
+    const newPoints = { ...points };
+    if (!newPoints[playerName]) {
+      newPoints[playerName] = 0;
+    }
+    newPoints[playerName] += pointValue;
+    setPoints(newPoints);
+  
+    // Update points in Firestore
+    const pyramidDocRef = doc(pyramid1CollectionRef, pyramidDocId);
+    await updateDoc(pyramidDocRef, {
+      [`players.${playerName}.points`]: newPoints[playerName]
+    });
+  };
+  
+
   const firestoreQuery = async (arv) => {
     try {
       const roomDocRef = doc(collection(firestoreDB, "Lobby"), localDocID);
@@ -321,6 +349,9 @@ const FirstFaze = () => {
             [`${fieldName}.faceUp`]: true
           });
         });
+
+        await handleAssignPoints(rowIndex);
+
         console.log("batch: "+batch)
         await batch.commit(); // Commit batch update to Firestore
     
@@ -383,10 +414,22 @@ const FirstFaze = () => {
     setupGame();
   };
 
+
   return (
     <div className="first-faze-container">
       <div className="first-faze">
         <h1>First Faze Game</h1>
+        <div className="player-list-container">
+          <h3>Players in Lobby:</h3>
+          <ul>
+            {playerList.map((player, index) => (
+              <li key={index} onClick={() => handleAssignPoints(player, currentRow)}>
+                {player}
+                {points[player] && <span className="points">{points[player]}</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
         <Pyramid pyramid={pyramid} onCardClick={handlePyramidCardClick} />
         <div className="hand">
           {hand.map((card, index) => (
@@ -399,11 +442,14 @@ const FirstFaze = () => {
             />
           ))}
         </div>
-        {gameOver && <button onClick={restartGame}>Restart</button>}
-
+        {gameOver && <button onClick={navigate("/2faas")}>Next phase</button>}
+        <ul>
+          
+        </ul>
       </div>
     </div>
   );
+  
 };
 
 export default FirstFaze;
