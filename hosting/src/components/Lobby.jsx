@@ -20,8 +20,12 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           if (data) {
-            setPlayers(data.players || []);
+            const updatedPlayers = data.players || [];
+            setPlayers(updatedPlayers);
+  
             if (data.inGame) {
+              const playerNames = updatedPlayers.map(player => player.name).join(';');
+              localStorage.setItem('playerNames', playerNames);
               setInGame(true);
               setGameData(data);
               navigate('/1faas');
@@ -29,7 +33,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
           }
         });
       });
-
+  
       return () => unsubscribe();
     }
   }, [localRoomCode, setGameData, setInGame, navigate]);
@@ -45,7 +49,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     const newRoomCode = await handleRoomCode();
     const lobbyDocRef = await addDoc(lobbyCollectionRef, {
       roomCode: newRoomCode,
-      players: [{ name: localPlayerName, host: true, ready: false }],
+      players: [{ name: localPlayerName, host: true, ready: false, points: 0 }],
       inGame: false
     });
     localStorage.setItem('lobbyCode', newRoomCode);
@@ -72,7 +76,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
       querySnapshot.forEach(async (doc) => {
         const roomData = doc.data();
         localStorage.setItem('doc_id', doc.id);
-        const updatedPlayers = [...roomData.players, { name: localPlayerName, host: false, ready: false }];
+        const updatedPlayers = [...roomData.players, { name: localPlayerName, host: false, ready: false, points: 0 }];
         await updateDoc(doc.ref, { players: updatedPlayers });
       });
     } else {

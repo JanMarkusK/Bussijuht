@@ -13,32 +13,31 @@ const FirstFaze = () => {
   const [selectedCardIndex, setSelectedCardIndex] = useState(null);
   const [selectedHandCard, setSelectedHandCard] = useState(null);
   const [isHost, setIsHost] = useState(false); // State to determine if current player is host
-  const [skipSnapshot, setSkipSnapshot] = useState(false);
   const [players, setPlayers] = useState([]);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [points, setPoints] = useState({});
+  const [pointsAssigned, setPointsAssigned] = useState(true); // New state to track if points are assigned
   const navigate = useNavigate();
 
   const pyramid1CollectionRef = collection(firestoreDB, "Pyramid1");
+  const lobbyCollectionRef = collection(firestoreDB, "Lobby");
   const localPlayerName = localStorage.getItem('playerName');
   const localRoomCode = localStorage.getItem('lobbyCode');
   const localDocID = localStorage.getItem('doc_id');
   const pyramidDocId = localStorage.getItem('pyramidDocId');
   const allPlayers = localStorage.getItem('playerNames');
   const playerList = allPlayers ? allPlayers.split(';') : [];
+  const pointsList = allPlayers ? allPlayers.split(';') : [];
 
   useEffect(() => {
     setupGame();
   }, []); 
 
   useEffect(() => {
-    if (pyramidDocId) {
+    if (pyramidDocId, localDocID) {
     const pyramidDocRef = doc(pyramid1CollectionRef, pyramidDocId);
    
       const unsubscribe = onSnapshot(pyramidDocRef, (doc) => {
-        if (skipSnapshot) {
-          return; // Skip updating state if skipSnapshot is true
-        }
         if (doc.exists()) {
           const pyramidData = doc.data();
           const pyramidCards = [[], [], [], [], []];
@@ -72,6 +71,7 @@ const FirstFaze = () => {
           }
     
           console.log("lastFlippedRow3: " + lastFlippedRow)
+
           // Check for the win condition
           if (lastFlippedRow === 0) {
             // const lastCard = pyramidCards[0].find(card => card && card.faceUp);
@@ -84,13 +84,35 @@ const FirstFaze = () => {
             //   }
             // }
           }
-    
         }
       });
+
+      const lobbyDocRef = doc(lobbyCollectionRef, localDocID);
+      const unsubscribe2 = onSnapshot(lobbyDocRef, (doc) => {
+        if (doc.exists()) {
+          const lobbyData = doc.data();
+          const newPoints = {};
     
-      return () => unsubscribe();
+          lobbyData.players.forEach((player) => {
+            newPoints[player.name] = player.points || 0;
+          });
+    
+          setPoints(newPoints);
+          console.log("Updated points:", newPoints); // Log updated points for debugging
+        } else {
+          console.log("Document does not exist.");
+        }
+      }, (error) => {
+        console.error("Error fetching document:", error);
+      });
+      
+      
+      return () => {
+        unsubscribe();
+        unsubscribe2();
+      };
     }
-    }, [pyramidDocId]);
+    }, [pyramidDocId, localDocID]);
 
   const setupGame = async () => {
     console.log('Setting up game...');
@@ -271,24 +293,41 @@ const FirstFaze = () => {
     }
   };
 
-  const handleAssignPoints = async (playerName, rowIndex) => {
+  const handleAssignPoints = async (playerName) => {
+    if (playerName === localPlayerName) {
+      return; // Prevent assigning points to self
+    }
 
+    const pointValue = 5 - currentRow; // Calculate points based on row index
 
-    const pointValue = 5 - rowIndex; // Calculate points based on row index
-  
-    // Update points locally
     const newPoints = { ...points };
     if (!newPoints[playerName]) {
       newPoints[playerName] = 0;
     }
     newPoints[playerName] += pointValue;
     setPoints(newPoints);
-  
-    // Update points in Firestore
-    const pyramidDocRef = doc(pyramid1CollectionRef, pyramidDocId);
-    await updateDoc(pyramidDocRef, {
-      [`players.${playerName}.points`]: newPoints[playerName]
-    });
+
+    // Update Firestore
+    const lobbyDocRef = doc(lobbyCollectionRef, localDocID);
+    const lobbyDoc = await getDoc(lobbyDocRef);
+    if (lobbyDoc.exists()) {
+      const lobbyData = lobbyDoc.data();
+      const updatedPlayers = lobbyData.players.map(player => {
+        if (player.name === playerName) {
+          return { ...player, points: newPoints[playerName] };
+        }
+        return player;
+      });
+
+      await updateDoc(lobbyDocRef, {
+        players: updatedPlayers
+      });
+
+      setSelectedPlayer(null); // Reset selected player
+      setPointsAssigned(true); // Set points assigned flag to true
+    } else {
+      console.error('Lobby document does not exist.');
+    }
   };
   
 
@@ -324,7 +363,7 @@ const FirstFaze = () => {
   };
 
   const handlePyramidCardClick = async (rowIndex, cardIndex) => {
-    if (gameOver) return;
+    if (gameOver || !pointsAssigned) return;
     
     const pyramidDocRef = doc(pyramid1CollectionRef, pyramidDocId);
     
@@ -332,7 +371,6 @@ const FirstFaze = () => {
       console.log(`Clicked card at row ${rowIndex}, col ${cardIndex}`);
     
       if (rowIndex === currentRow - 1) {
-        // setSkipSnapshot(true); // Disable snapshot listener
     
         const newPyramid = [...pyramid];
         newPyramid[rowIndex].forEach(card => {
@@ -361,7 +399,6 @@ const FirstFaze = () => {
           setCurrentRow(currentRow - 1); // Move to the next row
           console.log(`currentRow updated to ${currentRow - 1}`);
           console.log(`Row ${rowIndex} turned over`);
-          setSkipSnapshot(false); // Re-enable snapshot listener
         }, 500); // Adjust the delay as needed
     
       } else {
@@ -374,8 +411,6 @@ const FirstFaze = () => {
     
         const handCardIndex = hand.findIndex(card => card === selectedHandCard);
         if (handCardIndex === -1) return;
-    
-        setSkipSnapshot(true); // Disable snapshot listener
     
         const newHand = [...hand];
         newHand.splice(handCardIndex, 1);
@@ -394,9 +429,10 @@ const FirstFaze = () => {
         } else if (newPyramid[rowIndex - 1].every(card => card.faceUp)) {
           setTimeout(() => {
             setCurrentRow(currentRow - 1);
-            setSkipSnapshot(false); // Re-enable snapshot listener
           }, 500); // Adjust the delay as needed
         }
+
+        setPointsAssigned(false); // Reset points assigned flag
     
         setSelectedCardIndex(null);
         setSelectedHandCard(null);
@@ -405,7 +441,6 @@ const FirstFaze = () => {
     
     } catch (error) {
       console.error('Error updating pyramid:', error);
-      setSkipSnapshot(false); // Re-enable snapshot listener in case of error
     }
     };
   
@@ -419,17 +454,22 @@ const FirstFaze = () => {
     <div className="first-faze-container">
       <div className="first-faze">
         <h1>First Faze Game</h1>
-        <div className="player-list-container">
-          <h3>Players in Lobby:</h3>
-          <ul>
-            {playerList.map((player, index) => (
-              <li key={index} onClick={() => handleAssignPoints(player, currentRow)}>
-                {player}
-                {points[player] && <span className="points">{points[player]}</span>}
-              </li>
+        {!pointsAssigned && (
+          <div className="points-assignment">
+            <h2>Assign Points</h2>
+            <div className="player-list">
+            {playerList.map(player => (
+              <div
+                key={player}
+                className={`player-item ${selectedPlayer === player ? 'selected' : ''}`}
+                onClick={() => handleAssignPoints(player)}
+              >
+                {player} ({points[player] || 0} points)
+              </div>
             ))}
-          </ul>
-        </div>
+            </div>
+          </div>
+        )}
         <Pyramid pyramid={pyramid} onCardClick={handlePyramidCardClick} />
         <div className="hand">
           {hand.map((card, index) => (
