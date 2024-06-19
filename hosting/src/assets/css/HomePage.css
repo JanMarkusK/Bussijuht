@@ -98,14 +98,60 @@ button:hover {
   }
 }
 
-/* Large screens 481px and above */
-@media (min-width: 481px) {
+/* Mobile and Tablet (up to 768px) */
+@media (max-width: 768px) {
+  .banner-container {
+    display: none; /* Hide large banner on small screens */
+  }
+
+  .banner-container-telole {
+    display: block; /* Show mobile banner on small screens */
+    width: 100%;
+  }
+
+  .banner-telole-image {
+    width: 100%;
+  }
+
+  .home-page h1, .home-page h2 {
+    font-size: 1.5em;
+  }
+
+  .home-page-image {
+    max-width: 50%;
+  }
+
+  .button-container {
+    gap: 10px;
+  }
+
+  .home-page button {
+    font-size: 1em;
+  }
+  .home-page h3 {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px #000000;
+  }
+}
+
+/* Large screens 769px and above */
+@media (min-width: 769px) {
   .banner-container {
     display: block; /* Show large banner on large screens */
   }
 
   .banner-container-telole {
+    width: 100%;
     display: none; /* Hide mobile banner on large screens */
+
+  }
+  .home-page h3 {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px #000000;
   }
 }
 
