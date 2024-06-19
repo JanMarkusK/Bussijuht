@@ -1,6 +1,22 @@
 /* src/assets/css/bannerbuss.css */
 
 
+.border-image{
+  width: 820px;
+  height: 220px;
+  position: absolute;
+  left: -10px;
+  top: -9px;
+  z-index: 9;
+}
+
+.pohi-image {
+  width: 950px;
+  height: 200px;
+  position: absolute;
+  left: -70px;
+}
+
 
 .road-container {
   display: flex;
@@ -13,17 +29,26 @@
 }
 
 .tee-image {
-  width: 2500px;
+  width: 3135px;
   height: 200px;
   position: absolute;
-  left: 300px;
-  animation: moveTee 5s linear infinite;
+  left: -100px;
+  animation: moveTee 6s linear infinite;
+}
+
+.pilved-image {
+  width: 1500px;
+  height: 230px;
+  position: absolute;
+  left: 500px;
+  top: -10px;
+  animation: moveTee 60s linear infinite;
 }
 
 .peatus {
-  top: 15px; /* Adjust position as needed */
+  top: 11px; /* Adjust position as needed */
   left: 1550px; /* Center the bus horizontally */
-  width: 200px; /* Adjust the size as needed */
+  width: 100px; /* Adjust the size as needed */
   height: auto;
   position: absolute;
   z-index: 3;
@@ -36,13 +61,12 @@
 }
 
 .buss {
-  top: 60px; /* Adjust position as needed */
+  top: 75px; /* Adjust position as needed */
   left: 250px; /* Center the bus horizontally */
   width: 120px; /* Adjust size as needed */
   height: auto;
-  z-index: 1;
+  z-index: 4;
   animation: moveBuss 5s linear forwards;
-  transform: scaleX(-1);
 }
 
 .pealkiri {
@@ -52,6 +76,7 @@
   height: auto;
   z-index: 2;
 }
+
 
 @keyframes moveTee {
   0% {
