@@ -61,40 +61,111 @@ button:hover {
 }
 
 /* Mobile (Smartphone) 480px and below */
-@media (max-width: 480px) {
-  .banner-container {
-    display: none; /* Hide large banner on small screens */
-  }
+/* Ensure parent container has overflow: hidden */
+.banner-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
 
-  .banner-container-telole {
-    display: block; /* Show mobile banner on small screens */
-    width: 100%;
-  }
+/* Update the road-container styles */
+.road-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden; /* Prevent overflow beyond the container */
+}
 
-  .banner-telole-image {
-    width: 100%;
-  }
+/* Adjust the border-image positioning */
+.border-image {
+  width: 100%;
+  height: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9;
+}
 
-  .home-page h1, .home-page h2 {
-    font-size: 1.5em;
-  }
+/* Adjust other elements to fit within the border */
+.pohi-image {
+  width: 100%;
+  height: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 
-  .home-page-image {
-    max-width: 50%;
-  }
+.tee-image {
+  width: 200%;
+  height: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: moveTee 6s linear infinite;
+}
 
-  .button-container {
-    gap: 10px;
-  }
+.pilved-image {
+  width: 150%;
+  height: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: movePilved 60s linear infinite;
+}
 
-  .home-page button {
-    font-size: 1em;
+.peatus {
+  top: 11px;
+  left: 75%;
+  width: 10%;
+  height: auto;
+  position: absolute;
+  z-index: 3;
+  animation: moveTee 6s linear infinite;
+}
+
+.buss {
+  top: 75px;
+  left: 20%;
+  width: 10%;
+  height: auto;
+  position: absolute;
+  z-index: 4;
+  animation: moveBuss 5s linear forwards;
+}
+
+.pealkiri {
+  top: 10px;
+  left: 15%;
+  width: 20%;
+  height: auto;
+  position: absolute;
+  z-index: 2;
+}
+
+@keyframes moveTee {
+  0% {
+    transform: translateX(0);
   }
-  .home-page h3 {
-    font-size: 1.1em;
-    margin-bottom: 10px;
-    color: #ffffff;
-    text-shadow: 2px 2px 4px #000000;
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes movePilved {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes moveBuss {
+  0% {
+    left: -10%;
+  }
+  100% {
+    left: 20%;
   }
 }
 
@@ -143,9 +214,7 @@ button:hover {
   }
 
   .banner-container-telole {
-    width: 100%;
     display: none; /* Hide mobile banner on large screens */
-
   }
   .home-page h3 {
     font-size: 1.1em;
