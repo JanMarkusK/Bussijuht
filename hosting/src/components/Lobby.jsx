@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth, firestoreDB, collection, addDoc, updateDoc, getDocs, onSnapshot, query, where, doc } from '../firebase';
+import { auth, firestoreDB, collection, addDoc, updateDoc, deleteDoc, getDocs, onSnapshot, query, where, doc } from '../firebase';
 import PropTypes from 'prop-types';
 import '../assets/css/Lobby.css'; // Import the CSS file
 
@@ -73,7 +73,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
       roomCode: newRoomCode,
       players: [{ name: localPlayerName, host: true, ready: false }],
       inGame: false,
-      cardBack: 'default.png' // Default card back
+      cardBack: 'back.png' // Default card back
     });
     localStorage.setItem('lobbyCode', newRoomCode);
     localStorage.setItem('playerName', localPlayerName);
@@ -119,8 +119,9 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   };
 
   const handleStartGame = async () => {
-    if (players.length < MIN_PLAYERS) {
-      alert(`At least ${MIN_PLAYERS} players are required to start the game.`);
+    if (players.length < 3) {
+      //siit setNotification ei tööta (GameStartListener all on teavitus kõigile)
+      setNotification("At least 3 players are required to start the game.");
       return;
     }
     const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
@@ -129,13 +130,14 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
       querySnapshot.forEach(async (doc) => {
         await updateDoc(doc.ref, { inGame: true });
         setInGame(true);
-        navigate('/1faas'); // Host navigates to the new route
+        navigate('/1faas');
       });
     } else {
       alert('No matching room found for the provided room code.');
     }
   };
-
+  
+//seda hetkel ei ole enam kasutusel
   const handleDisabledClick = () => {
     setNotification("You must be logged in to create lobby");
     setTimeout(() => setNotification(''), 3000); // Clear notification after 3 seconds
@@ -186,6 +188,10 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   const setupGameStartListener = (docId) => {
     const docRef = doc(firestoreDB, 'Lobby', docId);
     return onSnapshot(docRef, (doc) => {
+      if (players.length < 3) {
+        setNotification("At least 3 players are required to start the game.");
+        return;
+      }
       const data = doc.data();
       if (data && data.inGame) {
         setInGame(true);
@@ -194,26 +200,70 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     });
   };
 
+  const setupLobbyDeletionListener = (docId) => {
+    const docRef = doc(firestoreDB, 'Lobby', docId);
+    return onSnapshot(docRef, (docSnapshot) => {
+      if (!docSnapshot.exists) {
+        // If the document no longer exists, redirect to the home page
+        navigate('/');
+      }
+    });
+  };
+
   const setupRealTimeListener = (docId) => {
     const unsubscribePlayers = setupPlayersListener(docId);
     const unsubscribeGameStart = setupGameStartListener(docId);
+    const unsubscribeLobbyDeletion = setupLobbyDeletionListener(docId);
     const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
     getDocs(q).then((querySnapshot) => {
       if (!querySnapshot.empty) {
         querySnapshot.forEach((doc) => {
-          setupCardBackListener(doc.ref);
+          const unsubscribeCardBack = setupCardBackListener(doc.ref);
         });
       }
     });
-
     return () => {
       unsubscribePlayers();
       unsubscribeGameStart();
+      unsubscribeLobbyDeletion();
     };
   };
-
-//leave lobby kood
-  const handleLeaveLobby = () => {
+// leave lobby code
+const handleLeaveLobby = async () => {
+  const docId = localStorage.getItem('doc_id');
+  if (docId) {
+    const lobbyDocRef = doc(firestoreDB, 'Lobby', docId);
+    if (isHost) {
+      // Märgista lobby kui "disbanded"
+      await updateDoc(lobbyDocRef, { disbanded: true });
+      // Kustuta lobby dokument Firestore'ist
+      await deleteDoc(lobbyDocRef);
+      // Suuna kasutaja avalehele
+      navigate('/');
+      //siia tuleks lisada kood mis viiks teised mängijad ka avalehele!!!!
+      const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach(async (doc) => {
+          const roomData = doc.data();
+          const updatedPlayers = roomData.players.filter(player => player.name !== localPlayerName);
+          await updateDoc(doc.ref, { players: updatedPlayers });
+        });
+      }
+    } else {
+      // Eemalda mängija lobby dokumentist, kui kasutaja pole host
+      const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach(async (doc) => {
+          const roomData = doc.data();
+          const updatedPlayers = roomData.players.filter(player => player.name !== localPlayerName);
+          await updateDoc(doc.ref, { players: updatedPlayers });
+          navigate('/');
+        });
+      }
+    }
+    // Puhasta lokaalne salvestus ja olek
     localStorage.removeItem('lobbyCode');
     localStorage.removeItem('playerName');
     localStorage.removeItem('doc_id');
@@ -225,25 +275,30 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     setPlayers([]);
     setRoomCreated(false);
     setInGame(false);
-    navigate('/'); // Redirect to home page
-  };
+    navigate('/'); // Suuna kasutaja avalehele
+  }
+};
 
-  useEffect(() => {
-    let unsubscribe;
-    if (hasJoinedRoom) {
-      const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
-      getDocs(q).then((querySnapshot) => {
-        if (!querySnapshot.empty) {
-          querySnapshot.forEach((doc) => {
-            unsubscribe = setupRealTimeListener(doc.id);
-          });
-        }
-      });
-    }
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
-  }, [hasJoinedRoom, localRoomCode]);
+useEffect(() => {
+  let unsubscribe;
+  if (hasJoinedRoom) {
+    const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
+    getDocs(q).then((querySnapshot) => {
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach((doc) => {
+          unsubscribe = setupRealTimeListener(doc.id);
+          const data = doc.data();
+          if (data && data.disbanded) {
+            navigate('/'); // Suuna kasutaja avalehele, kui lobby on "disbanded"
+          }
+        });
+      }
+    });
+  }
+  return () => {
+    if (unsubscribe) unsubscribe();
+  };
+}, [hasJoinedRoom, localRoomCode, localPlayerName, setGameData, setInGame, navigate, lobbyCollectionRef]);
 
   return (
     <div className="lobby-page">
@@ -353,7 +408,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
       {!isHost && (
         <div className="current-card-back">
           <h3>Current Card Back:</h3>
-          <img src={`/cards/back/${cardBack}`} alt="Current card back" />
+          <img src={`/cards/back/${cardBack}`} alt="Default card" />
         </div>
       )}
     </div>
