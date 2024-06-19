@@ -4,10 +4,10 @@ import { firestoreDB, writeBatch, collection, addDoc, doc, updateDoc, getDoc, ge
 import Pyramid from './Pyramid';
 import Hand from './Hand';
 import { fetchDeck, shuffleDeck } from '../utils/deck';
-import '../assets/css/styles.css';
 import '../assets/css/faas2.css';
 import { array } from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+
 
 const BusDriver = () => {
   const [pyramid, setPyramid] = useState([]);
@@ -385,15 +385,16 @@ const BusDriver = () => {
     }
   };
 
+
   return (
     <div className="faas2-container">
-      <div className="player1">1</div>
-      <div className="player2">2</div>
-      <div className="player3">3</div>
-      <div className="player4">4</div>
-      <div className="player5">5</div>
-      <div className="player6">6</div>
-      <div className="player7">7</div>
+      <div className="player1">player1</div>
+      <div className="player2">player2</div>
+      <div className="player3">player3</div>
+      <div className="player4">player4</div>
+      <div className="player5">player5</div>
+      <div className="player6">player6</div>
+      <div className="player7">player7</div>
       <div className="faas2">
         <Pyramid pyramid={pyramid} onCardClick={handleCardClick} />
         {/* <Hand hand={hand} /> */}
@@ -414,7 +415,7 @@ const BusDriver = () => {
           </div>
         )}
       </div>
-      <div className="player8">8</div>
+      <div className="player8">player8</div>
     </div>
   );
 };
