@@ -1,7 +1,5 @@
 .faas2-container {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(3,1fr);
   gap: 10px;
   background-color: rgba(10, 35, 10, 0.8);
   padding: 10px;
@@ -11,6 +9,10 @@
   background-size: cover;
   background-position: center;
   background-repeat: repeat-y;
+  grid-template-columns: 3fr [faas2-start] 5fr [faas2-end] 3fr;
+  grid-template-rows: 2fr auto [faas2-start] auto [faas2-end] auto 2fr 155px;
+  justify-items: center;
+  align-items: start;
 }
 
 .faas2-pyramid {
@@ -19,8 +21,6 @@
   padding: 20px;
   text-align: center;
   align-content: center;
-  grid-column: 2 / span 3;
-  grid-row: 1 / span 1;
 }
 
 .faas2 {
@@ -29,6 +29,7 @@
   padding: 20px;
   text-align: center;
   align-content: center;
+  grid-area: faas2;
 }
 
 .faas2 h1 {
@@ -66,6 +67,72 @@
 .overlay-content h1 {
   margin-bottom: 20px;
 }
+
+
+.player1 {
+  background: rgba(10, 35, 10, 0.8);
+  border: 5px solid rgba(00, 64, 00, 0.8);
+  padding: 20px;
+  text-align: right;
+  align-content: left;
+}
+
+.player2 {
+  background: rgba(10, 35, 10, 0.8);
+  border: 5px solid rgba(00, 64, 00, 0.8);
+  padding: 20px;
+  text-align: right;
+  align-content: left;
+}
+
+.player3 {
+  background: rgba(10, 35, 10, 0.8);
+  border: 5px solid rgba(00, 64, 00, 0.8);
+  padding: 20px;
+  text-align: right;
+  align-content: left;
+}
+
+.player4 {
+  background: rgba(10, 35, 10, 0.8);
+  border: 5px solid rgba(00, 64, 00, 0.8);
+  padding: 20px;
+  text-align: right;
+  align-content: left;
+}
+
+.player5 {
+  background: rgba(10, 35, 10, 0.8);
+  border: 5px solid rgba(00, 64, 00, 0.8);
+  padding: 20px;
+  text-align: right;
+  align-content: left;
+}
+
+.player6 {
+  background: rgba(10, 35, 10, 0.8);
+  border: 5px solid rgba(00, 64, 00, 0.8);
+  padding: 20px;
+  text-align: right;
+  align-content: left;
+}
+
+.player7 {
+  background: rgba(10, 35, 10, 0.8);
+  border: 5px solid rgba(00, 64, 00, 0.8);
+  padding: 20px;
+  text-align: right;
+  align-content: left;
+}
+
+.player8 {
+  background: rgba(10, 35, 10, 0.8);
+  border: 5px solid rgba(00, 64, 00, 0.8);
+  padding: 20px;
+  text-align: right;
+  align-content: left;
+}
+
 
 /* Mobile (Smartphone) 480px and below */
 @media (max-width: 480px) {
@@ -127,11 +194,6 @@
   text-align: center;
 }
 
+@media screen and (orientation: portrait) {
 
-
-@media (max-width: 480px) {
-  .faas2 {
-    grid-template-columns: 150px;
-    grid-template-rows: 200px;
-  }
 }

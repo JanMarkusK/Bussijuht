@@ -382,17 +382,24 @@ const BusDriver = () => {
 
   return (
     <div className="faas2-container">
-      <div className="grid-element"></div>
-      <div className="grid-element"></div>
-      <div className="grid-element"></div>
-      <div className="grid-element"></div>
-      <div className="grid-element"></div>
-      <div className="grid-element"></div>
-      <div className="grid-element"></div>
+      <div className="player1">1</div>
+      <div className="player2">2</div>
+      <div className="player3">3</div>
+      <div className="player4">4</div>
+      <div className="player5">5</div>
+      <div className="player6">6</div>
+      <div className="player7">7</div>
       <div className="faas2">
         <Pyramid pyramid={pyramid} onCardClick={handleCardClick} />
         {/* <Hand hand={hand} /> */}
-        {gameOver && <button onClick={restartGame}>Restart</button>}
+        {gameOver && (
+          <div className="overlay">
+            <div className="overlay-content">
+              <h1>You have to go again!</h1>
+              <button onClick={restartGame}>Restart</button>
+            </div>
+          </div>
+          )}
         {win && (
           <div className="overlay">
             <div className="overlay-content">
@@ -402,13 +409,7 @@ const BusDriver = () => {
           </div>
         )}
       </div>
-      <div className="grid-element"></div>
-      <div className="grid-element"></div>
-      <div className="grid-element"></div>
-      <div className="grid-element"></div>
-      <div className="grid-element"></div>
-      <div className="grid-element"></div>
-      <div className="grid-element"></div>
+      <div className="player8">8</div>
     </div>
   );
 };
