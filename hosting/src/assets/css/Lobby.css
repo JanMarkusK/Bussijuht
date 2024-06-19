@@ -170,3 +170,9 @@
   color: white;
   text-shadow: 2px 2px 4px #000000;
 }
+.notification {
+  font-size: 1em;
+  margin-bottom: 20px;
+  color: rgb(255, 0, 0); /* "You must be logged in to create a game" text color */
+  text-shadow: 2px 2px 4px #000000;
+}
