@@ -17,6 +17,7 @@ const FirstFaze = () => {
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [points, setPoints] = useState({});
   const [pointsAssigned, setPointsAssigned] = useState(true); // New state to track if points are assigned
+  const [pointValue, setPointValue] = useState(5); // New state for point value
   const navigate = useNavigate();
 
   const pyramid1CollectionRef = collection(firestoreDB, "Pyramid1");
@@ -112,7 +113,11 @@ const FirstFaze = () => {
         unsubscribe2();
       };
     }
-    }, [pyramidDocId, localDocID]);
+  }, [pyramidDocId, localDocID]);
+
+  useEffect(() => {
+    setPointValue(5 - currentRow); // Update point value based on current row
+  }, [currentRow]);
 
   const setupGame = async () => {
     console.log('Setting up game...');
@@ -188,7 +193,7 @@ const FirstFaze = () => {
         console.error('Error setting up host game:', error);
         // Add error handling
     }
-};
+  };
 
 
   const distributeCardsToPlayers = (deck, players, batch, pyramidDocRef) => {
@@ -298,13 +303,12 @@ const FirstFaze = () => {
       return; // Prevent assigning points to self
     }
 
-    const pointValue = 5 - currentRow; // Calculate points based on row index
-
     const newPoints = { ...points };
     if (!newPoints[playerName]) {
       newPoints[playerName] = 0;
     }
-    newPoints[playerName] += pointValue;
+
+    newPoints[playerName] += pointValue; // Use pointValue from state
     setPoints(newPoints);
 
     // Update Firestore
@@ -467,7 +471,7 @@ const FirstFaze = () => {
 
         {!pointsAssigned && (
           <div className="points-assignment">
-            <h2>Assign Points</h2>
+            <h2>Assign Points ({pointValue} lonksu)</h2>
             <div className="player-points-assign">
             {playerList.map(player => (
               <div
