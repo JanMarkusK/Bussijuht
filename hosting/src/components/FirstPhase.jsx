@@ -454,17 +454,28 @@ const FirstFaze = () => {
     <div className="first-faze-container">
       <div className="first-faze">
         <h1>First Faze Game</h1>
+        <div className="players">
+            <h2>Players</h2>
+            <div className="player-list">
+            {playerList.map(player => (
+              <div>
+                {player} ({points[player] || 0} points)
+              </div>
+            ))}
+            </div>
+          </div>
+
         {!pointsAssigned && (
           <div className="points-assignment">
             <h2>Assign Points</h2>
-            <div className="player-list">
+            <div className="player-points-assign">
             {playerList.map(player => (
               <div
                 key={player}
                 className={`player-item ${selectedPlayer === player ? 'selected' : ''}`}
                 onClick={() => handleAssignPoints(player)}
               >
-                {player} ({points[player] || 0} points)
+                {player}
               </div>
             ))}
             </div>
