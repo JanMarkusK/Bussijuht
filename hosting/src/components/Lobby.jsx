@@ -188,17 +188,22 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   const setupGameStartListener = (docId) => {
     const docRef = doc(firestoreDB, 'Lobby', docId);
     return onSnapshot(docRef, (doc) => {
-      if (players.length < 3) {
-        setNotification("At least 3 players are required to start the game.");
-        return;
-      }
       const data = doc.data();
+      if (data && data.players) {
+        setPlayers(data.players);
+        if (data.players.length < 3) {
+          setNotification("At least 3 players are required to start the game.");
+        } else {
+          setNotification(''); // Clear notification when there are 3 or more players
+        }
+      }
       if (data && data.inGame) {
         setInGame(true);
         navigate('/1faas'); // All players navigate to the new route
       }
     });
   };
+  
 
   const setupLobbyDeletionListener = (docId) => {
     const docRef = doc(firestoreDB, 'Lobby', docId);
@@ -281,24 +286,28 @@ const handleLeaveLobby = async () => {
 
 useEffect(() => {
   let unsubscribe;
+
   if (hasJoinedRoom) {
-    const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
-    getDocs(q).then((querySnapshot) => {
-      if (!querySnapshot.empty) {
-        querySnapshot.forEach((doc) => {
-          unsubscribe = setupRealTimeListener(doc.id);
-          const data = doc.data();
-          if (data && data.disbanded) {
-            navigate('/'); // Suuna kasutaja avalehele, kui lobby on "disbanded"
-          }
-        });
-      }
-    });
+    const docId = localStorage.getItem('doc_id');
+    if (docId) {
+      const lobbyDocRef = doc(firestoreDB, 'Lobby', docId);
+
+      unsubscribe = onSnapshot(lobbyDocRef, (doc) => {
+        const data = doc.data();
+        if (data && data.disbanded) {
+          navigate('/'); // Redirect to home page if the lobby is disbanded
+        } else {
+          setPlayers(data.players || []);
+        }
+      });
+    }
   }
+
   return () => {
     if (unsubscribe) unsubscribe();
   };
-}, [hasJoinedRoom, localRoomCode, localPlayerName, setGameData, setInGame, navigate, lobbyCollectionRef]);
+}, [hasJoinedRoom, localRoomCode, localPlayerName, navigate]);
+
 
   return (
     <div className="lobby-page">
