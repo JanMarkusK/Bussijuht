@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth, firestoreDB, collection, addDoc, updateDoc, getDocs, onSnapshot, query, where } from '../firebase';
+import { firestoreDB, collection, addDoc, doc, updateDoc, getDocs, onSnapshot, query, where } from '../firebase'; // Adjust imports based on your Firebase setup
 import PropTypes from 'prop-types';
 import '../assets/css/Lobby.css'; // Import the CSS file
 
@@ -19,52 +19,28 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   const lobbyCollectionRef = collection(firestoreDB, "Lobby");
 
   useEffect(() => {
-    const fetchUserName = async (email) => {
-      try {
-        const q = query(collection(firestoreDB, "User"), where("email", "==", email));
-        const querySnapshot = await getDocs(q);
-        if (!querySnapshot.empty) {
-          const userDoc = querySnapshot.docs[0];
-          const userData = userDoc.data();
-          setLocalPlayerName(userData.username);
-          setIsLoggedIn(true);
-          setIsPremium(userData.premium || false); // Check if user is premium
-        }
-      } catch (error) {
-        console.error("Error fetching user data: ", error);
-      }
-    };
-
-    const currentUser = auth.currentUser;
-    if (currentUser) {
-      fetchUserName(currentUser.email);
-    }
-  }, []);
-
-  useEffect(() => {
     if (localRoomCode) {
       const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           if (data) {
-            setPlayers((prevPlayers) => {
-              if (JSON.stringify(prevPlayers) !== JSON.stringify(data.players)) {
-                return data.players || [];
-              }
-              return prevPlayers;
-            });
+            const updatedPlayers = data.players || [];
+            setPlayers(updatedPlayers);
+  
             if (data.inGame) {
+              const playerNames = updatedPlayers.map(player => player.name).join(';');
+              localStorage.setItem('playerNames', playerNames);
               setInGame(true);
               setGameData(data);
-              navigate('/2faas');
+              navigate('/1faas');
             }
             setIsHost(data.players.some(player => player.name === localPlayerName && player.host)); // Check if current user is the host
             setCardBack(data.cardBack); // Set the card back for the room
           }
         });
       });
-
+  
       return () => unsubscribe();
     }
   }, [localRoomCode, localPlayerName, setGameData, setInGame, navigate, lobbyCollectionRef]);
@@ -77,25 +53,18 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   };
 
   const handleCreateRoom = async () => {
-    if (!localPlayerName) {
-      alert("Please enter a player name.");
-      return;
-    }
     const newRoomCode = await handleRoomCode();
-    // Paneb kõik vajaliku info Firestore doci
     const lobbyDocRef = await addDoc(lobbyCollectionRef, {
       roomCode: newRoomCode,
-      players: [{ name: localPlayerName, host: true, ready: false }],
-      inGame: false,
-      cardBack: 'default.png' // Default card back
+      players: [{ name: localPlayerName, host: true, ready: false, points: 0 }],
+      inGame: false
     });
     localStorage.setItem('lobbyCode', newRoomCode);
     localStorage.setItem('playerName', localPlayerName);
     localStorage.setItem('doc_id', lobbyDocRef.id);
     console.log("Document ID host:", lobbyDocRef.id);
-    // Muudab proppide valuet, mdea kas need on tegelt vajalikud veel
     setPlayerName(localPlayerName);
-    setRoomCode(localRoomCode);
+    setRoomCode(newRoomCode); // Corrected to setRoomCode(newRoomCode) instead of setLocalRoomCode(newRoomCode)
     setRoomCreated(true);
     setIsJoining(false);
     setIsHost(true); // The creator of the room is always the host
@@ -108,19 +77,14 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     }
     localStorage.setItem('playerName', localPlayerName);
     localStorage.setItem('lobbyCode', localRoomCode);
-    console.log();
     const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
     const querySnapshot = await getDocs(q);
+    
     if (!querySnapshot.empty) {
       querySnapshot.forEach(async (doc) => {
         const roomData = doc.data();
         localStorage.setItem('doc_id', doc.id);
-        // Test
-        const localTestPlayerName = localStorage.getItem('playerName');
-        const localTestLobbyCode = localStorage.getItem('lobbyCode');
-        console.log("Liituja nimi:", localTestPlayerName);
-        console.log("Liituja kood:", localTestLobbyCode);
-        const updatedPlayers = [...roomData.players, { name: localPlayerName, host: false, ready: false }];
+        const updatedPlayers = [...roomData.players, { name: localPlayerName, host: false, ready: false, points: 0 }];
         await updateDoc(doc.ref, { players: updatedPlayers });
         setCardBack(roomData.cardBack); // Set the card back for the room
       });
@@ -132,11 +96,17 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   const handleStartGame = async () => {
     const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
     const querySnapshot = await getDocs(q);
+    
     if (!querySnapshot.empty) {
       querySnapshot.forEach(async (doc) => {
         await updateDoc(doc.ref, { inGame: true });
         setInGame(true);
-        navigate('/2faas');
+        
+        // Store all player names in localStorage under one key
+        const playerNames = players.map(player => player.name).join(';');
+        localStorage.setItem('playerNames', playerNames);
+        
+        navigate('/1faas'); // Navigate to FirstFaze component upon game start
       });
     } else {
       alert('No matching room found for the provided room code.');
