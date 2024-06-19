@@ -40,6 +40,7 @@
   margin-bottom: 10px;
   padding: 10px;
   background-color: rgba(255, 255, 255, 0.61); /* Gray background color */
+  width: 70%;
   border-radius: 5px;
 }
 
@@ -91,6 +92,20 @@
   background-color: #45a049;
 }
 
+.red-button {
+  background-color: rgb(196, 5, 5) !important;
+  color: white !important; /* Text color */
+  padding: 10px 15px; /* Padding inside the button */
+  border: none; /* Remove default border */
+  border-radius: 5px; /* Optional: Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 1.2em; /* Optional: Font size */
+}
+
+.red-button:hover {
+  background-color: darkred !important; /* Darker shade on hover */
+}
+
 button {
   padding: 10px 20px;
   font-size: 1em;
@@ -105,4 +120,3 @@ button {
 button:hover {
   background: #5a0081;
 }
-

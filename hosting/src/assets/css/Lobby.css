@@ -48,13 +48,10 @@
 
 .player-name-container {
   background-color: #adadad; /* Hall taustavärv */
-  padding: 1px;
   border-radius: 3px;
-  margin-bottom: 1px;
 }
 
 .player-list-container {
-  margin-top: 20px;
   color: #ffffff;
   text-shadow: 2px 2px 4px #000000;
 }
@@ -104,8 +101,8 @@
 
 /* Additional styles for specific text colors */
 .lobby-page .sulPoleKontot {
-  font-size: 1em;
-  margin-bottom: 20px;
+  font-size: 1.3em;
+  margin-bottom: 15px;
   color: rgb(255, 0, 0); /* "You must be logged in to create a game" text color */
   text-shadow: 2px 2px 4px #000000;
 }

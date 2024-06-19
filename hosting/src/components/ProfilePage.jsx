@@ -176,7 +176,7 @@ const ProfilePage = () => {
                 <option value="Champagne">Champagne</option>
               </select>
               <button type="submit">Save</button>
-              <button type="button" onClick={handleCancelClick}>Cancel</button>
+              <button type="button" onClick={handleCancelClick} className="red-button">Cancel</button>
             </form>
           ) : (
             <div className="profile-content">
