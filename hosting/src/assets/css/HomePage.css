@@ -116,7 +116,6 @@ button:hover {
     height: 200px;
     position: relative;
     overflow: hidden;
-    border: 1px solid black;
     margin: 5 auto; /* Center the banner horizontally */
     top: 5px;
   }
