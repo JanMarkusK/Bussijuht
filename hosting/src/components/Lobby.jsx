@@ -408,7 +408,7 @@ useEffect(() => {
       {!isHost && (
         <div className="current-card-back">
           <h3>Current Card Back:</h3>
-          <img src={`/cards/back/${cardBack}`} alt="Current card back" />
+          <img src={`/cards/back/${cardBack}`} alt="Default card" />
         </div>
       )}
     </div>
