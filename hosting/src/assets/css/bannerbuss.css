@@ -52,7 +52,7 @@
   height: auto;
   position: absolute;
   z-index: 3;
-  animation: moveTee 5s linear infinite;
+  animation: moveTee 6s linear infinite;
   animation-delay: 0s;
 }
 
