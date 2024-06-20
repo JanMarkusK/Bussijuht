@@ -462,49 +462,43 @@ const FirstFaze = () => {
     <div className="faas1-container">
       <div className="faas1"></div>
       <div className="faas1">
-        <h1>First Faze Game</h1>
-        <div className="players">
-            <h2>Players</h2>
+      <div className="players">
             <div className="player-list">
-            {playerList.map(player => (
-              <div>
+              {playerList.map(player => (
+                <div
+                key={player}
+                className={`player-item ${selectedPlayer === player ? 'selected' : ''}`}
+                onClick={() => {
+                  if (!pointsAssigned) {
+                    handleAssignPoints(player);
+                  }
+                }}
+              >
                 {player} ({points[player] || 0} points)
               </div>
-            ))}
+              
+              ))}
             </div>
           </div>
           
         <div className="faas1-pyramid"><Pyramid pyramid={pyramid} onCardClick={handlePyramidCardClick} /></div>
 
-        {!pointsAssigned && (
-          <div className="points-assignment">
-            <h2>Assign {pointValue} point(s) to:</h2>
-            <h5>Can't assign point(s) to yourself</h5>
-            <div className="player-points-assign">
-            {playerList.map(player => (
-              <div className="players"
-                key={player}
-                className={`player-item ${selectedPlayer === player ? 'selected' : ''}`}
-                onClick={() => handleAssignPoints(player)}
-              >
-                {player}
-              </div>
-            ))}
-            </div>
-          </div>
-        )}
+        
         
         <div className="hand">
           {hand.map((card, index) => (
-            <img 
-              key={index} 
-              src={`cards/${card}.png`} 
-              alt={card} 
-              className={selectedCardIndex === index ? "hand-card selected" : "hand-card"}
-              onClick={() => handleHandCardClick(index)}
-            />
+            <div className="hand-grid" key={index}>
+              <img 
+                key={index} 
+                src={`cards/${card}.png`} 
+                alt={card} 
+                className={selectedCardIndex === index ? "hand-card selected" : "hand-card"}
+                onClick={() => handleHandCardClick(index)}
+              />
+            </div> 
           ))}
         </div>
+
         {gameOver && <button onClick={navigate("/2faas")}>Next phase</button>}
         <ul>
           

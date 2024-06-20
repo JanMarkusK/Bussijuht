@@ -16,9 +16,10 @@
 }
 
 .faas1 h1 {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(10, 35, 10, 0.8);
   font-size: 2em;
   margin-bottom: 20px;
+  color: rgba(52, 93, 52);
 }
 
 .faas1 button {
@@ -29,34 +30,43 @@
 }
 
 .faas1-pyramid {
-  background: transparent;
-  border: 5px solid rgba(10, 35, 10);
+  background: rgba(10, 35, 10, 0.8);
+  border: 5px solid rgba(00, 64, 00, 0.8);
   padding: 20px;
   text-align: center;
   align-content: center;
 }
 
+.hand-card {
+  grid-template-areas: 1 / span 3;
+}
+
+.hand-card.selected {
+  grid-template-areas: 1 / span 3;
+}
+
 .players {
+  display: grid;
   background: rgba(10, 35, 10, 0.8);
   border: 5px solid rgba(00, 64, 00, 0.8);
   padding: 20px;
   text-align: left;
   align-content: left;
   color: rgba(52, 93, 52);
-  
 }
 
 .player-item {
-  background: rgba(10, 35, 10, 0.8);
+  background: rgba(10, 35, 10, 0.6);
   border: 5px solid rgba(00, 64, 00, 0.8);
   padding: 20px;
   text-align: left;
   align-content: left;
   color: rgba(52, 93, 52);
+  grid-template-rows: 1fr 1fr;
 }
 
 .player-item.selected {
-  background: rgba(10, 35, 10, 0.918);
+  background: rgba(10, 35, 10, 0.9);
   border: 5px solid rgba(00, 64, 00, 0.8);
   padding: 20px;
   text-align: left;
@@ -164,5 +174,34 @@
 
 
 .hand {
-  grid-template-areas: 1 / span 3;
+  display: grid;
+  grid-template-areas: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+  max-width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  grid-template-rows: 100px 100px 100px;
+  grid-template-columns: 100px 100px 100px 100px 100px 100px 100px;
+}
+
+.hand-grid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hand-card {
+  width: 100%;
+  max-width: 100px;
+  height: auto;
+}
+
+.hand-card.selected {
+  border: 5px solid red;
+}
+
+.hand-card:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+  transition: transform 0.2s;
 }
