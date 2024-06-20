@@ -4,10 +4,10 @@ import { firestoreDB, writeBatch, collection, addDoc, doc, updateDoc, getDoc, ge
 import Pyramid from './Pyramid';
 import Hand from './Hand';
 import { fetchDeck, shuffleDeck } from '../utils/deck';
-import '../assets/css/styles.css';
-import '../assets/css/BusDriver.css';
+import '../assets/css/faas2.css';
 import { array } from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+
 
 const BusDriver = () => {
   const [pyramid, setPyramid] = useState([]);
@@ -52,7 +52,7 @@ const BusDriver = () => {
         setPyramid(pyramidCards);
 
         let lastFlippedRow = 4;
-        console.log("lasFlippedRow: " + lastFlippedRow)
+        console.log("lastFlippedRow: " + lastFlippedRow)
         for (let i = 0; i < pyramidCards.length; i++) {
           if (pyramidCards[i].some(card => card && card.faceUp)) {
             console.log("index: " + i )
@@ -61,7 +61,7 @@ const BusDriver = () => {
             } else{
               lastFlippedRow = i -1;
             }
-            console.log("lasFlippedRow2: " + lastFlippedRow)
+            console.log("lastFlippedRow2: " + lastFlippedRow)
             setCurrentRow(lastFlippedRow);
             break;
 
@@ -77,7 +77,7 @@ const BusDriver = () => {
           if (lastCard) {
             const cardValue = lastCard.value.split('_')[0];
             const cardFace = lastCard.faceUp;
-            if (cardValue !== 'J' && cardValue !== 'Q' && cardValue !== 'K', cardFace ) {
+            if (cardValue !== 'J' && cardValue !== 'Q' && cardValue !== 'K' && cardValue !== 'A', cardFace ) {
               setWin(true);
               console.log("voitsin")
             }
@@ -88,6 +88,11 @@ const BusDriver = () => {
     // if (win){
     //   return () => unsubscribe();
     // }
+
+    return () => {
+      console.log('Unsubscribing from onSnapshot');
+      unsubscribe();
+    };
   }, [pyramidDocId]);
   
 
@@ -252,12 +257,12 @@ const BusDriver = () => {
 
 
   const updateCardFaceUpInFirestore = async (rowIndex, cardIndex) => {
-      const pyramidDocRef = doc(pyramidCollectionRef, pyramidDocId);
-      const cardFieldName = `row${rowIndex}_col${cardIndex}`;
-      await updateDoc(pyramidDocRef, {
-        [`${cardFieldName}.faceUp`]: true
-      });
-    };
+    const pyramidDocRef = doc(pyramidCollectionRef, pyramidDocId);
+    const cardFieldName = `row${rowIndex}_col${cardIndex}`;
+    await updateDoc(pyramidDocRef, {
+      [`${cardFieldName}.faceUp`]: true
+    });
+  };
 
   const handleCardClick = async (rowIndex, cardIndex) => {
     if (gameOver || win || cardsTurned[rowIndex] || rowIndex !== currentRow) return;
@@ -275,11 +280,11 @@ const BusDriver = () => {
     //setCurrentRow(currentRow - 1);
     
     const cardValue = newPyramid[rowIndex][cardIndex].value.split('_')[0];
-    if (cardValue === 'J' || cardValue === 'Q' || cardValue === 'K') {
+    if (cardValue === 'J' || cardValue === 'Q' || cardValue === 'K' || cardValue === 'A') {
       setGameOver(true);
     }
 
-    if (currentRow === 0 && cardValue !== 'J' && cardValue !== 'Q' && cardValue !== 'K') {
+    if (currentRow === 0 && cardValue !== 'J' && cardValue !== 'Q' && cardValue !== 'K' && cardValue !== 'A') {
       setWin(true);
     }
     
@@ -380,13 +385,20 @@ const BusDriver = () => {
     }
   };
 
+
   return (
-    <div className="bus-driver-container">
-      <div className="bus-driver">
-        <h1>Bus Driver Game</h1>
+    <div className="faas2-container">
+      <div className="faas2">
         <Pyramid pyramid={pyramid} onCardClick={handleCardClick} />
         {/* <Hand hand={hand} /> */}
-        {gameOver && <button onClick={restartGame}>Restart</button>}
+        {gameOver && (
+          <div className="overlay">
+            <div className="overlay-content">
+              <h1>You have to go again!</h1>
+              <button onClick={restartGame}>Restart</button>
+            </div>
+          </div>
+          )}
         {win && (
           <div className="overlay">
             <div className="overlay-content">

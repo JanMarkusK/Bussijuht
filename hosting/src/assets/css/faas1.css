@@ -1,0 +1,207 @@
+.faas1-container {
+  display: grid;
+  gap: 10px;
+  background-color: rgba(10, 35, 10, 0.8);
+  padding: 10px;
+  font-size: 20px;
+  text-align: left;
+  background-image: url('/banner/taust.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: repeat-y;
+  grid-template-columns: 3fr 5fr 3fr;
+  grid-template-rows: repeat(4, 300px);
+  justify-items: center;
+  align-items: start;
+}
+
+.faas1 h1 {
+  background: rgba(10, 35, 10, 0.8);
+  font-size: 2em;
+  margin-bottom: 20px;
+  color: rgba(52, 93, 52);
+}
+
+.faas1 button {
+  padding: 10px 20px;
+  font-size: 1.2em;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.faas1-pyramid {
+  background: rgba(10, 35, 10, 0.8);
+  border: 5px solid rgba(00, 64, 00, 0.8);
+  padding: 20px;
+  text-align: center;
+  align-content: center;
+}
+
+.hand-card {
+  grid-template-areas: 1 / span 3;
+}
+
+.hand-card.selected {
+  grid-template-areas: 1 / span 3;
+}
+
+.players {
+  display: grid;
+  background: rgba(10, 35, 10, 0.8);
+  border: 5px solid rgba(00, 64, 00, 0.8);
+  padding: 20px;
+  text-align: left;
+  align-content: left;
+  color: rgba(52, 93, 52);
+}
+
+.player-item {
+  background: rgba(10, 35, 10, 0.6);
+  border: 5px solid rgba(00, 64, 00, 0.8);
+  padding: 20px;
+  text-align: left;
+  align-content: left;
+  color: rgba(52, 93, 52);
+  grid-template-rows: 1fr 1fr;
+}
+
+.player-item.selected {
+  background: rgba(10, 35, 10, 0.9);
+  border: 5px solid rgba(00, 64, 00, 0.8);
+  padding: 20px;
+  text-align: left;
+  align-content: left;
+  color: rgba(52, 93, 52);
+  transform:scale(+5%);
+}
+
+
+.player1 {
+  background: rgba(10, 35, 10, 0.8);
+  border: 5px solid rgba(00, 64, 00, 0.8);
+  padding: 20px;
+  text-align: right;
+  align-content: left;
+  color: rgba(52, 93, 52);
+}
+
+.player2 {
+  background: rgba(10, 35, 10, 0.8);
+  border: 5px solid rgba(00, 64, 00, 0.8);
+  padding: 20px;
+  text-align: right;
+  align-content: left;
+  color: rgba(52, 93, 52);
+}
+
+.player3 {
+  background: rgba(10, 35, 10, 0.8);
+  border: 5px solid rgba(00, 64, 00, 0.8);
+  padding: 20px;
+  text-align: right;
+  align-content: left;
+  color: rgba(52, 93, 52);
+}
+
+.player4 {
+  background: rgba(10, 35, 10, 0.8);
+  border: 5px solid rgba(00, 64, 00, 0.8);
+  padding: 20px;
+  text-align: right;
+  align-content: left;
+  color: rgba(52, 93, 52);
+}
+
+.player5 {
+  background: rgba(10, 35, 10, 0.8);
+  border: 5px solid rgba(00, 64, 00, 0.8);
+  padding: 20px;
+  text-align: right;
+  align-content: left;
+  color: rgba(52, 93, 52);
+}
+
+.player6 {
+  background: rgba(10, 35, 10, 0.8);
+  border: 5px solid rgba(00, 64, 00, 0.8);
+  padding: 20px;
+  text-align: right;
+  align-content: left;
+  color: rgb(52, 93, 52);
+}
+
+.player7 {
+  background: rgba(10, 35, 10, 0.8);
+  border: 5px solid rgba(00, 64, 00, 0.8);
+  padding: 20px;
+  text-align: right;
+  align-content: left;
+  color: rgba(52, 93, 52);
+}
+
+.player8 {
+  background: rgba(10, 35, 10, 0.8);
+  border: 5px solid rgba(00, 64, 00, 0.8);
+  padding: 20px;
+  text-align: right;
+  align-content: left;
+  color: rgba(52, 93, 52);
+}
+
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.overlay-content h1 {
+  margin-bottom: 20px;
+}
+
+
+.hand {
+  display: grid;
+  grid-template-areas: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+  max-width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  grid-template-rows: 100px 100px 100px;
+  grid-template-columns: 100px 100px 100px 100px 100px 100px 100px;
+}
+
+.hand-grid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hand-card {
+  width: 100%;
+  max-width: 100px;
+  height: auto;
+}
+
+.hand-card.selected {
+  border: 5px solid red;
+}
+
+.hand-card:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+  transition: transform 0.2s;
+}
