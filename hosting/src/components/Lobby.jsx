@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { auth, firestoreDB, collection, addDoc, updateDoc, deleteDoc, getDocs, onSnapshot, query, where, doc } from '../firebase';
 import PropTypes from 'prop-types';
-import '../assets/css/Lobby.css'; // Import the CSS file
+import '../assets/css/Lobby.css';
 
 const MIN_PLAYERS = 3;
 const MAX_PLAYERS = 8;
@@ -141,6 +141,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   const handleDisabledClick = () => {
     setNotification("You must be logged in to create lobby");
     setTimeout(() => setNotification(''), 3000); // Clear notification after 3 seconds
+    
   };
 
   const handleSwitchToCreate = async () => {
@@ -368,15 +369,18 @@ useEffect(() => {
           </>
         ) : (
           <>
-            <div className="sulPoleKontot">
-              <h4>You must be logged in to create a game</h4>
+            <div className="sulPoleKontot"> 
+            <h4>You must be <Link to="/login" className="special-link">logged in</Link> to create a game</h4>
+
             </div>
             <input
-              type="text"
-              placeholder="Room Code"
-              value={localRoomCode}
-              onChange={(e) => setLocalRoomCode(e.target.value)}
-            />
+            type="text"
+            inputMode="numeric" // Määrab brauserile, et kuvataks numbriline klaviatuur
+            pattern="[0-9]*" // Lubab sisestada ainult numbreid
+            placeholder="Room Code"
+            value={localRoomCode}
+            onChange={(e) => setLocalRoomCode(e.target.value)}
+          />
             <input
               type="text"
               placeholder="Player Name"

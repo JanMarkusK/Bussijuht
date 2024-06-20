@@ -48,6 +48,11 @@
   border-radius: 8px; /* kergelt ümarad servad */
 }
 
+.special-link {
+  color: red; /* Soovitud värv */
+  text-decoration: underline; /* Lisab joone alla */
+}
+
 
 .input-container {
   display: flex;
