@@ -17,9 +17,6 @@ const FirstFaze = () => {
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [points, setPoints] = useState({});
   const [pointsAssigned, setPointsAssigned] = useState(true); // New state to track if points are assigned
-  const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0); // Index to track current player turn
-  const [localPlayerTurn, setLocalPlayerTurn] = useState(false); // State to track if it's local player's turn
-  //const [loser, setLoser] = useState(null)
   const [pointValue, setPointValue] = useState(5); // New state for point value
   const navigate = useNavigate();
 
@@ -39,20 +36,12 @@ const FirstFaze = () => {
   useEffect(() => {
     if (pyramidDocId, localDocID) {
     const pyramidDocRef = doc(pyramid1CollectionRef, pyramidDocId);
-    // let loser = 0
-    // let joever = false
       const unsubscribe = onSnapshot(pyramidDocRef, (doc) => {
         if (doc.exists()) {
           const pyramidData = doc.data();
           const pyramidCards = [[], [], [], [], []];
           const localPlayerData = pyramidData.players[localPlayerName];
 
-          //turn updater
-          if (localPlayerData && localPlayerData.isTurn) {
-            setLocalPlayerTurn(true);
-          } else {
-            setLocalPlayerTurn(false);
-          }
 
           //pyramid updater
           for (const key in pyramidData) {
@@ -88,33 +77,7 @@ const FirstFaze = () => {
     
           console.log("lastFlippedRow3: " + lastFlippedRow)
         // Check for the win condition
-        if (lastFlippedRow === 0) {
-          // Extract the card from row 0, column 0
-          const row0Card = pyramidCards[0][0].value;
-
-          // Check if any player has the row0Card in their hand
-          let gameShouldEnd = true;
-          let playerHands = {};
-          Object.keys(pyramidData.players).forEach(playerName => {
-            const playerHand = pyramidData.players[playerName].hand || [];
-            playerHands[playerName] = playerHand.length;
-            if (playerHand.includes(row0Card)) {
-              gameShouldEnd = false;
-            }
-          });
-
-          // If no player has the card, end the game
-          if (gameShouldEnd) {
-            // Determine the player with the most cards in their hand
-            const maxCardsPlayer = Object.keys(playerHands).reduce((a, b) => playerHands[a] > playerHands[b] ? a : b);
-            loser = maxCardsPlayer;
-            joever = true;
-            setTimeout(async () => {
-              setGameOver(true);
-              console.log('Game Over: No player has the card in row 0');
-            }, 3000); // 3-second delay
-          }
-        }
+       
       }
     });
 
@@ -138,15 +101,9 @@ const FirstFaze = () => {
         } else {
           console.log("Document does not exist.");
         }
-        // if (joever){
-        //   updateDoc(lobbyDocRef, {
-        //     [`players.${loser}.busdriver`]: true
-        //   });
-        // }
       }, (error) => {
         console.error("Error fetching document:", error);
       });
-
 
       return () => {
         unsubscribe();
@@ -172,7 +129,6 @@ const FirstFaze = () => {
       const updatedPlayers = players.map((player, index) => ({
         ...player,
         index,
-        isTurn: false, // Assuming initially no one's turn
       }));
       console.log("players array?: " + JSON.stringify(updatedPlayers))
       setPlayers(updatedPlayers);
@@ -238,7 +194,6 @@ const FirstFaze = () => {
 
         // Add a slight delay to ensure data is committed
         await setTimeout(getHand, 1000);
-        await initializeTurn(players, pyramidDocRef);
     } catch (error) {
         console.error('Error setting up host game:', error);
         // Add error handling
@@ -325,8 +280,6 @@ const FirstFaze = () => {
         setPyramid(pyramidCards);
         getHand();
         setCurrentRow(4);
-
-        await initializeTurn(players, pyramidDocRef); // Initialize the turn after setting up the game
       } else {
         console.error('No pyramid data found for this room code.');
       }
@@ -383,66 +336,11 @@ const FirstFaze = () => {
       setSelectedPlayer(null); // Reset selected player
       setPointsAssigned(true); // Set points assigned flag to true
 
-      await transitionToNextTurn(updatedPlayers);
     } else {
       console.error('Lobby document does not exist.');
     }
   };
 
-  //Turns functions
-  const transitionToNextTurn = async (players) => {
-    const nextPlayerIndex = (currentPlayerIndex + 1) % players.length;
-    const currentPlayerName = players[currentPlayerIndex].name;
-    const nextPlayerName = players[nextPlayerIndex].name;
-
-    const pyramidDocRef = doc(pyramid1CollectionRef, pyramidDocId);
-    await updateDoc(pyramidDocRef, {
-      [`players.${currentPlayerName}.isTurn`]: false,
-      [`players.${nextPlayerName}.isTurn`]: true,
-    });
-
-    setCurrentPlayerIndex(nextPlayerIndex);
-    setLocalPlayerTurn(nextPlayerName === localPlayerName); // Update local player's turn status
-    setPointsAssigned(true); // Reset points assigned flag
-  };
-
-  const initializeTurn = async (players, pyramidDocRef) => {
-    console.log("players array?: " + JSON.stringify(players))
-    console.log("localplayername: " + localPlayerName)
-    const localPlayerIndex = players.findIndex((player) => player.name === localPlayerName);
-  
-    if (localPlayerIndex === 0) {
-      // Host player's turn
-      try {
-        await updateDoc(pyramidDocRef, {
-          [`players.${localPlayerName}.isTurn`]: true,
-        });
-        const updatedPlayers = [...players];
-        updatedPlayers[localPlayerIndex].isTurn = true;
-        setPlayers(updatedPlayers);
-      } catch (error) {
-        console.error('Error updating host player turn:', error);
-        // Handle error
-      }
-    } else if (localPlayerIndex > 0) {
-      // Joiner's turn
-      //const localPlayerTurn = players[localPlayerIndex].isTurn;
-      try {
-        await updateDoc(pyramidDocRef, {
-          [`players.${localPlayerName}.isTurn`]: false,
-        });
-        const updatedPlayers = [...players];
-        updatedPlayers[localPlayerIndex].isTurn = false;
-        setPlayers(updatedPlayers);
-      } catch (error) {
-        console.error('Error updating joiner player turn:', error);
-        // Handle error
-      }
-    } else {
-      console.error('Local player index not found in players array.');
-      // Handle error or edge case where local player is not found
-    }
-  };
 
   const firestoreQuery = async (arv) => {
     try {
@@ -476,7 +374,7 @@ const FirstFaze = () => {
   };
 
   const handlePyramidCardClick = async (rowIndex, cardIndex) => {
-    if (gameOver || !pointsAssigned || !localPlayerTurn) return;
+    if (gameOver || !pointsAssigned /*  || !localPlayerTurn */) return;
     
     const pyramidDocRef = doc(pyramid1CollectionRef, pyramidDocId);
     
@@ -541,14 +439,6 @@ const FirstFaze = () => {
         await updateDoc(pyramidDocRef, {
           [`players.${localPlayerName}.hand`]: newHand
         });
-    
-        // if (rowIndex === 0) {
-        //   setGameOver(true); // Set game over logic here
-        // } else if (newPyramid[rowIndex - 1].every(card => card.faceUp)) {
-        //   setTimeout(() => {
-        //     setCurrentRow(currentRow - 1);
-        //   }, 500); // Adjust the delay as needed
-        // }
 
         setPointsAssigned(false); // Reset points assigned flag
     
