@@ -26,6 +26,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     const storedPlayerName = localStorage.getItem('playerName');
     const storedLobbyCode = localStorage.getItem('lobbyCode');
 
+    // Madar
     if (storedPlayerName && storedLobbyCode) {
       setLocalPlayerName(storedPlayerName);
       setLocalRoomCode(storedLobbyCode);
@@ -33,6 +34,31 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
       setHasJoinedRoom(true);
       setupRealTimeListener(localStorage.getItem('doc_id')); // Setup listener for players list
     }
+
+    // Jan Hans
+    if (localRoomCode) {
+      const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          if (data) {
+            const updatedPlayers = data.players || [];
+            setPlayers(updatedPlayers);
+  
+            if (data.inGame) {
+              const playerNames = updatedPlayers.map(player => player.name).join(';');
+              localStorage.setItem('playerNames', playerNames);
+              setInGame(true);
+              setGameData(data);
+              navigate('/1faas');
+            }
+          }
+        });
+      });
+  
+      return () => unsubscribe();
+
+
 
     const fetchUserName = async (email) => {
       try {
@@ -64,6 +90,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
   };
 
   const handleCreateRoom = async () => {
+
     if (!localPlayerName) {
       alert("Please enter a player name.");
       return;
@@ -71,16 +98,17 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     const newRoomCode = await handleRoomCode();
     const lobbyDocRef = await addDoc(lobbyCollectionRef, {
       roomCode: newRoomCode,
-      players: [{ name: localPlayerName, host: true, ready: false }],
+      players: [{ name: localPlayerName, host: true, ready: false, points: 0 }],
       inGame: false,
       cardBack: 'back.png' // Default card back
+
     });
     localStorage.setItem('lobbyCode', newRoomCode);
     localStorage.setItem('playerName', localPlayerName);
     localStorage.setItem('doc_id', lobbyDocRef.id);
     console.log("Document ID host:", lobbyDocRef.id);
     setPlayerName(localPlayerName);
-    setRoomCode(localRoomCode);
+    setRoomCode(newRoomCode); // Corrected to setRoomCode(newRoomCode) instead of setLocalRoomCode(newRoomCode)
     setRoomCreated(true);
     setIsJoining(false);
     setIsHost(true); // The creator of the room is always the host
@@ -97,15 +125,18 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     localStorage.setItem('lobbyCode', localRoomCode);
     const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
     const querySnapshot = await getDocs(q);
+    
     if (!querySnapshot.empty) {
       querySnapshot.forEach(async (doc) => {
         const roomData = doc.data();
         localStorage.setItem('doc_id', doc.id);
+
         if (roomData.players.length >= MAX_PLAYERS) {
           alert('Room is full.');
           return;
         }
-        const updatedPlayers = [...roomData.players, { name: localPlayerName, host: false, ready: false }];
+        const updatedPlayers = [...roomData.players, { name: localPlayerName, host: false, ready: false, points: 0 }];
+
         await updateDoc(doc.ref, { players: updatedPlayers });
         setCardBack(roomData.cardBack); // Set the card back for the room
         setPlayers(updatedPlayers); // Update the players state
@@ -126,11 +157,17 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     }
     const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
     const querySnapshot = await getDocs(q);
+    
     if (!querySnapshot.empty) {
       querySnapshot.forEach(async (doc) => {
         await updateDoc(doc.ref, { inGame: true });
         setInGame(true);
-        navigate('/1faas');
+        
+        // Store all player names in localStorage under one key
+        const playerNames = players.map(player => player.name).join(';');
+        localStorage.setItem('playerNames', playerNames);
+        
+        navigate('/1faas'); // Navigate to FirstFaze component upon game start
       });
     } else {
       alert('No matching room found for the provided room code.');
