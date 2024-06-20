@@ -394,7 +394,7 @@ const FirstFaze = () => {
 
         await handleAssignPoints(rowIndex);
 
-        console.log("batch: "+batch)
+        console.log("batch: "+ batch);
         await batch.commit(); // Commit batch update to Firestore
     
         console.log('Firestore updated with flipped cards');
@@ -426,6 +426,11 @@ const FirstFaze = () => {
     
         await updateDoc(pyramidDocRef, {
           [`row${rowIndex}_col${cardIndex}.faceUp`]: true
+        });
+
+        // Update the player's hand in Firestore
+        await updateDoc(pyramidDocRef, {
+          [`players.${localPlayerName}.hand`]: newHand
         });
     
         if (rowIndex === 0) {
