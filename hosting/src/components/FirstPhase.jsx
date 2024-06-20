@@ -29,13 +29,37 @@ const FirstFaze = () => {
   const allPlayers = localStorage.getItem('playerNames');
   const playerList = allPlayers ? allPlayers.split(';') : [];
 
+  // Use useEffect to refresh the page once
+  useEffect(() => {
+    const shouldReload = localStorage.getItem('shouldReloadFirstFaze');
+    if (!shouldReload) {
+      localStorage.setItem('shouldReloadFirstFaze', 'true');
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
+    }
+  }, []);
+
   useEffect(() => {
     setupGame();
   }, []); 
 
+  // useEffect(() => {
+  //   if (pyramidDocId, localDocID, lobbyCollectionRef) {}
+  //   // Setup beforeunload event listener
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
+
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleBeforeUnload);
+  //   };
+  // }, [localDocID, pyramidDocId, lobbyCollectionRef]);
+
   useEffect(() => {
     if (pyramidDocId, localDocID) {
     const pyramidDocRef = doc(pyramid1CollectionRef, pyramidDocId);
+    let loser = "";
+    let joever = false;
+
       const unsubscribe = onSnapshot(pyramidDocRef, (doc) => {
         if (doc.exists()) {
           const pyramidData = doc.data();
@@ -76,8 +100,39 @@ const FirstFaze = () => {
           }
     
           console.log("lastFlippedRow3: " + lastFlippedRow)
-        // Check for the win condition
+          // Check for the win condition
        
+          if (lastFlippedRow === 0) {
+            // Extract the card from row 0, column 0
+            const row0Card = pyramidCards[0][0].value;
+
+            // Check if any player has the row0Card in their hand
+            let gameShouldEnd;
+            let playerHands = {};
+            Object.keys(pyramidData.players).forEach(playerName => {
+              const playerHand = pyramidData.players[playerName].hand || [];
+              playerHands[playerName] = playerHand.length;
+              if (playerHand.includes(row0Card)) {
+                gameShouldEnd = false;
+              } else if (!playerHand.includes(row0Card)) {
+                gameShouldEnd = true;
+              }
+            });
+
+            // If no player has the card, end the game
+            if (gameShouldEnd) {
+              // Determine the player with the most cards in their hand
+              const maxCardsPlayer = Object.keys(playerHands).reduce((a, b) => playerHands[a] > playerHands[b] ? a : b);
+              loser = maxCardsPlayer;
+              joever = true;
+              setTimeout(async () => {
+                setGameOver(true);
+                console.log('Game Over: No player has the card in row 0');
+                console.log("Loser is: " + loser);
+              }, 3000); // 3-second delay
+            }
+          }
+
       }
     });
 
@@ -86,7 +141,7 @@ const FirstFaze = () => {
         if (doc.exists()) {
           const lobbyData = doc.data();
           const newPoints = {};
-    
+          let playerMapId = null;
         // Convert lobbyData.players to an array if it is an object
         const players = Array.isArray(lobbyData.players) 
             ? lobbyData.players 
@@ -100,6 +155,17 @@ const FirstFaze = () => {
           console.log("Updated points:", newPoints); // Log updated points for debugging
         } else {
           console.log("Document does not exist.");
+        }
+        if (joever){
+          for (const key in players) {
+            if (players[key].name === loser) {
+              playerMapId = key;
+              break;
+            }
+          }
+          updateDoc(lobbyDocRef, {
+            [`players.${playerMapId}.busdriver`]: true
+          });
         }
       }, (error) => {
         console.error("Error fetching document:", error);
@@ -450,8 +516,53 @@ const FirstFaze = () => {
     } catch (error) {
       console.error('Error updating pyramid:', error);
     }
-    };
+  };
   
+  const handleBeforeUnload = async () => {
+    console.log('Handling beforeunload event...');
+
+    await handleLeaveLobby();
+  };
+
+  const handleLeaveLobby = async () => {
+        // Puhasta lokaalne salvestus ja olek
+        localStorage.clear();
+        setLocalRoomCode('');
+        setLocalPlayerName('');
+        setIsLoggedIn(false);
+        setIsHost(false);
+        setHasJoinedRoom(false);
+        setPlayers([]);
+        setRoomCreated(false);
+        setInGame(false);
+        navigate('/'); // Suuna kasutaja avalehele
+        
+    const docId = localStorage.getItem('doc_id');
+    if (docId) {
+      const lobbyDocRef = doc(firestoreDB, 'Lobby', docId);
+      if (isHost) {
+
+        // Kustuta lobby dokument Firestore'ist
+        await deleteDoc(lobbyDocRef);
+        // Suuna kasutaja avalehele
+        navigate('/');
+      } else {
+        // Eemalda mängija lobby dokumentist, kui kasutaja pole host
+        const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+          querySnapshot.forEach(async (doc) => {
+            const roomData = doc.data();
+            const updatedPlayers = roomData.players.filter(player => player.name !== localPlayerName);
+            await updateDoc(doc.ref, { players: updatedPlayers });
+            navigate('/');
+          });
+        } else if (querySnapshot.empty) {
+          navigate('/'); // Suuna kasutaja avalehele
+        }
+      }
+    }
+  };
 
   const restartGame = () => {
     setupGame();
