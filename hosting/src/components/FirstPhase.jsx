@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Pyramid from './Pyramid';
 import { firestoreDB, writeBatch, collection, doc, updateDoc, getDoc, getDocs, addDoc, query, where, onSnapshot } from '../firebase'; // Ensure all necessary Firestore functions are imported
 import { fetchDeck, shuffleDeck } from '../utils/deck';
-import '../assets/css/styles.css';
+import '../assets/css/faas1.css';
 import { useNavigate } from 'react-router-dom';
 
 const FirstFaze = () => {
@@ -455,8 +455,9 @@ const FirstFaze = () => {
 
 
   return (
-    <div className="first-faze-container">
-      <div className="first-faze">
+    <div className="faas1-container">
+      <div className="faas1"></div>
+      <div className="faas1">
         <h1>First Faze Game</h1>
         <div className="players">
             <h2>Players</h2>
@@ -468,6 +469,8 @@ const FirstFaze = () => {
             ))}
             </div>
           </div>
+          
+        <div className="faas1-pyramid"><Pyramid pyramid={pyramid} onCardClick={handlePyramidCardClick} /></div>
 
         {!pointsAssigned && (
           <div className="points-assignment">
@@ -485,7 +488,7 @@ const FirstFaze = () => {
             </div>
           </div>
         )}
-        <Pyramid pyramid={pyramid} onCardClick={handlePyramidCardClick} />
+        
         <div className="hand">
           {hand.map((card, index) => (
             <img 

@@ -205,3 +205,28 @@
 @media screen and (orientation: portrait) {
 
 }
+
+
+.box {
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  height: 100%;
+  width: 100%;
+  border-radius: 4px;
+  transition: all 500ms;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  box-shadow: rgba(3, 8, 20, 0.1) 0px 0.15rem 0.5rem, rgba(2, 8, 20, 0.1) 0px 0.075rem 0.175rem;
+  color: rgba(00, 64, 00, 0.8);
+  background: rgba(10, 35, 10, 0.8);
+}
+
+.box:hover {
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: rgba(2, 8, 20, 0.1) 0px 0.35em 1.175em, rgba(2, 8, 20, 0.08) 0px 0.175 0.5em;
+}

@@ -388,13 +388,6 @@ const BusDriver = () => {
 
   return (
     <div className="faas2-container">
-      <div className="player1">player1</div>
-      <div className="player2">player2</div>
-      <div className="player3">player3</div>
-      <div className="player4">player4</div>
-      <div className="player5">player5</div>
-      <div className="player6">player6</div>
-      <div className="player7">player7</div>
       <div className="faas2">
         <Pyramid pyramid={pyramid} onCardClick={handleCardClick} />
         {/* <Hand hand={hand} /> */}
@@ -415,7 +408,6 @@ const BusDriver = () => {
           </div>
         )}
       </div>
-      <div className="player8">player8</div>
     </div>
   );
 };
