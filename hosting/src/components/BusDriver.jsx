@@ -2,7 +2,6 @@
 /**/import React, { useState, useEffect } from 'react';
 import { firestoreDB, writeBatch, collection, addDoc, doc, updateDoc, getDoc, getDocs, onSnapshot, query, where, deleteDoc } from '../firebase';
 import Pyramid from './Pyramid';
-import Hand from './Hand';
 import { fetchDeck, shuffleDeck } from '../utils/deck';
 import '../assets/css/faas2.css';
 import { array } from 'prop-types';
@@ -29,6 +28,18 @@ const BusDriver = () => {
 
   
   console.log ("laen lehte")
+
+    // Use useEffect to refresh the page once
+    useEffect(() => {
+      const shouldReload = localStorage.getItem('shouldReloadFirstFaze');
+      if (!shouldReload) {
+        localStorage.setItem('shouldReloadFirstFaze', 'true');
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+      }
+    }, []);
+
   useEffect(() => {
     setupGame(); // Pass the room code and player name to setupGame
   }, []); // Include roomCode and playerName in the dependency array
@@ -80,15 +91,12 @@ const BusDriver = () => {
             if (cardValue !== 'J' && cardValue !== 'Q' && cardValue !== 'K' && cardValue !== 'A', cardFace ) {
               setWin(true);
               console.log("voitsin")
+              setTimeout(navigate('/'), 1000)
             }
           }
         }
       }
     });
-    // if (win){
-    //   return () => unsubscribe();
-    // }
-
     return () => {
       console.log('Unsubscribing from onSnapshot');
       unsubscribe();
@@ -360,6 +368,7 @@ const BusDriver = () => {
     setCurrentRow(4);
     localStorage.setItem('deck', deck.join(','));
   };
+
   const handleWin = async () => {
     const pyramidDocRef = doc(pyramidCollectionRef, pyramidDocId);
     try {
@@ -381,7 +390,7 @@ const BusDriver = () => {
         console.log(roomData);
         // Check if the player is in the map and is the host
         setNotInGame(true);
-
+        navigate('/')
     }
   };
 
@@ -403,7 +412,7 @@ const BusDriver = () => {
           <div className="overlay">
             <div className="overlay-content">
               <h1>You win!</h1>
-              <button onClick={handleWin}>Go to endscreen</button>
+              <button onClick={handleWin}>Go to homepage</button>
             </div>
           </div>
         )}
