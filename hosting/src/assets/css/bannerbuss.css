@@ -71,7 +71,7 @@
 
 .pealkiri {
   top: 10px; /* Adjust position as needed */
-  left: 185px; /* Center the title horizontally */
+  left: 215px; /* Center the title horizontally */
   width: 350px; /* Adjust size as needed */
   height: auto;
   z-index: 2;

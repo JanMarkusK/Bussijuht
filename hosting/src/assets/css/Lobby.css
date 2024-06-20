@@ -33,11 +33,21 @@
 .lobby-page ul {
   list-style-type: none;
   padding: 0;
+  display: flex;
+  flex-wrap: wrap; /* Elementide murdmiseks uuele reale */
+  gap: 5px; /* Väiksem vahe kaartide vahel */
+  justify-content: center; /* Keskendab elemendid horisontaalselt */
 }
 
 .lobby-page li {
   margin: 5px 0;
+  color: #000000;
+  background-color: #62e07d; /* hall taustavärv */
+  padding: 10px; /* sisemine kaugus kasti sees */
+  border: 1px solid #000000; /* kasti serv */
+  border-radius: 8px; /* kergelt ümarad servad */
 }
+
 
 .input-container {
   display: flex;
@@ -56,6 +66,8 @@
 .player-list-container {
   color: #ffffff;
   text-shadow: 2px 2px 4px #000000;
+  margin: -20px;
+  flex-direction: column;
 }
 
 .top-buttons {
@@ -132,6 +144,7 @@
   max-width: 150px; /* Maksimaalne laius, mis kohaneb ekraanisuurusega */
   cursor: pointer;
   transition: transform 0.2s ease;
+  border-radius: 10px;
 }
 
 .card-back-option.selected {
@@ -144,6 +157,7 @@
 .current-card-back img {
   width: 20%; /* Reducing the width to 20% of the original size */
   height: auto; /* Maintaining the aspect ratio */
+
 }
 
 .current-card-back {
@@ -170,8 +184,7 @@
   text-shadow: 2px 2px 4px #000000;
 }
 .notification {
-  font-size: 1em;
-  margin-bottom: 20px;
+  font-size: 1.1em;
   color: rgb(255, 0, 0); /* "You must be logged in to create a game" text color */
   text-shadow: 2px 2px 4px #000000;
 }
@@ -193,3 +206,4 @@
     height: auto; /* Maintaining the aspect ratio */
   }
 }
+

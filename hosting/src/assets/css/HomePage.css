@@ -40,12 +40,15 @@
   align-items: center;
   gap: 10px;
   margin-bottom: 20px;
+  transition: background-color 0.3s, transform 0.3s;
 }
+
 
 .home-page button {
   padding: 10px 15px;
   font-size: 1.2em;
   cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
 }
 
 .home-page .logout-button {

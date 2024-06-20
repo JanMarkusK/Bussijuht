@@ -28,12 +28,12 @@ const Premium = ({ setInPremium }) => {
 
   return (
     <div className="premium-page">
-      <h2>OSTA PREMIUM</h2>
-      <h3>
-        Kas soovid soetada Premium kontot?
-      </h3>
-      <button onClick={() => handlePremiumChoice(true)} className='premium-button'>Jah!</button>
-      <button onClick={() => handlePremiumChoice(false)} className='premium-button'>Ei, olen vaene</button>
+      <h2>OLE LAHE JA OMA PREMIUM KONTOT</h2>
+      <h1>TASUTA!</h1>
+      <button onClick={() => handlePremiumChoice(true)} className='premium-button'>Jah</button>
+      <button onClick={() => handlePremiumChoice(false)} className='premium-button'>Ei, olen igav</button>
+      <h2>Premiumi eelis:</h2>
+      <h3>Saab valida mängimiseks lahedamaid kaarte</h3>
     </div>
   );
 };
