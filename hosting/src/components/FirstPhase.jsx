@@ -39,8 +39,8 @@ const FirstFaze = () => {
   useEffect(() => {
     if (pyramidDocId, localDocID) {
     const pyramidDocRef = doc(pyramid1CollectionRef, pyramidDocId);
-    let loser = 0
-    let joever = false
+    // let loser = 0
+    // let joever = false
       const unsubscribe = onSnapshot(pyramidDocRef, (doc) => {
         if (doc.exists()) {
           const pyramidData = doc.data();
@@ -138,11 +138,11 @@ const FirstFaze = () => {
         } else {
           console.log("Document does not exist.");
         }
-        if (joever){
-          updateDoc(lobbyDocRef, {
-            [`players.${loser}.busdriver`]: true
-          });
-        }
+        // if (joever){
+        //   updateDoc(lobbyDocRef, {
+        //     [`players.${loser}.busdriver`]: true
+        //   });
+        // }
       }, (error) => {
         console.error("Error fetching document:", error);
       });
