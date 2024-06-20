@@ -26,14 +26,6 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     const storedPlayerName = localStorage.getItem('playerName');
     const storedLobbyCode = localStorage.getItem('lobbyCode');
 
-    // Madar
-    if (storedPlayerName && storedLobbyCode) {
-      setLocalPlayerName(storedPlayerName);
-      setLocalRoomCode(storedLobbyCode);
-      setIsLoggedIn(true);
-      setHasJoinedRoom(true);
-      setupRealTimeListener(localStorage.getItem('doc_id')); // Setup listener for players list
-    }
 
     // Jan Hans
     if (localRoomCode) {
@@ -55,8 +47,23 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
           }
         });
       });
-  
       return () => unsubscribe();
+    }
+
+    // Madar
+    if (storedPlayerName && storedLobbyCode) {
+      setLocalPlayerName(storedPlayerName);
+      setLocalRoomCode(storedLobbyCode);
+      setIsLoggedIn(true);
+      setHasJoinedRoom(true);
+      setupRealTimeListener(localStorage.getItem('doc_id')); // Setup listener for players list
+    }
+
+    
+
+    //
+  
+      
 
 
 
@@ -80,7 +87,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
     if (currentUser) {
       fetchUserName(currentUser.email);
     }
-  }, []);
+  }, [localRoomCode, setGameData, setInGame, navigate]);
 
   const handleRoomCode = async () => {
     const newRoomCode = Math.floor(Math.random() * 90000) + 10000;
@@ -155,6 +162,7 @@ const Lobby = ({ setGameData, setRoomCode, setPlayerName, setInGame }) => {
       setNotification("At least 3 players are required to start the game.");
       return;
     }
+    
     const q = query(lobbyCollectionRef, where('roomCode', '==', localRoomCode));
     const querySnapshot = await getDocs(q);
     

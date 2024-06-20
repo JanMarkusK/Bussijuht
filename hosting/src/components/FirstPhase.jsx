@@ -475,7 +475,8 @@ const FirstFaze = () => {
 
         {!pointsAssigned && (
           <div className="points-assignment">
-            <h2>Assign Points ({pointValue} lonksu)</h2>
+            <h2>Assign {pointValue} point(s) to:</h2>
+            <h5>Can't assign point(s) to yourself</h5>
             <div className="player-points-assign">
             {playerList.map(player => (
               <div
