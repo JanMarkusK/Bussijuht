@@ -8,6 +8,7 @@ Busdriver is a party game that is played with a normal deck of cards. We felt th
 
 https://bussijuht.com
 
+![plot](./MainScreen.png)
 
 ## Authors
 
