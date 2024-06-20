@@ -3,9 +3,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  min-height: 100vh; /* Kasutage min-height asemel height, et see saaks kohanduda sisu kõrgusega */
   background-image: url('/banner/taust.png');
-  text-align: center; /* Center text and image horizontally */
+  background-size: cover; /* Katkesta pilt täies ulatuses taustaga */
+  background-position: center; /* Keskele joondamine */
+  text-align: center;
 }
 
 .lobby-page h3 {
@@ -47,14 +49,11 @@
 }
 
 .player-name-container {
-  background-color: #e9d414; /* Hall taustavärv */
-  padding: 5px;
-  border-radius: 5px;
-  margin-bottom: 10px;
+  background-color: #adadad; /* Hall taustavärv */
+  border-radius: 3px;
 }
 
 .player-list-container {
-  margin-top: 20px;
   color: #ffffff;
   text-shadow: 2px 2px 4px #000000;
 }
@@ -70,9 +69,19 @@
   margin: 40px; /* Vähendatud nuppude vaheline vahe */
 }
 
+.room-code-container{
+  background-color: #ffffff; /* Hall taustavärv */
+  padding: 5px;
+  width: 108%;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
 .room-code {
-  color: #fc0000;
-  text-shadow: 2px 2px 4px #000000;
+  color: #000000;
+  text-shadow: 1px 1px 3px #000000;
+  transform: scale(1.3);
+
 }
 
 .join-room-button,
@@ -94,8 +103,8 @@
 
 /* Additional styles for specific text colors */
 .lobby-page .sulPoleKontot {
-  font-size: 1em;
-  margin-bottom: 20px;
+  font-size: 1.3em;
+  margin-bottom: 15px;
   color: rgb(255, 0, 0); /* "You must be logged in to create a game" text color */
   text-shadow: 2px 2px 4px #000000;
 }
@@ -107,28 +116,28 @@
 
 /*kaardi suurused ja sellega seonduvad*/
 .card-back-selection {
-  margin-top: 20px;
+  margin-top: 15px;
 }
 
 .card-back-options {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid; /* Kasuta gridi paigutust */
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Lubab kaardil olla vähemalt 100px lai ja kohaneb ekraani suurusega */
   gap: 10px;
   justify-content: center;
 }
 
 .card-back-option {
-  width: 5%;
+  width: 100%; /* Muuda laius 100% */
   height: auto;
+  max-width: 150px; /* Maksimaalne laius, mis kohaneb ekraanisuurusega */
   cursor: pointer;
   transition: transform 0.2s ease;
 }
 
 .card-back-option.selected {
-  /* border: 2px solid #000; */
   transform: scale(1.5);
-  /* margin-bottom: 34px; */
 }
+
 
 /* CSS to make the Current Card Back 80% smaller for users who join */
 
@@ -145,5 +154,42 @@
 }
 
 .current-card-back h3 {
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+  color: white;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+.card-back-selector h3 {
+  margin-bottom: 50px;
+  color: white;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+.handleStartGame {
+  color: white;
+  text-shadow: 2px 2px 4px #000000;
+}
+.notification {
+  font-size: 1em;
+  margin-bottom: 20px;
+  color: rgb(255, 0, 0); /* "You must be logged in to create a game" text color */
+  text-shadow: 2px 2px 4px #000000;
+}
+
+/* Kohandame paigutust seadmetes, mille laius on maksimaalselt 480px */
+@media (max-width: 480px) {
+  .card-back-options {
+    grid-template-columns: repeat(2, 1fr); /* Kaks veergu */
+    gap: 5px; /* Väiksem vahe kaartide vahel */
+  }
+
+  .card-back-option {
+    width: 100%; /* Maksimeerime kaartide laiuse */
+    margin-bottom: 10px; /* Lisame allserva veidi vahet */
+  }
+
+  .current-card-back img {
+    width: 50%; /* Reducing the width to 20% of the original size */
+    height: auto; /* Maintaining the aspect ratio */
+  }
 }

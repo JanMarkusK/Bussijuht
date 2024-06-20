@@ -9,12 +9,19 @@ import bussImage from '/banner/buss.png';
 import peatusImage from '/banner/peatus.png';
 import pealkiriImage from '/banner/pealkiri.png';
 import bannerTeloleImage from '/banner/bannertelole.png';
+import pohiImage from '/banner/pohi.png';
+import borderImage from '/banner/border.png';
+import pilvedImage from '/banner/pilved.png';
+
 
 const HomePageBanner = () => {
   return (
     <div className="banner-container">
       <div className="road-container">
+        <img id="border" src={borderImage} alt="border" className="border-image" />
+        <img id="pohi" src={pohiImage} alt="pohi" className="pohi-image" />
         <img id="tee" src={teeImage} alt="tee" className="tee-image" />
+        <img id="pilved" src={pilvedImage} alt="pilved" className="pilved-image" />
         <img id="peatus" src={peatusImage} alt="peatus" className="overlay-image peatus" />
       </div>
       <img id="pealkiri" src={pealkiriImage} alt="pealkiri" className="overlay-image pealkiri" />

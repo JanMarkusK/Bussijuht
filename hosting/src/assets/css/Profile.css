@@ -21,11 +21,11 @@
 .profile-container {
   position: relative;
   z-index: 1;
-  background-color: rgba(255, 255, 255, 0.575); /* White background with 90% opacity */
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  max-width: 800px;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
   width: 100%;
 }
 
@@ -40,6 +40,7 @@
   margin-bottom: 10px;
   padding: 10px;
   background-color: rgba(255, 255, 255, 0.61); /* Gray background color */
+  width: 70%;
   border-radius: 5px;
 }
 
@@ -50,13 +51,14 @@
 
 .profile-field p {
   margin: 0;
+  color: #555;
 }
 
 .profile-form {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: white;
+  background: #fff;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(252, 250, 250, 0.1);
@@ -74,18 +76,34 @@
 }
 
 .profile-form button {
-  padding: 10px 20px;
+  padding: 12px 25px;
   font-size: 1em;
-  color: white;
-  background-color: #4caf50;
+  color: #fff;
+  background: #4caf50;
   border: none;
-  border-radius: 5px;
+  border-radius: 25px;
   cursor: pointer;
+  transition: background 0.3s ease;
   margin-top: 10px;
+  font-family: 'Arial', sans-serif;
 }
 
 .profile-form button:hover {
   background-color: #45a049;
+}
+
+.red-button {
+  background-color: rgb(196, 5, 5) !important;
+  color: white !important; /* Text color */
+  padding: 10px 15px; /* Padding inside the button */
+  border: none; /* Remove default border */
+  border-radius: 5px; /* Optional: Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 1.2em; /* Optional: Font size */
+}
+
+.red-button:hover {
+  background-color: darkred !important; /* Darker shade on hover */
 }
 
 button {
@@ -97,4 +115,8 @@ button {
   border-radius: 5px;
   cursor: pointer;
   margin-top: 10px;
+}
+
+button:hover {
+  background: #5a0081;
 }

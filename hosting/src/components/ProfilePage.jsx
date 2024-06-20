@@ -1,4 +1,3 @@
-// src/components/ProfilePage.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, firestoreDB } from "../firebase";
@@ -69,6 +68,11 @@ const ProfilePage = () => {
     } catch (error) {
       console.error("Error updating user data: ", error);
     }
+  };
+
+  const handleCancelClick = () => {
+    setEditMode(false);
+    setUpdatedData(userData); // Reset updatedData to userData to discard changes
   };
 
   const handleChange = (e) => {
@@ -168,8 +172,11 @@ const ProfilePage = () => {
                 <option value="Rum">Rum</option>
                 <option value="Vodka">Vodka</option>
                 <option value="Limpa limonaad">Limpa limonaad</option>
+                <option value="Sparkling wine">Sparkling wine</option>
+                <option value="Champagne">Champagne</option>
               </select>
               <button type="submit">Save</button>
+              <button type="button" onClick={handleCancelClick} className="red-button">Cancel</button>
             </form>
           ) : (
             <div className="profile-content">

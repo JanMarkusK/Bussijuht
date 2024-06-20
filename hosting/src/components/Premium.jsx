@@ -26,10 +26,6 @@ const Premium = ({ setInPremium }) => {
     }
   };
 
-  const handleBackClick = () => {
-    navigate('/');
-  };
-
   return (
     <div className="premium-page">
       <h2>OSTA PREMIUM</h2>
@@ -37,7 +33,7 @@ const Premium = ({ setInPremium }) => {
         Kas soovid soetada Premium kontot?
       </h3>
       <button onClick={() => handlePremiumChoice(true)} className='premium-button'>Jah!</button>
-      <button onClick={() => handlePremiumChoice(false)} className='premium-button'>Ei, olen vaene rott</button>
+      <button onClick={() => handlePremiumChoice(false)} className='premium-button'>Ei, olen vaene</button>
     </div>
   );
 };

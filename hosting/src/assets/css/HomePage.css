@@ -61,7 +61,116 @@ button:hover {
 }
 
 /* Mobile (Smartphone) 480px and below */
-@media (max-width: 480px) {
+/* Ensure parent container has overflow: hidden */
+.banner-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Update the road-container styles */
+.road-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden; /* Prevent overflow beyond the container */
+}
+
+/* Adjust the border-image positioning */
+.border-image {
+  width: 100%;
+  height: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9;
+}
+
+/* Adjust other elements to fit within the border */
+.pohi-image {
+  width: 100%;
+  height: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.tee-image {
+  width: 200%;
+  height: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: moveTee 6s linear infinite;
+}
+
+.pilved-image {
+  width: 150%;
+  height: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: movePilved 60s linear infinite;
+}
+
+.peatus {
+  top: 11px;
+  left: 75%;
+  width: 10%;
+  height: auto;
+  position: absolute;
+  z-index: 3;
+  animation: moveTee 6s linear infinite;
+}
+
+.buss {
+  top: 75px;
+  left: 20%;
+  width: 10%;
+  height: auto;
+  position: absolute;
+  z-index: 4;
+  animation: moveBuss 5s linear forwards;
+}
+
+.pealkiri {
+  top: 10px;
+  left: 15%;
+  width: 20%;
+  height: auto;
+  position: absolute;
+  z-index: 2;
+}
+
+@keyframes moveTee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes movePilved {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes moveBuss {
+  0% {
+    left: -10%;
+  }
+  100% {
+    left: 20%;
+  }
+}
+
+/* Mobile and Tablet (up to 768px) */
+@media (max-width: 768px) {
   .banner-container {
     display: none; /* Hide large banner on small screens */
   }
@@ -98,14 +207,20 @@ button:hover {
   }
 }
 
-/* Large screens 481px and above */
-@media (min-width: 481px) {
+/* Large screens 769px and above */
+@media (min-width: 769px) {
   .banner-container {
     display: block; /* Show large banner on large screens */
   }
 
   .banner-container-telole {
     display: none; /* Hide mobile banner on large screens */
+  }
+  .home-page h3 {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px #000000;
   }
 }
 
@@ -116,8 +231,7 @@ button:hover {
     height: 200px;
     position: relative;
     overflow: hidden;
-    border: 1px solid black;
-    margin: 0 auto; /* Center the banner horizontally */
+    margin: 5 auto; /* Center the banner horizontally */
     top: 5px;
   }
 
