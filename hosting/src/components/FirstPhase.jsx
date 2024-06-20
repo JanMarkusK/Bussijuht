@@ -28,7 +28,6 @@ const FirstFaze = () => {
   const pyramidDocId = localStorage.getItem('pyramidDocId');
   const allPlayers = localStorage.getItem('playerNames');
   const playerList = allPlayers ? allPlayers.split(';') : [];
-  const pointsList = allPlayers ? allPlayers.split(';') : [];
 
   useEffect(() => {
     setupGame();
@@ -37,16 +36,21 @@ const FirstFaze = () => {
   useEffect(() => {
     if (pyramidDocId, localDocID) {
     const pyramidDocRef = doc(pyramid1CollectionRef, pyramidDocId);
-   
       const unsubscribe = onSnapshot(pyramidDocRef, (doc) => {
         if (doc.exists()) {
           const pyramidData = doc.data();
           const pyramidCards = [[], [], [], [], []];
-    
+          const localPlayerData = pyramidData.players[localPlayerName];
+
+
+          //pyramid updater
           for (const key in pyramidData) {
             if (key.startsWith('row')) {
               const { faceUp, name, row, col } = pyramidData[key];
               pyramidCards[row][col] = { faceUp, value: name };
+            }
+            if (key.startsWith('row0')) {
+              
             }
             if (pyramidData.players && pyramidData.players[localPlayerName]) {
               const playerData = pyramidData.players[localPlayerName];
@@ -72,21 +76,10 @@ const FirstFaze = () => {
           }
     
           console.log("lastFlippedRow3: " + lastFlippedRow)
-
-          // Check for the win condition
-          if (lastFlippedRow === 0) {
-            // const lastCard = pyramidCards[0].find(card => card && card.faceUp);
-            // if (lastCard) {
-            //   const cardValue = lastCard.value.split('_')[0];
-            //   const cardFace = lastCard.faceUp;
-            //   if (cardValue !== 'J' && cardValue !== 'Q' && cardValue !== 'K' && cardValue !== 'A', cardFace ) {
-            //     setWin(true);
-            //     console.log("voitsin")
-            //   }
-            // }
-          }
-        }
-      });
+        // Check for the win condition
+       
+      }
+    });
 
       const lobbyDocRef = doc(lobbyCollectionRef, localDocID);
       const unsubscribe2 = onSnapshot(lobbyDocRef, (doc) => {
@@ -94,10 +87,15 @@ const FirstFaze = () => {
           const lobbyData = doc.data();
           const newPoints = {};
     
-          lobbyData.players.forEach((player) => {
+        // Convert lobbyData.players to an array if it is an object
+        const players = Array.isArray(lobbyData.players) 
+            ? lobbyData.players 
+            : Object.values(lobbyData.players);
+
+        players.forEach((player) => {
             newPoints[player.name] = player.points || 0;
-          });
-    
+        });
+        
           setPoints(newPoints);
           console.log("Updated points:", newPoints); // Log updated points for debugging
         } else {
@@ -106,8 +104,7 @@ const FirstFaze = () => {
       }, (error) => {
         console.error("Error fetching document:", error);
       });
-      
-      
+
       return () => {
         unsubscribe();
         unsubscribe2();
@@ -128,11 +125,20 @@ const FirstFaze = () => {
     if (querySnapshot.empty) {
       const localPlayer = await firestoreQuery(1);
       const players = await firestoreQuery(2);
+      console.log("players array setup : " + JSON.stringify(players))
+      const updatedPlayers = players.map((player, index) => ({
+        ...player,
+        index,
+      }));
+      console.log("players array?: " + JSON.stringify(updatedPlayers))
+      setPlayers(updatedPlayers);
+
+
       if (localPlayer && localPlayer.host) {
         setIsHost(true);
-        await initializeHostGame(players);
+        await initializeHostGame(updatedPlayers);
       } else {
-        await setTimeout(initializeJoinerGame, 1000);
+        await setTimeout(() => initializeJoinerGame(updatedPlayers), 1000);
       }
     }
 
@@ -188,7 +194,6 @@ const FirstFaze = () => {
 
         // Add a slight delay to ensure data is committed
         await setTimeout(getHand, 1000);
-
     } catch (error) {
         console.error('Error setting up host game:', error);
         // Add error handling
@@ -252,7 +257,8 @@ const FirstFaze = () => {
     }
   };
 
-  const initializeJoinerGame = async () => {
+  const initializeJoinerGame = async (players) => {
+    console.log("joiners lobbycode: " + localRoomCode)
     try {
       const q = query(pyramid1CollectionRef, where('roomCode', '==', localRoomCode));
       const querySnapshot = await getDocs(q);
@@ -260,8 +266,9 @@ const FirstFaze = () => {
       if (!querySnapshot.empty) {
         const pyramidData = querySnapshot.docs[0].data();
         const pyramidCards = [[], [], [], [], []];
-        const pyramidDocId = querySnapshot.docs.map(doc =>doc.id);
+        const pyramidDocId = querySnapshot.docs[0].id;
         localStorage.setItem('pyramidDocId', pyramidDocId);
+        const pyramidDocRef = doc(pyramid1CollectionRef, pyramidDocId);
 
         for (const key in pyramidData) {
           if (key.startsWith('row')) {
@@ -273,7 +280,6 @@ const FirstFaze = () => {
         setPyramid(pyramidCards);
         getHand();
         setCurrentRow(4);
-
       } else {
         console.error('No pyramid data found for this room code.');
       }
@@ -329,11 +335,12 @@ const FirstFaze = () => {
 
       setSelectedPlayer(null); // Reset selected player
       setPointsAssigned(true); // Set points assigned flag to true
+
     } else {
       console.error('Lobby document does not exist.');
     }
   };
-  
+
 
   const firestoreQuery = async (arv) => {
     try {
@@ -367,7 +374,7 @@ const FirstFaze = () => {
   };
 
   const handlePyramidCardClick = async (rowIndex, cardIndex) => {
-    if (gameOver || !pointsAssigned) return;
+    if (gameOver || !pointsAssigned /*  || !localPlayerTurn */) return;
     
     const pyramidDocRef = doc(pyramid1CollectionRef, pyramidDocId);
     
@@ -394,7 +401,7 @@ const FirstFaze = () => {
 
         await handleAssignPoints(rowIndex);
 
-        console.log("batch: "+batch)
+        console.log("batch: "+ batch);
         await batch.commit(); // Commit batch update to Firestore
     
         console.log('Firestore updated with flipped cards');
@@ -427,14 +434,11 @@ const FirstFaze = () => {
         await updateDoc(pyramidDocRef, {
           [`row${rowIndex}_col${cardIndex}.faceUp`]: true
         });
-    
-        if (rowIndex === 0) {
-          setGameOver(true); // Set game over logic here
-        } else if (newPyramid[rowIndex - 1].every(card => card.faceUp)) {
-          setTimeout(() => {
-            setCurrentRow(currentRow - 1);
-          }, 500); // Adjust the delay as needed
-        }
+
+        // Update the player's hand in Firestore
+        await updateDoc(pyramidDocRef, {
+          [`players.${localPlayerName}.hand`]: newHand
+        });
 
         setPointsAssigned(false); // Reset points assigned flag
     
@@ -474,7 +478,8 @@ const FirstFaze = () => {
 
         {!pointsAssigned && (
           <div className="points-assignment">
-            <h2>Assign Points ({pointValue} lonksu)</h2>
+            <h2>Assign {pointValue} point(s) to:</h2>
+            <h5>Can't assign point(s) to yourself</h5>
             <div className="player-points-assign">
             {playerList.map(player => (
               <div
