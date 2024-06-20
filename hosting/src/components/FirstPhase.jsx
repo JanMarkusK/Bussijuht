@@ -482,7 +482,7 @@ const FirstFaze = () => {
             <h5>Can't assign point(s) to yourself</h5>
             <div className="player-points-assign">
             {playerList.map(player => (
-              <div
+              <div className="players"
                 key={player}
                 className={`player-item ${selectedPlayer === player ? 'selected' : ''}`}
                 onClick={() => handleAssignPoints(player)}

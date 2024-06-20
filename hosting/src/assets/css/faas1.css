@@ -40,10 +40,31 @@
   background: rgba(10, 35, 10, 0.8);
   border: 5px solid rgba(00, 64, 00, 0.8);
   padding: 20px;
-  text-align: right;
+  text-align: left;
+  align-content: left;
+  color: rgba(52, 93, 52);
+  
+}
+
+.player-item {
+  background: rgba(10, 35, 10, 0.8);
+  border: 5px solid rgba(00, 64, 00, 0.8);
+  padding: 20px;
+  text-align: left;
   align-content: left;
   color: rgba(52, 93, 52);
 }
+
+.player-item.selected {
+  background: rgba(10, 35, 10, 0.918);
+  border: 5px solid rgba(00, 64, 00, 0.8);
+  padding: 20px;
+  text-align: left;
+  align-content: left;
+  color: rgba(52, 93, 52);
+  transform:scale(+5%);
+}
+
 
 .player1 {
   background: rgba(10, 35, 10, 0.8);
