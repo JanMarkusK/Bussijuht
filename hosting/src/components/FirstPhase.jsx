@@ -20,6 +20,7 @@ const FirstFaze = () => {
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0); // Index to track current player turn
   const [localPlayerTurn, setLocalPlayerTurn] = useState(false); // State to track if it's local player's turn
   //const [loser, setLoser] = useState(null)
+  const [pointValue, setPointValue] = useState(5); // New state for point value
   const navigate = useNavigate();
 
   const pyramid1CollectionRef = collection(firestoreDB, "Pyramid1");
@@ -152,7 +153,11 @@ const FirstFaze = () => {
         unsubscribe2();
       };
     }
-    }, [pyramidDocId, localDocID]);
+  }, [pyramidDocId, localDocID]);
+
+  useEffect(() => {
+    setPointValue(5 - currentRow); // Update point value based on current row
+  }, [currentRow]);
 
   const setupGame = async () => {
     console.log('Setting up game...');
@@ -238,7 +243,7 @@ const FirstFaze = () => {
         console.error('Error setting up host game:', error);
         // Add error handling
     }
-};
+  };
 
 
   const distributeCardsToPlayers = (deck, players, batch, pyramidDocRef) => {
@@ -351,13 +356,12 @@ const FirstFaze = () => {
       return; // Prevent assigning points to self
     }
 
-    const pointValue = 5 - currentRow; // Calculate points based on row index
-
     const newPoints = { ...points };
     if (!newPoints[playerName]) {
       newPoints[playerName] = 0;
     }
-    newPoints[playerName] += pointValue;
+
+    newPoints[playerName] += pointValue; // Use pointValue from state
     setPoints(newPoints);
 
     // Update Firestore
@@ -499,7 +503,7 @@ const FirstFaze = () => {
 
         await handleAssignPoints(rowIndex);
 
-        console.log("batch: "+batch)
+        console.log("batch: "+ batch);
         await batch.commit(); // Commit batch update to Firestore
     
         console.log('Firestore updated with flipped cards');
@@ -532,6 +536,11 @@ const FirstFaze = () => {
         await updateDoc(pyramidDocRef, {
           [`row${rowIndex}_col${cardIndex}.faceUp`]: true
         });
+
+        // Update the player's hand in Firestore
+        await updateDoc(pyramidDocRef, {
+          [`players.${localPlayerName}.hand`]: newHand
+        });
     
         // if (rowIndex === 0) {
         //   setGameOver(true); // Set game over logic here
@@ -563,17 +572,28 @@ const FirstFaze = () => {
     <div className="first-faze-container">
       <div className="first-faze">
         <h1>First Faze Game</h1>
+        <div className="players">
+            <h2>Players</h2>
+            <div className="player-list">
+            {playerList.map(player => (
+              <div>
+                {player} ({points[player] || 0} points)
+              </div>
+            ))}
+            </div>
+          </div>
+
         {!pointsAssigned && (
           <div className="points-assignment">
-            <h2>Assign Points</h2>
-            <div className="player-list">
+            <h2>Assign Points ({pointValue} lonksu)</h2>
+            <div className="player-points-assign">
             {playerList.map(player => (
               <div
                 key={player}
                 className={`player-item ${selectedPlayer === player ? 'selected' : ''}`}
                 onClick={() => handleAssignPoints(player)}
               >
-                {player} ({points[player] || 0} points)
+                {player}
               </div>
             ))}
             </div>
